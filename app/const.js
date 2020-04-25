@@ -15,7 +15,9 @@ export const GUI_VERSION = version;
 export const DEFAULT_CLI_LOCAL = true;
 export const DEFAULT_CLIPORT = 8899;
 
-export const VERSIONS_URL = "https://raw.githubusercontent.com/Samourai-Wallet/whirlpool-runtimes/master/CLI.json"
+export const VERSIONS_URL = "https://code.samourai.io/whirlpool/whirlpool-runtimes/raw/master/CLI.json"
+export const CLI_STABLE_URL = 'https://code.samourai.io/whirlpool/whirlpool-client-cli'
+export const CLI_QA_URL = 'https://code.samourai.io/whirlpool/QA'
 
 export const IPC_CLILOCAL = {
   GET_STATE: 'cliLocal.getState',
