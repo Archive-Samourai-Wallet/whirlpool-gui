@@ -3,7 +3,7 @@
 
 # whirlpool-client-gui
 
-Desktop GUI for [Whirlpool](https://github.com/Samourai-Wallet/Whirlpool) by Samourai-Wallet.
+Desktop GUI for [Whirlpool](https://code.samourai.io/whirlpool/Whirlpool) by Samourai-Wallet.
 
 ## Requirements
 - Java 8+ (OpenJDK 8+ recommended)
@@ -31,7 +31,7 @@ Whirlpool files are stored in ```userData``` which varies depending on your OS:
 
 ## Resources
 
-- [whirlpool](https://github.com/Samourai-Wallet/Whirlpool)
-- [whirlpool-protocol](https://github.com/Samourai-Wallet/whirlpool-protocol)
-- [whirlpool-client](https://github.com/Samourai-Wallet/whirlpool-client)
-- [whirlpool-server](https://github.com/Samourai-Wallet/whirlpool-server)
+- [whirlpool](https://code.samourai.io/whirlpool/Whirlpool)
+- [whirlpool-protocol](https://code.samourai.io/whirlpool/whirlpool-protocol)
+- [whirlpool-client](https://code.samourai.io/whirlpool/whirlpool-client)
+- [whirlpool-server](https://code.samourai.io/whirlpool/whirlpool-server)

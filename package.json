@@ -114,7 +114,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Samourai-Wallet/whirlpool-gui.git"
+    "url": "git@code.samourai.io:whirlpool/whirlpool-gui.git"
   },
   "author": {
     "name": "zeroleak",
@@ -123,7 +123,7 @@
   },
   "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/Samourai-Wallet/whirlpool-gui/issues"
+    "url": "https://code.samourai.io/whirlpool/whirlpool-gui/issues"
   },
   "keywords": [
     "samourai",
@@ -132,7 +132,7 @@
     "coinjoin",
     "whirlpool"
   ],
-  "homepage": "https://github.com/Samourai-Wallet/Whirlpool",
+  "homepage": "https://code.samourai.io/whirlpool/whirlpool-gui",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {

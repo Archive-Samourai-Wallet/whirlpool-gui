@@ -152,10 +152,10 @@ export default class MenuBuilder {
           }
         },
         {
-          label: 'GitHub repository',
+          label: 'Code & issues',
           click() {
             shell.openExternal(
-              'https://github.com/Samourai-Wallet/whirlpool-gui/'
+              'https://code.samourai.io/whirlpool/whirlpool-gui/'
             );
           }
         }
