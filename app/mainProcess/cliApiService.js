@@ -8,7 +8,7 @@ export const API_MODES = {
   LOCAL: 'LOCAL',
   QA: 'QA'
 }
-const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli4/target/'
+const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli/target/'
 
 export class CliApiService {
   constructor (apiVersion) {

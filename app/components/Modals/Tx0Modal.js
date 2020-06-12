@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import * as Icon from 'react-feather';
-import utils from '../../services/utils';
+import utils, { MIXSTARGET_VALUES } from '../../services/utils';
 import mixService from '../../services/mixService';
 import AbstractModal from './AbstractModal';
 import poolsService from '../../services/poolsService';
@@ -129,12 +129,11 @@ export default class Tx0Modal extends AbstractModal {
 
         Mixs target: (editable later)
         <select className="form-control col-sm-2" onChange={this.handleChangeMixsTargetTx0} defaultValue={this.state.mixsTarget}>
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={0}>∞</option>
+          {MIXSTARGET_VALUES.map(value => {
+            value = parseInt(value)
+            const label = utils.mixsTargetLabel(value)
+            return <option value={value}>{label}</option>
+          })}
         </select><br/>
 
         {this.state.tx0Preview && <div>
