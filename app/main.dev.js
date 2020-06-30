@@ -92,6 +92,20 @@ else {
       }
     });
 
+    // fix Linux icon
+    const os = require('os');
+    switch (os.platform()) {
+      case 'darwin':
+        mainWindow.setIcon('resources/icon.icns');
+        break;
+      case 'win32':
+        mainWindow.setIcon('resources/icon.ico');
+        break;
+      default:
+        mainWindow.setIcon('resources/icon.png');
+        break;
+    }
+
     // GUI proxy
     try {
       const guiProxy = guiConfig.getGuiProxy()
