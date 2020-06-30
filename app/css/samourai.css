@@ -4,9 +4,9 @@ html,body{height:100%;}
   background-color: #700606;
   border-color: #700606;
 }
-.btn-primary:hover {
-  background-color: #b71c1c;
-  border-color: #b71c1c;
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
 }
 .btn-primary.disabled,
 .btn-primary:disabled {
