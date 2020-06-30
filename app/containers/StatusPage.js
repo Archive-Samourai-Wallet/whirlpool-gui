@@ -146,12 +146,9 @@ export default class StatusPage extends Component<Props> {
               <div className='row'>
                 <div className='col-sm-2'>
                   {cliLocalService.hasCliApi() && <strong>JAR:<br/></strong>}
-                  {cliLocalService.hasCliApi() && <strong>Version:<br/></strong>}
                 </div>
                 <div className='col-sm-10'>
                   {cliLocalService.hasCliApi() && <div>{cliLocalService.getCliFilename()} ({cliLocalService.getCliChecksum()})</div>}
-                  {cliLocalService.hasCliApi() && <div>{cliLocalService.getCliVersionStr()}</div>}
-                  {!cliLocalService.hasCliApi() && <div><strong>CLI_API {cliApiService.getVersionName()} could not be resolved</strong><br/></div>}
                 </div>
               </div>
             </div>}
@@ -160,11 +157,13 @@ export default class StatusPage extends Component<Props> {
               <hr/>
               <div className='row'>
                 <div className='col-sm-2'>
+                  <strong>Version:</strong><br/>
                   <strong>Whirlpool server:</strong><br/>
                   <strong>DOJO:</strong><br/>
                   <strong>Tor:</strong><br/>
                 </div>
                 <div className='col-sm-10'>
+                  <div>{cliService.getVersion()}</div>
                   <div>{cliService.getServerName()}</div>
                   <div>
                     {utils.checkedIcon(cliService.isDojo())} <strong>{cliService.isDojo()?'enabled':'disabled'}</strong>&nbsp;

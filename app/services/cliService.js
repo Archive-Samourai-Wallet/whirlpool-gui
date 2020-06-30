@@ -289,6 +289,10 @@ class CliService {
     return this.isCliStatusReady() && this.state.cli.torProgress
   }
 
+  getVersion() {
+    return this.isCliStatusReady() && this.state.cli.version
+  }
+
   getTorProgressIcon() {
     const torProgress = this.getTorProgress()
     if (!torProgress) {
