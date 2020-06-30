@@ -113,11 +113,15 @@ export default class Tx0Modal extends AbstractModal {
       This will send <strong>{utils.toBtc(this.props.utxo.value)}btc</strong> to Premix and prepare for mixing.<br/>
       Spending <strong>{this.props.utxo.hash}:{this.props.utxo.index}</strong><br/>
       <br/>
-      {!this.isLoading() && !this.isError() && <div>
-        Pool fee: {this.state.tx0Preview && <span><strong>{utils.toBtc(this.state.tx0Preview.feeValue)} btc</strong></span>}
-        <select className="form-control" onChange={this.handleChangePoolTx0} defaultValue={this.state.poolId}>
-          {this.state.pools.map(pool => <option key={pool.poolId} value={pool.poolId}>{pool.poolId} · denomination: {utils.toBtc(pool.denomination)} btc · fee: {utils.toBtc(pool.feeValue)} btc</option>)}
-        </select><br/>
+      {!this.isLoading() && <div>
+
+        {this.state.pools && this.state.pools.length>0 && <div>
+          Pool fee: {this.state.tx0Preview && <span><strong>{utils.toBtc(this.state.tx0Preview.feeValue)} btc</strong></span>}
+          <select className="form-control" onChange={this.handleChangePoolTx0} defaultValue={this.state.poolId}>
+            {this.state.pools.map(pool => <option key={pool.poolId} value={pool.poolId}>{pool.poolId} · denomination: {utils.toBtc(pool.denomination)} btc · fee: {utils.toBtc(pool.feeValue)} btc</option>)}
+          </select>
+        </div>}
+        <br/>
 
         Miner fee: {this.state.tx0Preview && <strong>{utils.toBtc(this.state.tx0Preview.minerFee)} btc</strong>}
         <select className="form-control" onChange={this.handleChangeFeeTarget} defaultValue={this.state.feeTarget}>
@@ -127,17 +131,19 @@ export default class Tx0Modal extends AbstractModal {
           })}
         </select><br/>
 
-        Mixs target: (editable later)
-        <select className="form-control col-sm-2" onChange={this.handleChangeMixsTargetTx0} defaultValue={this.state.mixsTarget}>
-          {MIXSTARGET_VALUES.map(value => {
-            value = parseInt(value)
-            const label = utils.mixsTargetLabel(value)
-            return <option value={value}>{label}</option>
-          })}
-        </select><br/>
+        {!this.isError() && <div>
+          Mixs target: (editable later)
+          <select className="form-control col-sm-2" onChange={this.handleChangeMixsTargetTx0} defaultValue={this.state.mixsTarget}>
+            {MIXSTARGET_VALUES.map(value => {
+              value = parseInt(value)
+              const label = utils.mixsTargetLabel(value)
+              return <option value={value}>{label}</option>
+            })}
+          </select><br/>
 
-        {this.state.tx0Preview && <div>
-          This will generate <strong>{this.state.tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(this.state.tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(this.state.tx0Preview.changeValue)} btc</strong> change
+          {this.state.tx0Preview && <div>
+            This will generate <strong>{this.state.tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(this.state.tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(this.state.tx0Preview.changeValue)} btc</strong> change
+          </div>}
         </div>}
       </div>}
     </div>
