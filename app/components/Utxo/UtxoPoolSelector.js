@@ -20,7 +20,7 @@ class UtxoPoolSelector extends React.PureComponent {
   }
 
   computePoolLabel(poolId) {
-    return poolId ? poolId : 'no pool'
+    return poolId ? poolId : 'none'
   }
 
   render () {
@@ -29,7 +29,11 @@ class UtxoPoolSelector extends React.PureComponent {
     const activeLabel = this.computePoolLabel(utxo.poolId)
     if (pools.length < 2 && (!this.props.noPool || !utxo.poolId)) {
       // single choice available
-      return <span>{this.computePoolLabel(utxo.poolId ? utxo.poolId : undefined)}</span>
+      if (!utxo.poolId) {
+        // no pool
+        return <span className='text-muted'>-</span>
+      }
+      return <span>{activeLabel}</span>
     }
     return (
       <DropdownButton size='sm' variant="default" title={activeLabel} className='utxoPoolSelector'>

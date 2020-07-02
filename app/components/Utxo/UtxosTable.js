@@ -13,6 +13,8 @@ import LinkExternal from '../Utils/LinkExternal';
 import UtxoMixsTargetSelector from './UtxoMixsTargetSelector';
 import UtxoPoolSelector from './UtxoPoolSelector';
 import modalService from '../../services/modalService';
+import * as Icons from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const UtxoControls = React.memo(({ utxo }) => {
   return (
@@ -89,11 +91,6 @@ const UtxosTable = ({ controls, account, utxos }) => {
                 Address {renderSort('address')}
               </a>
             </th>
-            <th scope="col" className='path'>
-              <a onClick={() => handleSetSort('path')}>
-                Path {renderSort('path')}
-              </a>
-            </th>
             <th scope="col" className='confirmations'>
               <a onClick={() => handleSetSort('confirmations')}>
                 Confs {renderSort('confirmations')}
@@ -154,7 +151,7 @@ const UtxosTable = ({ controls, account, utxos }) => {
               </td>
               <td>
                 <small>
-                  <span title={utxo.address}>
+                  <span title={utxo.address+'\n('+utxo.path+')'}>
                     <LinkExternal href={utils.linkExplorerAddress(utxo)}>
                       {utils.shorten(utxo.address)}
                     </LinkExternal>
@@ -168,16 +165,12 @@ const UtxosTable = ({ controls, account, utxos }) => {
                   </span>
                 </small>
               </td>
-              <td>
-                <small className='text-muted'>{utxo.path}</small>
-              </td>
-              <td>
-                <small>{utxo.confirmations > 0 ? (
-                  <span title="confirmations" className='text-muted'>{utxo.confirmations}</span>
+              <td className='text-muted'>
+                {utxo.confirmations > 0 ? (
+                  <small title="confirmations">{utxo.confirmations}</small>
                 ) : (
-                  <strong>unconfirmed</strong>
+                  <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed'/>
                 )}
-                </small>
               </td>
               <td>{utils.toBtc(utxo.value)}</td>
               <td>

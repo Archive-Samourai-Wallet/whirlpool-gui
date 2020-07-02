@@ -158,6 +158,10 @@ code {
   padding: 0 0.4em;
 }
 
+.table-utxos .dropdown .btn {
+  padding:0;
+}
+
 
 /* login */
 .form-signin {
