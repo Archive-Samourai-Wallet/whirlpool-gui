@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import { shell } from 'electron';
+import LinkExternal from '../components/Utils/LinkExternal';
 
 const AMOUNT_PRECISION = 4
 const BTC_TO_SAT = 100000000
@@ -104,6 +105,13 @@ class Utils {
       return 'https://blockstream.info/testnet/tx/'+utxo.hash
     }
     return 'https://oxt.me/transaction/'+utxo.hash
+  }
+
+  linkExplorerAddress(utxo) {
+    if (cliService.isTestnet()) {
+      return 'https://blockstream.info/testnet/address/'+utxo.address
+    }
+    return 'https://oxt.me/address/'+utxo.address
   }
 
   statusIcon(utxo) {
@@ -221,6 +229,14 @@ class Utils {
 
   checkedIcon(checked) {
     return <FontAwesomeIcon icon={checked?Icons.faCheck:Icons.faTimes} color={checked?'green':'red'} />
+  }
+
+  shorten(str) {
+    const len = str.length
+    if (len < 10) {
+      return str
+    }
+    return str.substring(0, 5)+'...'+str.substring(len - 3)
   }
 }
 

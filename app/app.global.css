@@ -11,12 +11,12 @@
   line-height: 1em !important;
 }
 
-th.clipboard {
-  width: 20px;
+th.hash {
+  width: 100px;
 }
 
-th.hash {
-  width: 190px;
+th.address {
+  width: 100px;
 }
 
 th.path {
@@ -27,7 +27,11 @@ th.account {
   width: 70px;
 }
 
-th.confirmations, th.value, th.poolId, th.mixsDone, th.utxoStatus {
+th.confirmations {
+  width:60px;
+}
+
+th.value, th.poolId, th.mixsDone, th.utxoStatus {
   width: 95px;
 }
 
@@ -90,7 +94,7 @@ td.utxoMessage {
   outline: none;
 }
 
-.table-utxos tbody tr:hover .clipboard-icon {
+.table-utxos tbody tr td:hover .clipboard-icon {
   visibility: visible;
 }
 

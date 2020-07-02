@@ -74,7 +74,6 @@ const UtxosTable = ({ controls, account, utxos }) => {
       <table className="table table-sm table-hover">
         <thead>
           <tr>
-            <th scope="col" className='clipboard'/>
             {account && <th scope="col" className='account'>
               <a onClick={() => handleSetSort('account')}>
                 Account {renderSort('account')}
@@ -85,6 +84,11 @@ const UtxosTable = ({ controls, account, utxos }) => {
                 UTXO {renderSort('hash')}
               </a>
             </th>
+            <th scope="col" className='address'>
+              <a onClick={() => handleSetSort('address')}>
+                Address {renderSort('address')}
+              </a>
+            </th>
             <th scope="col" className='path'>
               <a onClick={() => handleSetSort('path')}>
                 Path {renderSort('path')}
@@ -92,7 +96,7 @@ const UtxosTable = ({ controls, account, utxos }) => {
             </th>
             <th scope="col" className='confirmations'>
               <a onClick={() => handleSetSort('confirmations')}>
-                Confirms {renderSort('confirmations')}
+                Confs {renderSort('confirmations')}
               </a>
             </th>
             <th scope="col" className='value'>
@@ -131,32 +135,45 @@ const UtxosTable = ({ controls, account, utxos }) => {
 
           return (
             <tr key={i} className={utxoReadOnly ? 'utxo-disabled' : ''}>
-              <td>
-                <span title='Copy TX ID'>
-                  <Icon.Clipboard
-                    className='clipboard-icon'
-                    tabIndex={0}
-                    size={18}
-                    onClick={() => copyToClipboard(utxo.hash)}
-                  />
-                </span>
-              </td>
               {account && <td><small>{utxo.account}</small></td>}
               <td>
                 <small>
                   <span title={utxo.hash + ':' + utxo.index}>
                     <LinkExternal href={utils.linkExplorer(utxo)}>
-                      {utxo.hash.substring(0, 20)}...{utxo.hash.substring(utxo.hash.length - 5)}:{utxo.index}
+                      {utils.shorten(utxo.hash)}:{utxo.index}
                     </LinkExternal>
+                  </span>{' '}
+                  <span title='Copy TXID'>
+                    <Icon.Clipboard
+                      className='clipboard-icon'
+                      size={18}
+                      onClick={() => copyToClipboard(utxo.hash)}
+                    />
                   </span>
                 </small>
               </td>
               <td>
-                <small>{utxo.path}</small>
+                <small>
+                  <span title={utxo.address}>
+                    <LinkExternal href={utils.linkExplorerAddress(utxo)}>
+                      {utils.shorten(utxo.address)}
+                    </LinkExternal>
+                  </span>{' '}
+                  <span title='Copy address'>
+                    <Icon.Clipboard
+                      className='clipboard-icon'
+                      size={18}
+                      onClick={() => copyToClipboard(utxo.address)}
+                    />
+                  </span>
+                </small>
+              </td>
+              <td>
+                <small className='text-muted'>{utxo.path}</small>
               </td>
               <td>
                 <small>{utxo.confirmations > 0 ? (
-                  <span title="confirmations">{utxo.confirmations}</span>
+                  <span title="confirmations" className='text-muted'>{utxo.confirmations}</span>
                 ) : (
                   <strong>unconfirmed</strong>
                 )}
