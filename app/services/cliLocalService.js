@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import { ProgressBar } from 'react-bootstrap';
-import { CLILOCAL_STATUS, IPC_CLILOCAL, cliApiService } from '../const';
+import { cliApiService, CLILOCAL_STATUS, IPC_CLILOCAL } from '../const';
 import cliService from './cliService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment';
+import utils from './utils';
 
 class CliLocalService {
   constructor() {
@@ -88,26 +88,26 @@ class CliLocalService {
     }
     // error
     if (cliLocalService.isStatusError()) {
-      const status = 'CLI error: '+infoError
+      const status = 'Local CLI error: '+infoError
       return format(<FontAwesomeIcon icon={Icons.faCircle} color='red' title={status}/>, status)
     }
     if (cliLocalService.isStarted()) {
       // started
-      const status = 'CLI running for '+moment.duration(new Date().getTime()-cliLocalService.getStartTime()).humanize()
+      const status = 'Local CLI was launched '+utils.durationElapsed(cliLocalService.getStartTime())+' ago'
       return format(<FontAwesomeIcon icon={Icons.faPlay} color='green' title={status} size='xs'/>, status)
     }
     if (cliLocalService.isStatusUnknown()) {
       // unknown
-      const status = 'CLI is initializing. '+infoError
+      const status = 'Local CLI is initializing. '+infoError
       return format(<FontAwesomeIcon icon={Icons.faCircle} color='red' title={status} size='xs'/>, status)
     }
     if (!cliLocalService.isValid()) {
       // invalid
-      const status = 'CLI executable is not valid. '+infoError
+      const status = 'Local CLI executable is not valid. '+infoError
       return format(<FontAwesomeIcon icon={Icons.faCircle} color='red' title={status} size='xs'/>, status)
     }
     // valid but stopped
-    const status = 'CLI is not running. '+infoError
+    const status = 'Local CLI is not running. '+infoError
     return format(<FontAwesomeIcon icon={Icons.faStop} color='orange' title={status} />, status)
   }
 

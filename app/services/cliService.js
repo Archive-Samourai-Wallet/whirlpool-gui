@@ -163,6 +163,17 @@ class CliService {
     this.doResetGUIConfig()
   }
 
+  restart() {
+    backendService.cli.restart()
+
+    // force refresh
+    this.updateState({
+      cli: undefined,
+      cliUrlError: undefined,
+      cliLocalState: undefined
+    })
+  }
+
   doResetGUIConfig() {
 
     // reset GUI
@@ -271,6 +282,10 @@ class CliService {
 
   isTestnet() {
     return this.getNetwork() === 'test'
+  }
+
+  isCliStatusStarting() {
+    return this.isConnected() && this.state.cli.cliStatus === CLI_STATUS.STARTING
   }
 
   isCliStatusReady() {
@@ -390,25 +405,34 @@ class CliService {
       const status = 'Connected to CLI'
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='green' title={status} />, status)
     }
+    if (cliService.isCliStatusStarting()) {
+      // connected & ready
+      const status = 'CLI is starting...'
+      return format(<FontAwesomeIcon icon={Icons.faWifi} color='lightgreen' title={status} />, status)
+    }
     if (cliService.getCliUrlError()) {
-      // not connected
-      const status = 'Disconnected from CLI'
+      // error
+      const status = 'CLI error'
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='red' title={status} />, status)
     }
     // connected & initialization required
     if (cliService.isCliStatusNotInitialized()) {
-      const status = 'Connected to CLI, initialization required'
+      const status = 'CLI initialization required'
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='orange' title={status}/>, status)
     }
     // connected & not ready
     if (cliService.isConnected()) {
+      // ???
       let cliMessage = cliService.getCliMessage()
       if (!cliMessage) {
-        cliMessage = 'starting...'
+        cliMessage = 'not ready.'
       }
-      const status = 'Connected to CLI, which is not ready: '+cliMessage
+      const status = 'Waiting for CLI: '+cliMessage
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='lightgreen' title={status}/>, status)
     }
+    // not connected
+    const status = 'Connecting to CLI'
+    return format(<FontAwesomeIcon icon={Icons.faWifi} color='black' title={status} />, status)
   }
 
   getLoginStatusIcon(format) {

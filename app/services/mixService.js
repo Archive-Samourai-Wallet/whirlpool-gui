@@ -1,7 +1,6 @@
 import ifNot from 'if-not-running';
-import moment from 'moment';
 import backendService from './backendService';
-import { TX0_MIN_CONFIRMATIONS, WHIRLPOOL_ACCOUNTS } from './utils';
+import utils, { TX0_MIN_CONFIRMATIONS, WHIRLPOOL_ACCOUNTS } from './utils';
 import poolsService from './poolsService';
 import walletService from './walletService';
 
@@ -125,8 +124,7 @@ class MixService {
     if (!utxo.lastActivityElapsed) {
       return undefined
     }
-    const fetchElapsed = new Date().getTime()-this.state.mix.fetchTime
-    return moment.duration(fetchElapsed + utxo.lastActivityElapsed).humanize()
+    return utils.durationElapsed(this.state.mix.fetchTime-utxo.lastActivityElapsed)
   }
 
   isStarted () {

@@ -1,4 +1,3 @@
-
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -15,6 +14,7 @@ class ConnectingPage extends Component<Props> {
     super(props)
 
     this.reconnect = this.reconnect.bind(this)
+    this.onRestartCli = this.onRestartCli.bind(this)
     this.onResetConfig = this.onResetConfig.bind(this)
   }
 
@@ -29,17 +29,28 @@ class ConnectingPage extends Component<Props> {
     cliService.fetchState()
   }
 
+  onRestartCli() {
+    if (confirm('This will restart CLI. Are you sure?')) {
+      cliService.restart()
+    }
+  }
+
   renderConnecting(cliUrlError) {
     return (
       <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
-        <h1 className="h3 mb-3 font-weight-normal">Connecting...</h1>
+        <h1 className="h3 mb-3 font-weight-normal">{cliService.getStatusIcon((icon,status)=><span>{icon} {status}</span>)}</h1>
         <div><FontAwesomeIcon icon={Icons.faCloud} size='3x' color='#343a40'/></div><br/>
-        <p>Connecting to whirlpool-cli<br/>
-          <strong>{cliService.getCliUrl()}</strong></p>
-        {cliService.isCliLocal() && <div>{cliLocalService.getStatusIcon((icon,text)=><span>{icon} {text}<br/>(might take a minute to start... restart if longer)</span>)}<br/><br/></div>}
+        <div>whirlpool-cli @ <strong>{cliService.isCliLocal() ? 'standalone GUI' : cliService.getCliUrl()}</strong></div>
+        <br/>
+        {cliService.isCliLocal() && <div>
+          {cliLocalService.getStatusIcon((icon,text)=><span>{icon} {text}</span>)}<br/>
+          {(!cliService.isConnected() || cliService.isCliStatusStarting()) && <small className='text-muted'>Might take a minute to start... restart if longer.</small>}<br/>
+        </div>}
+        <br/>
 
         {cliService.getCliMessage() && <Alert variant='info'>{cliService.getCliMessage()}</Alert>}
-        <button type='button' className='btn btn-primary' onClick={this.reconnect}><FontAwesomeIcon icon={Icons.faSync} /> Retry to connect</button>
+        {!cliService.isConnected() && <button type='button' className='btn btn-primary' onClick={this.reconnect}><FontAwesomeIcon icon={Icons.faSync} /> Retry to connect</button>}
+        {cliService.isConnected() && <button type='button' className='btn btn-danger' onClick={this.onRestartCli}>Restart CLI</button>}
 
         {cliUrlError && <div>
           <br/>

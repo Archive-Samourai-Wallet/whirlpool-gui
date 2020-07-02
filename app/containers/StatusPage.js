@@ -8,7 +8,8 @@ import {
   CLI_CONFIG_FILENAME,
   CLI_LOG_ERROR_FILE,
   CLI_LOG_FILE,
-  cliApiService, GUI_CONFIG_FILENAME,
+  cliApiService,
+  GUI_CONFIG_FILENAME,
   GUI_LOG_FILE,
   GUI_VERSION
 } from '../const';
@@ -26,6 +27,7 @@ export default class StatusPage extends Component<Props> {
     super(props)
 
     this.onResetConfig = this.onResetConfig.bind(this)
+    this.onRestartCli = this.onRestartCli.bind(this)
 
     this.cliLogFile = CLI_LOG_FILE
     this.cliLogErrorFile = CLI_LOG_ERROR_FILE
@@ -38,6 +40,11 @@ export default class StatusPage extends Component<Props> {
     }
   }
 
+  onRestartCli() {
+    if (confirm('This will restart CLI. Are you sure?')) {
+      cliService.restart()
+    }
+  }
 
   render() {
     const cliStatusIcon = cliService.getStatusIcon((icon,text)=><div>{icon} {text}</div>)
@@ -116,6 +123,9 @@ export default class StatusPage extends Component<Props> {
             </div>
           </Card.Header>
           <Card.Body>
+            <div style={{'float':'right'}}>
+              <button type='button' className='btn btn-danger' onClick={this.onRestartCli}>Restart CLI</button>
+            </div>
             <div className='row'>
               <div className='col-sm-2'>
                 <strong>Status:</strong>

@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import './PremixPage.css';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { bindActionCreators } from 'redux';
 import { walletActions } from '../actions/walletActions';
 import { connect } from 'react-redux';
