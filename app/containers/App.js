@@ -169,7 +169,12 @@ class App extends React.Component<Props> {
 
               {cliService.isLoggedIn() && walletService.isReady() &&  <div>
                 <button className='btn btn-sm btn-primary btn-deposit' onClick={() => modalService.openDeposit()}><Icon.Plus size={12}/> Deposit</button>
-                <div><small>Balance: {utils.toBtc(walletService.getBalanceDeposit()+walletService.getBalancePremix()+walletService.getBalancePostmix(), true)}</small></div>
+                <div>
+                  <small>Balance: {utils.toBtc(walletService.getBalance(), true)}</small>{' '}
+                  <small className='text-muted' title={'Refresh utxos ('+utils.durationElapsed(walletService.getLastUpdate())+' ago)'}>
+                    <a href='#' onClick={e => {walletService.fetchState(true);e.preventDefault()}}><Icon.RefreshCw size={12}/> </a>
+                  </small>
+                </div>
               </div>}
 
               <ul className="nav flex-column">
@@ -237,11 +242,11 @@ class App extends React.Component<Props> {
                 <small>Fetching wallet...</small>
               </div>}
               <div className="footerNav">
-                  <div>
-                    {cliService.isConnected() && <small>{cliService.getServerName()}</small>}
-                    {cliService.isCliLocal() && <small> {cliLocalStatusIcon} standalone</small>}
-                  </div>
-                  {!cliService.isCliLocal() && <div><small>{cliService.getCliUrl()}</small></div>}
+                <div>
+                  {cliService.isConnected() && <small>{cliService.getServerName()}</small>}
+                  {cliService.isCliLocal() && <small> {cliLocalStatusIcon} standalone</small>}
+                </div>
+                {!cliService.isCliLocal() && <div><small>{cliService.getCliUrl()}</small></div>}
               </div>
             </div>
             <Status

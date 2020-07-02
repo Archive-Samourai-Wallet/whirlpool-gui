@@ -82,6 +82,11 @@ class BackendService {
           this.fetchBackendAsJson('/rest/cli/logout', 'POST')
         , 'cli.logout')
     },
+    restart: () => {
+      return this.withStatus('CLI', 'Restart', () =>
+          this.fetchBackendAsJson('/rest/cli/restart', 'POST')
+        , 'cli.restart')
+    },
     getConfig: () => {
       return this.withStatus('CLI', 'Fetch configuration', () =>
           this.fetchBackendAsJson('/rest/cli/config', 'GET')
@@ -110,10 +115,10 @@ class BackendService {
   };
 
   wallet = {
-    fetchUtxos: () => {
-      return this.withStatus('Wallet', 'Fetch utxos', () =>
-        this.fetchBackendAsJson('/rest/utxos', 'GET')
-        , 'wallet.fetchUtxos', true)
+    fetchUtxos: (refresh=false) => {
+      return this.withStatus('Wallet', 'Refresh utxos', () =>
+        this.fetchBackendAsJson('/rest/utxos?refresh='+refresh, 'GET')
+        , 'wallet.fetchUtxos', false)
     },
 
     fetchDeposit: (increment) => {

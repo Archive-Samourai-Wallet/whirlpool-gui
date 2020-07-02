@@ -1,6 +1,6 @@
 import ifNot from 'if-not-running';
-import moment from 'moment';
 import backendService from './backendService';
+import utils from './utils';
 
 const REFRESH_RATE = 10000;
 class WalletService {
@@ -51,8 +51,15 @@ class WalletService {
     if (!utxo.lastActivityElapsed) {
       return undefined
     }
-    const fetchElapsed = new Date().getTime()-this.state.wallet.fetchTime
-    return moment.duration(fetchElapsed + utxo.lastActivityElapsed).humanize()
+    return utils.durationElapsed(this.state.wallet.fetchTime-utxo.lastActivityElapsed)
+  }
+
+  getBalance() {
+    return this.state.wallet.balance;
+  }
+
+  getLastUpdate() {
+    return this.state.wallet.lastUpdate;
   }
 
   getUtxosDeposit () {
@@ -91,10 +98,10 @@ class WalletService {
     return this.state.wallet.postmix.zpub
   }
 
-  fetchState () {
+  fetchState (refresh=false) {
     return ifNot.run('walletService:fetchState', () => {
       // fetchState backend
-      return backendService.wallet.fetchUtxos().then(wallet => {
+      return backendService.wallet.fetchUtxos(refresh).then(wallet => {
         wallet.fetchTime = new Date().getTime()
         // set state
         if (this.state === undefined) {

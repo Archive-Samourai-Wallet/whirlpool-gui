@@ -3,22 +3,7 @@ import { WALLET_SET } from '../actions/walletActions';
 import type { Action } from './types';
 import produce from 'immer';
 
-const initialState = {
-  /*wallet: {
-    deposit: {
-      utxos:[],
-      balance:0
-    },
-    premix: {
-      utxos:[],
-      balance:0
-    },
-    postmix: {
-      utxos:[],
-      balance:0
-    }
-  }*/
-}
+const initialState = {}
 
 const reducer = produce((state, action) => {
   const payload = action.payload

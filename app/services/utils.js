@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import { shell } from 'electron';
-import LinkExternal from '../components/Utils/LinkExternal';
+import moment from 'moment';
 
 const AMOUNT_PRECISION = 4
 const BTC_TO_SAT = 100000000
@@ -42,6 +42,7 @@ export const MIXABLE_STATUS = {
 export const CLI_STATUS = {
   NOT_INITIALIZED: 'NOT_INITIALIZED',
   NOT_READY: 'NOT_READY',
+  STARTING: 'STARTING',
   READY: 'READY'
 }
 
@@ -237,6 +238,11 @@ class Utils {
       return str
     }
     return str.substring(0, 5)+'...'+str.substring(len - 3)
+  }
+
+  durationElapsed(time) {
+    const elapsed = new Date().getTime()-time
+    return moment.duration(elapsed).humanize()
   }
 }
 
