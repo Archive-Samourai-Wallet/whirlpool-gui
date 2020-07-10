@@ -118,6 +118,14 @@ class WalletService {
     })
   }
 
+  resync() {
+    // resync
+    backendService.cli.resync()
+
+    // fetch updated utxos
+    return this.fetchState()
+  }
+
   // deposit
 
   fetchDepositAddress (increment=false) {

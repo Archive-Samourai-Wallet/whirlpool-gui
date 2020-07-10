@@ -87,6 +87,11 @@ class BackendService {
           this.fetchBackendAsJson('/rest/cli/restart', 'POST')
         , 'cli.restart')
     },
+    resync: () => {
+      return this.withStatus('CLI', 'Resynchronize', () =>
+          this.fetchBackend('/rest/cli/resync', 'POST')
+        , 'cli.resync')
+    },
     getConfig: () => {
       return this.withStatus('CLI', 'Fetch configuration', () =>
           this.fetchBackendAsJson('/rest/cli/config', 'GET')

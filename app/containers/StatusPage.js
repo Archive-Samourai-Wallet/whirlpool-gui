@@ -18,6 +18,7 @@ import LinkExternal from '../components/Utils/LinkExternal';
 import { Card } from 'react-bootstrap';
 import utils from '../services/utils';
 import guiConfig from '../mainProcess/guiConfig';
+import walletService from '../services/walletService';
 
 type Props = {};
 
@@ -28,6 +29,7 @@ export default class StatusPage extends Component<Props> {
 
     this.onResetConfig = this.onResetConfig.bind(this)
     this.onRestartCli = this.onRestartCli.bind(this)
+    this.onResync = this.onResync.bind(this)
 
     this.cliLogFile = CLI_LOG_FILE
     this.cliLogErrorFile = CLI_LOG_ERROR_FILE
@@ -43,6 +45,12 @@ export default class StatusPage extends Component<Props> {
   onRestartCli() {
     if (confirm('This will restart CLI. Are you sure?')) {
       cliService.restart()
+    }
+  }
+
+  onResync() {
+    if (confirm('This will resync mix counters. Are you sure?')) {
+      walletService.resync()
     }
   }
 
@@ -65,7 +73,7 @@ export default class StatusPage extends Component<Props> {
               </Card.Header>
               <Card.Body>
                 <div style={{'float':'right'}}>
-                  <button type='button' className='btn btn-danger' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
+                  <button type='button' className='btn btn-danger btn-sm' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
                 </div>
                 <div className='row'>
                   <div className='col-sm-2'>
@@ -123,8 +131,9 @@ export default class StatusPage extends Component<Props> {
             </div>
           </Card.Header>
           <Card.Body>
-            <div style={{'float':'right'}}>
-              <button type='button' className='btn btn-danger' onClick={this.onRestartCli}>Restart CLI</button>
+            <div className='float-right text-right'>
+              <button type='button' className='btn btn-primary btn-sm' onClick={this.onRestartCli}>Restart CLI</button>{' '}
+              {walletService.isReady() && <button type='button' className='btn btn-secondary btn-sm' onClick={this.onResync}>Resync mix counters</button>}
             </div>
             <div className='row'>
               <div className='col-sm-2'>

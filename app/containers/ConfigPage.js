@@ -212,10 +212,10 @@ export default class ConfigPage extends Component<Props> {
 
           <div className="form-group row">
             <div className="col-sm-5">
-              <button type='button' className='btn btn-danger' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
+              <button type='button' className='btn btn-danger btn-sm' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
             </div>
             <div className="col-sm-5">
-              <button type="submit" className="btn btn-primary">Save</button>
+              <button type="submit" className="btn btn-primary">Save &amp; restart</button>
             </div>
           </div>
         </form>
