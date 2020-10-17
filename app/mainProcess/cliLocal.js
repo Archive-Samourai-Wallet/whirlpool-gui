@@ -268,11 +268,11 @@ export class CliLocal {
           myThis.state.started = new Date().getTime()
           myThis.pushState()
           const cmd = 'java'
-          const args = ['-jar', myThis.getCliFilename(), '--listen', '--debug', ARG_CLI_GUI]
+          const args = ['-jar', myThis.getCliFilename(), '--listen', '--debug', '--logging.file='+CLI_LOG_FILE, ARG_CLI_GUI]
           if (IS_DEV) {
             args.push('--debug-client')
           }
-          myThis.startProc(cmd, args, cliApiService.getCliPath(), CLI_LOG_FILE, CLI_LOG_ERROR_FILE)
+          myThis.startProc(cmd, args, cliApiService.getCliPath(), CLI_LOG_ERROR_FILE)
         }, (e) => {
           // port in use => cannot start proc
           logger.error("[CLI_LOCAL] cannot start: port "+DEFAULT_CLIPORT+" already in use")
@@ -332,19 +332,16 @@ export class CliLocal {
     });
   }
 
-  startProc(cmd, args, cwd, logFile, logErrorFile) {
-    const cliLog = fs.createWriteStream(logFile, {flags: 'a'})
+  startProc(cmd, args, cwd, logErrorFile) {
     const cliLogError = fs.createWriteStream(logErrorFile, {flags: 'a'})
     const myThis = this
 
     const cmdStr = cmd+' '+args.join(' ')
-    cliLog.write('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')\n')
     cliLogError.write('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')\n')
     logger.info('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')')
     try {
       this.cliProc = spawn(cmd, args, { cwd: cwd })
       this.cliProc.on('error', function(err) {
-        cliLog.write('[CLI_LOCAL][ERROR] => ' + err + '\n')
         cliLogError.write('[CLI_LOCAL][ERROR] => ' + err + '\n')
         logger.error('[CLI_LOCAL] => ', err)
         myThis.state.info = undefined
@@ -356,7 +353,6 @@ export class CliLocal {
         let reloading = false
         if (code == 0) {
           // finishing normal
-          cliLog.write('[CLI_LOCAL] => terminated without error.\n')
           cliLogError.write('[CLI_LOCAL] => terminated without error.\n')
           logger.info('[CLI_LOCAL] => terminated without error.')
         } else {
@@ -364,11 +360,9 @@ export class CliLocal {
           if (code === 143) {
             // reloading? TODO
             reloading = true
-            cliLog.write('[CLI_LOCAL] => terminated for reloading...\n')
             cliLogError.write('[CLI_LOCAL] => terminated for reloading...\n')
             logger.error('[CLI_LOCAL] => terminated for reloading...')
           } else {
-            cliLog.write('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
             cliLogError.write('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
             logger.error('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '. Check logs for details')
             myThis.state.info = undefined
@@ -386,7 +380,6 @@ export class CliLocal {
         const dataStr = data.toString()
         const dataLine = dataStr.substring(0, (dataStr.length - 1))
         console.log('[CLI_LOCAL] ' + dataLine);
-        cliLog.write(data)
 
         // log java errors to CLI error file
         if (dataStr.match(/ ERROR ([0-9]+) \-\-\- /g)) {
@@ -400,7 +393,6 @@ export class CliLocal {
         const dataLine = dataStr.substring(0, (dataStr.length - 1))
         console.error('[CLI_LOCAL][ERROR] ' + dataLine);
         logger.error('[CLI_LOCAL][ERROR] ' + dataLine)
-        cliLog.write('[ERROR]' + data)
         cliLogError.write('[ERROR]' + data)
 
         //myThis.state.error = dataLine
