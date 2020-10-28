@@ -1,5 +1,4 @@
 import ifNot from 'if-not-running';
-import moment from 'moment';
 import backendService from './backendService';
 
 const REFRESH_RATE = 30000;

@@ -127,7 +127,7 @@ const UtxosTable = ({ controls, account, utxos }) => {
         <tbody>
         {sortedUtxos.map((utxo, i) => {
           const lastActivity = mixService.computeLastActivity(utxo);
-          const utxoReadOnly = utils.isUtxoReadOnly(utxo);
+          const utxoReadOnly = utils.isUtxoReadOnly(utxo) || mixService.getPoolsForUtxo(utxo).length == 0;
           const allowNoPool = utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT;
 
           return (

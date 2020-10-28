@@ -49,7 +49,7 @@ export default class StatusPage extends Component<Props> {
   }
 
   onResync() {
-    if (confirm('This will resync mix counters. Are you sure?')) {
+    if (confirm('This will resync postmix counters. Are you sure?')) {
       walletService.resync()
     }
   }
@@ -133,7 +133,7 @@ export default class StatusPage extends Component<Props> {
           <Card.Body>
             <div className='float-right text-right'>
               <button type='button' className='btn btn-primary btn-sm' onClick={this.onRestartCli}>Restart CLI</button>{' '}
-              {walletService.isReady() && <button type='button' className='btn btn-secondary btn-sm' onClick={this.onResync}>Resync mix counters</button>}
+              {walletService.isReady() && <button type='button' className='btn btn-secondary btn-sm' onClick={this.onResync}>Resync postmix counters</button>}
             </div>
             <div className='row'>
               <div className='col-sm-2'>

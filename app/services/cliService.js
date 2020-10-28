@@ -412,7 +412,7 @@ class CliService {
     }
     if (cliService.getCliUrlError()) {
       // error
-      const status = 'CLI error'
+      const status = 'CLI is disconnected'
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='red' title={status} />, status)
     }
     // connected & initialization required

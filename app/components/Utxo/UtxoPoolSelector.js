@@ -12,27 +12,20 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 /* eslint-disable react/prefer-stateless-function */
 class UtxoPoolSelector extends React.PureComponent {
 
-  computePools(utxo) {
-    if (utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT) {
-      return mixService.getPoolsForTx0(utxo)
-    }
-    return mixService.getPoolsForMix(utxo)
-  }
-
   computePoolLabel(poolId) {
     return poolId ? poolId : 'none'
   }
 
   render () {
     const utxo = this.props.utxo
-    const pools = this.computePools(utxo);
+    const pools = mixService.getPoolsForUtxo(utxo);
+    if (pools.length == 0) {
+      // no pool
+      return <span className='text-muted'>-</span>
+    }
     const activeLabel = this.computePoolLabel(utxo.poolId)
     if (pools.length < 2 && (!this.props.noPool || !utxo.poolId)) {
       // single choice available
-      if (!utxo.poolId) {
-        // no pool
-        return <span className='text-muted'>-</span>
-      }
       return <span>{activeLabel}</span>
     }
     return (

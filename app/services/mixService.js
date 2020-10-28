@@ -107,6 +107,13 @@ class MixService {
     return poolsService.getPoolsForMix(utxo.value, liquidity)
   }
 
+  getPoolsForUtxo(utxo) {
+    if (utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT) {
+      return this.getPoolsForTx0(utxo)
+    }
+    return this.getPoolsForMix(utxo)
+  }
+
   isStartMixPossible(utxo) {
     return (utxo.account === WHIRLPOOL_ACCOUNTS.PREMIX || utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
       && (utxo.status === 'MIX_FAILED' || utxo.status === 'READY')
