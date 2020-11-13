@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Alert, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import { WHIRLPOOL_SERVER } from '../const';
 import { logger } from '../utils/logger';
 import { CliConfigService } from '../services/cliConfigService';
 import cliService from '../services/cliService';
@@ -99,15 +98,6 @@ export default class ConfigPage extends Component<Props> {
             <Card.Header>CLI General configuration</Card.Header>
             <Card.Body>
               <div className="form-group row">
-                <label htmlFor="mixsTarget" className="col-sm-2 col-form-label">Mixs target min</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.mixsTarget = myValue)
-                }} defaultValue={cliConfig.mix.mixsTarget} id="mixsTarget"/>
-                <label className='col-form-label col-sm-5 text-muted'>Minimum number of mixs to achieve per UTXO</label>
-              </div>
-
-              <div className="form-group row">
                 <label htmlFor="autoMix" className="col-sm-2 col-form-label">Auto-MIX</label>
                 <div className="col-sm-10 custom-control custom-switch">
                   <input type="checkbox" className="custom-control-input" onChange={e => myThis.onChangeCliConfig(cliConfig => cliConfig.mix.autoMix = checked(e))} defaultChecked={cliConfig.mix.autoMix} id="autoMix"/>
@@ -172,7 +162,7 @@ export default class ConfigPage extends Component<Props> {
                     const myValue = parseInt(e.target.value)
                     myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0MaxOutputs = myValue)
                   }} defaultValue={cliConfig.mix.tx0MaxOutputs} id="tx0MaxOutputs"/>
-                <label className='col-form-label col-sm-5 text-muted'>Max premixes per TX0 (0 = no limit)</label>
+                <label className='col-form-label col-sm-5 text-muted'>Max premixes per TX0 (0 = max limit)</label>
               </div>
 
               {clientsPerPoolEditable && <div className="form-group row">
@@ -194,16 +184,6 @@ export default class ConfigPage extends Component<Props> {
                     Set it only when blocked by a firewall (this is not <i>GUI Tor proxy</i>).<br/>
                     <code>socks://host:port</code> or <code>http://host:port</code>
                   </label>
-              </div>
-
-              <div className="form-group row">
-                <label htmlFor="server" className="col-sm-2 col-form-label">Server</label>
-                <select className="col-sm-3 form-control" id="server" onChange={e => {
-                  const myValue = e.target.value
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.server = myValue)
-                }} defaultValue={cliConfig.server}>
-                  {Object.keys(WHIRLPOOL_SERVER).map((value) => <option value={value} key={value}>{WHIRLPOOL_SERVER[value]}</option>)}
-                </select>
               </div>
 
             </Card.Body>

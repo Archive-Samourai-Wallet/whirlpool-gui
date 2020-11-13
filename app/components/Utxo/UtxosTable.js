@@ -4,17 +4,17 @@
  *
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
-import _ from 'lodash';
+import React, { useState } from 'react';
 import mixService from '../../services/mixService';
 import * as Icon from 'react-feather';
 import utils, { MIXABLE_STATUS, UTXO_STATUS, WHIRLPOOL_ACCOUNTS } from '../../services/utils';
 import LinkExternal from '../Utils/LinkExternal';
-import UtxoMixsTargetSelector from './UtxoMixsTargetSelector';
 import UtxoPoolSelector from './UtxoPoolSelector';
 import modalService from '../../services/modalService';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
+import {FormCheck} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TableGeneric from '../TableGeneric/TableGeneric';
 
 const UtxoControls = React.memo(({ utxo }) => {
   return (
@@ -30,172 +30,137 @@ const UtxoControls = React.memo(({ utxo }) => {
 
 /* eslint-disable react/prefer-stateless-function */
 const UtxosTable = ({ controls, account, utxos }) => {
-  const copyToClipboard = useCallback((text) => {
-    const el = document.createElement('textarea');
 
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
+  const [showReadOnly, setShowReadOnly] = useState(false)
 
-    document.body.appendChild(el);
+  const isReadOnly = utxo => utils.isUtxoReadOnly(utxo) || mixService.getPoolsForUtxo(utxo).length == 0;
 
-    el.select();
-    document.execCommand('copy');
-
-    document.body.removeChild(el);
-  }, []);
-
-  const [sortBy, setSortBy] = useState('lastActivityElapsed');
-  const [ascending, setAscending] = useState(true);
-
-  const handleSetSort = useCallback((key) => {
-    if (sortBy === key) {
-      setAscending(!ascending);
-    } else {
-      setAscending(true);
+  const columns = []
+  if (account) {
+    columns.push({
+      Header: 'Account',
+      accessor: o => o.account,
+      Cell: o => <small>{o.cell.value}</small>
+    })
+  }
+  columns.push(
+    {
+      Header: 'UTXO',
+      accessor: o => o.hash+':'+o.index,
+      Cell: o => {
+        const utxo = o.row.original
+        return <small>
+          <span title={utxo.hash + ':' + utxo.index}>
+            <LinkExternal href={utils.linkExplorer(utxo)}>
+              {utils.shorten(utxo.hash)}:{utxo.index}
+            </LinkExternal>
+          </span>{' '}
+          <span title='Copy TXID'>
+            <Icon.Clipboard
+              className='clipboard-icon'
+              size={18}
+              onClick={() => utils.copyToClipboard(utxo.hash)}
+            />
+          </span>
+        </small>
+      }
+    },
+    {
+      Header: 'Address',
+      accessor: o => o.address,
+      Cell: o => {
+        const utxo = o.row.original
+        return <small>
+          <span title={utxo.address+'\n('+utxo.path+')'}>
+            <LinkExternal href={utils.linkExplorerAddress(utxo)}>
+              {utils.shorten(utxo.address)}
+            </LinkExternal>
+          </span>{' '}
+          <span title='Copy address'>
+            <Icon.Clipboard
+              className='clipboard-icon'
+              size={18}
+              onClick={() => copyToClipboard(utxo.address)}
+            />
+          </span>
+        </small>
+      }
+    },
+    {
+      Header: 'Confs',
+      accessor: o => o.confirmations,
+      className: 'text-muted',
+      Cell: o => o.cell.value > 0 ? (
+          <small title="confirmations">{o.cell.value}</small>
+        ) : (
+          <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed'/>
+        )
+    },
+    {
+      Header: 'Amount',
+      accessor: o => o.value,
+      Cell: o => utils.toBtc(o.cell.value)
+    },
+    {
+      Header: 'Pool',
+      accessor: o => o.poolId,
+      Cell: o => {
+        const utxo = o.row.original
+        const allowNoPool = utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT;
+        return !isReadOnly(utxo) && <UtxoPoolSelector utxo={utxo} noPool={allowNoPool}/>
+      }
+    },
+    {
+      Header: 'Mixs',
+      accessor: o => o.mixsDone,
+      Cell: o => !isReadOnly(o.row.original) && <span>{o.cell.value}</span>
+    },
+    {
+      Header: 'Status',
+      accessor: o => o.status,
+      Cell: o => !isReadOnly(o.row.original) && <span className='text-primary'>{utils.statusLabel(o.row.original)}</span>
+    },
+    {
+      Header: 'Last activity',
+      accessor: o => o.lastActivityElapsed,
+      Cell: o => {
+        const lastActivity = mixService.computeLastActivity(o.row.original);
+        return lastActivity ? lastActivity : '-'
+      }
+    },
+    {
+      Header: 'Info',
+      accessor: o => o.error,
+      className: 'utxoMessage',
+      Cell: o => !isReadOnly(o.row.original) && <small>{utils.utxoMessage(o.row.original)}</small>
     }
+  );
+  if (controls) {
+    columns.push({
+      id: 'utxoControls',
+      Header: '',
+      Cell: o => !isReadOnly(o.row.original) && <UtxoControls utxo={o.row.original}/>
+    })
+  }
 
-    setSortBy(key);
-  }, [sortBy, ascending]);
-
-  const sortedUtxos = useMemo(() => {
-    const sortedUtxos = _.sortBy(utxos, sortBy);
-
-    if (!ascending) {
-      return _.reverse(sortedUtxos);
-    }
-
-    return sortedUtxos;
-  }, [utxos, sortBy, ascending]);
-
-  const renderSort = sort => sortBy === sort && (ascending ? "▲" : "▼")
+  const visibleUtxos = showReadOnly ? utxos : utxos.filter(utxo => !isReadOnly(utxo))
+  const utxosReadOnly = utxos.filter(utxo => isReadOnly(utxo))
+  const amountUtxosReadOnly = utxosReadOnly.map(utxo => utxo.value).reduce((total,current) => total+current, 0)
 
   return (
-    <div className='table-utxos'>
-      <table className="table table-sm table-hover">
-        <thead>
-          <tr>
-            {account && <th scope="col" className='account'>
-              <a onClick={() => handleSetSort('account')}>
-                Account {renderSort('account')}
-              </a>
-            </th>}
-            <th scope="col" className='hash'>
-              <a onClick={() => handleSetSort('hash')}>
-                UTXO {renderSort('hash')}
-              </a>
-            </th>
-            <th scope="col" className='address'>
-              <a onClick={() => handleSetSort('address')}>
-                Address {renderSort('address')}
-              </a>
-            </th>
-            <th scope="col" className='confirmations'>
-              <a onClick={() => handleSetSort('confirmations')}>
-                Confs {renderSort('confirmations')}
-              </a>
-            </th>
-            <th scope="col" className='value'>
-              <a onClick={() => handleSetSort('value')}>
-                Amount {renderSort('value')}
-              </a>
-            </th>
-            <th scope="col" className='poolId'>
-              <a onClick={() => handleSetSort('poolId')}>
-                Pool {renderSort('poolId')}
-              </a>
-            </th>
-            <th scope="col" className='mixsDone'>
-              <a onClick={() => handleSetSort('mixsDone')}>
-                Mixs {renderSort('mixsDone')}
-              </a>
-            </th>
-            <th scope="col" className='utxoStatus'>
-              <a onClick={() => handleSetSort('status')}>
-                Status {renderSort('status')}
-              </a>
-            </th>
-            <th scope="col" colSpan={2}>
-              <a onClick={() => handleSetSort('lastActivityElapsed')}>
-                Last activity {renderSort('lastActivityElapsed')}
-              </a>
-            </th>
-            {controls && <th scope="col" className='utxoControls' />}
-          </tr>
-        </thead>
-        <tbody>
-        {sortedUtxos.map((utxo, i) => {
-          const lastActivity = mixService.computeLastActivity(utxo);
-          const utxoReadOnly = utils.isUtxoReadOnly(utxo) || mixService.getPoolsForUtxo(utxo).length == 0;
-          const allowNoPool = utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT;
-
-          return (
-            <tr key={i} className={utxoReadOnly ? 'utxo-disabled' : ''}>
-              {account && <td><small>{utxo.account}</small></td>}
-              <td>
-                <small>
-                  <span title={utxo.hash + ':' + utxo.index}>
-                    <LinkExternal href={utils.linkExplorer(utxo)}>
-                      {utils.shorten(utxo.hash)}:{utxo.index}
-                    </LinkExternal>
-                  </span>{' '}
-                  <span title='Copy TXID'>
-                    <Icon.Clipboard
-                      className='clipboard-icon'
-                      size={18}
-                      onClick={() => copyToClipboard(utxo.hash)}
-                    />
-                  </span>
-                </small>
-              </td>
-              <td>
-                <small>
-                  <span title={utxo.address+'\n('+utxo.path+')'}>
-                    <LinkExternal href={utils.linkExplorerAddress(utxo)}>
-                      {utils.shorten(utxo.address)}
-                    </LinkExternal>
-                  </span>{' '}
-                  <span title='Copy address'>
-                    <Icon.Clipboard
-                      className='clipboard-icon'
-                      size={18}
-                      onClick={() => copyToClipboard(utxo.address)}
-                    />
-                  </span>
-                </small>
-              </td>
-              <td className='text-muted'>
-                {utxo.confirmations > 0 ? (
-                  <small title="confirmations">{utxo.confirmations}</small>
-                ) : (
-                  <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed'/>
-                )}
-              </td>
-              <td>{utils.toBtc(utxo.value)}</td>
-              <td>
-                {!utxoReadOnly && <UtxoPoolSelector utxo={utxo} noPool={allowNoPool}/>}
-              </td>
-              <td>
-                {!utxoReadOnly && <UtxoMixsTargetSelector utxo={utxo}/>}
-              </td>
-              <td>
-                {!utxoReadOnly && <span className='text-primary'>{utils.statusLabel(utxo)}</span>}
-              </td>
-              <td className='utxoMessage'>
-                {!utxoReadOnly && <small>{utils.utxoMessage(utxo)}</small>}
-              </td>
-              <td>
-                {!utxoReadOnly && <small>{lastActivity ? lastActivity : '-'}</small>}
-              </td>
-              <td>
-                {!utxoReadOnly && controls && <UtxoControls utxo={utxo}/>}
-              </td>
-            </tr>
-          );
-        })}
-        </tbody>
-      </table>
+    <div>
+      {utxosReadOnly.length>0 && <div className='text-center text-muted'>
+        <FormCheck id="showReadOnly" type="checkbox" label={<span>{utxosReadOnly.length} non-mixable utxos ({utils.toBtc(amountUtxosReadOnly)}btc)</span>} onClick={() => setShowReadOnly(!showReadOnly)} checked={showReadOnly}/>
+      </div>}
+      <div className='table-utxos'>
+        <TableGeneric
+          columns={columns}
+          data={visibleUtxos}
+          sortBy={[{ id: 'lastActivityElapsed', desc: true }]}
+          getRowClassName={row => isReadOnly(row.original) ? 'utxo-disabled' : ''}
+        />
+        {visibleUtxos.length == 0 && <div className='text-center text-muted'><small>No utxo yet</small></div>}
+      </div>
     </div>
   );
 };

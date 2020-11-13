@@ -1,6 +1,6 @@
 import ifNot from 'if-not-running';
 import backendService from './backendService';
-import utils, { TX0_MIN_CONFIRMATIONS, WHIRLPOOL_ACCOUNTS } from './utils';
+import utils, { TX0_MIN_CONFIRMATIONS, UTXO_STATUS, WHIRLPOOL_ACCOUNTS } from './utils';
 import poolsService from './poolsService';
 import walletService from './walletService';
 
@@ -75,17 +75,12 @@ class MixService {
     return this.configure(utxo)
   }
 
-  setMixsTarget(utxo, mixsTarget) {
-    utxo.mixsTarget = mixsTarget
-    return this.configure(utxo)
-  }
-
   configure(utxo) {
-    return backendService.utxo.configure(utxo.hash, utxo.index, utxo.poolId, utxo.mixsTarget).then(() => walletService.fetchState())
+    return backendService.utxo.configure(utxo.hash, utxo.index, utxo.poolId).then(() => walletService.fetchState())
   }
 
-  tx0(utxo, feeTarget, poolId, mixsTarget) {
-    return backendService.utxo.tx0(utxo.hash, utxo.index, feeTarget, poolId, mixsTarget).then(() => walletService.fetchState())
+  tx0(utxo, feeTarget, poolId) {
+    return backendService.utxo.tx0(utxo.hash, utxo.index, feeTarget, poolId).then(() => walletService.fetchState())
   }
 
   startMixUtxo(utxo) {
@@ -116,13 +111,13 @@ class MixService {
 
   isStartMixPossible(utxo) {
     return (utxo.account === WHIRLPOOL_ACCOUNTS.PREMIX || utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
-      && (utxo.status === 'MIX_FAILED' || utxo.status === 'READY')
+      && (utxo.status === UTXO_STATUS.MIX_FAILED || utxo.status === UTXO_STATUS.READY)
       && this.getPoolsForMix(utxo).length > 0
   }
 
   isStopMixPossible(utxo) {
     return (utxo.account === WHIRLPOOL_ACCOUNTS.PREMIX || utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
-      && (utxo.status === 'MIX_QUEUE' || utxo.status === 'MIX_STARTED' || utxo.status === 'MIX_SUCCESS')
+      && (utxo.status === UTXO_STATUS.MIX_QUEUE || utxo.status === UTXO_STATUS.MIX_STARTED || utxo.status === UTXO_STATUS.MIX_SUCCESS)
   }
 
   // state

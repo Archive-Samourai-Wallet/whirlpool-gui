@@ -8,9 +8,6 @@ import moment from 'moment';
 const AMOUNT_PRECISION = 4
 const BTC_TO_SAT = 100000000
 export const TX0_MIN_CONFIRMATIONS = 0
-export const MIXSTARGET_UNLIMITED = 0
-export const MIXSTARGET_VALUES = [1, 2, 3, 5, 10, 25, 50, 100, MIXSTARGET_UNLIMITED]
-export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 
 export const WHIRLPOOL_ACCOUNTS = {
   DEPOSIT: 'DEPOSIT',
@@ -129,7 +126,7 @@ class Utils {
     if (utxo.status === UTXO_STATUS.MIX_FAILED) {
       return <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='MIX FAILED'/>
     }
-    if ((utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX && (utxo.mixsTargetOrDefault != MIXSTARGET_UNLIMITED || utxo.mixsDone >= utxo.mixsTargetOrDefault) && utxo.mixableStatus === MIXABLE_STATUS.MIXABLE) || utxo.status === UTXO_STATUS.MIX_SUCCESS) {
+    if ((utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX && utxo.mixsDone >= 1 && utxo.mixableStatus === MIXABLE_STATUS.MIXABLE) || utxo.status === UTXO_STATUS.MIX_SUCCESS) {
       return <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>
     }
 
@@ -153,23 +150,21 @@ class Utils {
   }
 
   statusLabelText(utxo) {
+    if ((utxo.status === UTXO_STATUS.READY && utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
+      || utxo.status === UTXO_STATUS.MIX_QUEUE || utxo.status === UTXO_STATUS.MIX_SUCCESS) {
+      return 'MIXED'
+    }
+    if (utxo.mixableStatus === MIXABLE_STATUS.NO_POOL) {
+      return undefined
+    }
     switch(utxo.status) {
-      case UTXO_STATUS.READY:
-        if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX && (utxo.mixsTargetOrDefault != MIXSTARGET_UNLIMITED || utxo.mixsDone >= utxo.mixsTargetOrDefault)) {
-          return 'MIXED'
-        }
-        if (utxo.mixableStatus === MIXABLE_STATUS.NO_POOL) {
-          return undefined
-        }
-        return 'READY'
+      case UTXO_STATUS.READY: return 'READY'
       case UTXO_STATUS.STOP: return 'STOPPED'
       case UTXO_STATUS.TX0: return 'TX0'
       case UTXO_STATUS.TX0_SUCCESS: return 'TX0:SUCCESS'
       case UTXO_STATUS.TX0_FAILED: return 'TX0:ERROR'
-      case UTXO_STATUS.MIX_QUEUE: return 'QUEUE'
       case UTXO_STATUS.MIX_STARTED: return 'MIXING'
-      case UTXO_STATUS.MIX_SUCCESS: return 'MIXED'
-      case UTXO_STATUS.MIX_FAILED: return 'MIX:ERROR'
+      case UTXO_STATUS.MIX_FAILED: return 'MIX:FAILED'
       default: return '?'
     }
   }
@@ -207,10 +202,6 @@ class Utils {
     return false
   }
 
-  mixsTargetLabel(mixsTarget) {
-    return mixsTarget !== MIXSTARGET_UNLIMITED ? mixsTarget : '∞'
-  }
-
   torIcon(width=20) {
     return <svg width={width} version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(-58.12 -303.3)">
@@ -243,6 +234,22 @@ class Utils {
   durationElapsed(time) {
     const elapsed = new Date().getTime()-time
     return moment.duration(elapsed).humanize()
+  }
+
+  copyToClipboard(text) {
+    const el = document.createElement('textarea');
+
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+
+    document.body.appendChild(el);
+
+    el.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(el);
   }
 }
 

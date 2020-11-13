@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import * as Icon from 'react-feather';
-import utils, { MIXSTARGET_VALUES } from '../../services/utils';
+import utils from '../../services/utils';
 import mixService from '../../services/mixService';
 import AbstractModal from './AbstractModal';
 import poolsService from '../../services/poolsService';
@@ -15,7 +15,6 @@ export default class Tx0Modal extends AbstractModal {
       pools: undefined,
       feeTarget: TX0_FEE_TARGET.BLOCKS_2.value,
       poolId: props.utxo.poolId,
-      mixsTarget: props.utxo.mixsTargetOrDefault
     }
     super(props, 'modal-tx0', initialState)
 
@@ -23,7 +22,6 @@ export default class Tx0Modal extends AbstractModal {
 
     this.handleChangeFeeTarget = this.handleChangeFeeTarget.bind(this);
     this.handleChangePoolTx0 = this.handleChangePoolTx0.bind(this);
-    this.handleChangeMixsTargetTx0 = this.handleChangeMixsTargetTx0.bind(this);
     this.handleSubmitTx0 = this.handleSubmitTx0.bind(this)
     this.fetchPoolsForTx0FeeTarget = this.fetchPoolsForTx0FeeTarget.bind(this)
     this.setStateWithTx0Preview = this.setStateWithTx0Preview.bind(this)
@@ -85,16 +83,8 @@ export default class Tx0Modal extends AbstractModal {
     })
   }
 
-  handleChangeMixsTargetTx0(e) {
-    const mixsTarget = parseInt(e.target.value)
-
-    this.setState({
-      mixsTarget: mixsTarget
-    })
-  }
-
   handleSubmitTx0() {
-    mixService.tx0(this.props.utxo, this.state.feeTarget, this.state.poolId, this.state.mixsTarget)
+    mixService.tx0(this.props.utxo, this.state.feeTarget, this.state.poolId)
     this.props.onClose();
   }
 
@@ -132,15 +122,6 @@ export default class Tx0Modal extends AbstractModal {
         </select><br/>
 
         {!this.isError() && <div>
-          Mixs target: (editable later)
-          <select className="form-control col-sm-2" onChange={this.handleChangeMixsTargetTx0} defaultValue={this.state.mixsTarget}>
-            {MIXSTARGET_VALUES.map(value => {
-              value = parseInt(value)
-              const label = utils.mixsTargetLabel(value)
-              return <option value={value}>{label}</option>
-            })}
-          </select><br/>
-
           {this.state.tx0Preview && <div>
             This will generate <strong>{this.state.tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(this.state.tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(this.state.tx0Preview.changeValue)} btc</strong> change
           </div>}

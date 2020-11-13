@@ -153,8 +153,7 @@ code {
   width: 100%;
 }
 
-.utxoPoolSelector .dropdown-item,
-.utxoMixsTargetSelector .dropdown-item {
+.utxoPoolSelector .dropdown-item {
   padding: 0 0.4em;
 }
 

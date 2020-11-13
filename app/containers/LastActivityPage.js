@@ -39,7 +39,7 @@ class LastActivityPage extends Component {
       <div className='lastActivityPage'>
         <div className='row'>
           <div className='col-sm-12'>
-            <h2>Last activity <FontAwesomeIcon icon={Icons.faCircleNotch} spin size='xs' /></h2>
+            <h2>Last activity</h2>
           </div>
         </div>
         <div className='row h-100 d-flex flex-column'>
