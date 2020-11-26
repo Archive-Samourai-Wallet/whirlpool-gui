@@ -260,7 +260,7 @@ class App extends React.Component<Props> {
             {guiUpdate && <div><br/><Alert variant='warning'>GUI update {guiUpdate} available!</Alert></div>}
             {this.routes()}
 
-            {this.state.modalTx0 && <Tx0Modal utxo={this.state.modalTx0} onClose={modalService.close.bind(modalService)}/>}
+            {this.state.modalTx0 && <Tx0Modal utxos={this.state.modalTx0} onClose={modalService.close.bind(modalService)}/>}
             {this.state.modalDeposit && <DepositModal onClose={modalService.close.bind(modalService)}/>}
             {this.state.modalZpub && <ZpubModal zpub={this.state.modalZpub.zpub} account={this.state.modalZpub.account} onClose={modalService.close.bind(modalService)}/>}
 

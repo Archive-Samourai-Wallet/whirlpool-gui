@@ -473,8 +473,7 @@ class InitPage extends Component<Props> {
 
   step3() {
     return <div>
-      <p>Success. <b>whirlpool-gui</b> is now configured.</p>
-      <p>Reconnecting to CLI...</p>
+      Success. Restarting...
     </div>
   }
 }

@@ -94,6 +94,26 @@ td.utxoMessage {
   visibility: visible;
 }
 
+.table-utxos .utxo-controls {
+  visibility: hidden;
+}
+
+.table-utxos tbody tr:hover .utxo-controls {
+  visibility: visible;
+}
+
+.table-utxos tbody input[type='checkbox'] {
+  visibility: hidden;
+}
+
+.table-utxos tbody tr:hover input[type='checkbox'], .table-utxos tbody input:checked {
+  visibility: visible;
+}
+
+.table-generic .select-actions {
+ padding: 0 1em;
+}
+
 .modal-body canvas.qr {
   margin: 0.6em 0 0.2em 0;
 }

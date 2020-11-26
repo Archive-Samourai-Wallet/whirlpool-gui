@@ -84,6 +84,14 @@ class Utils {
     }, 0);
   }
 
+  utxoRefs (utxos) {
+    return utxos.map(utxo => {
+      return {
+      hash: utxo.hash,
+      index: utxo.index
+    }})
+  }
+
   scale (value, precision) {
     const factor = Math.pow(10, precision)
     return Math.floor(value * factor) / factor

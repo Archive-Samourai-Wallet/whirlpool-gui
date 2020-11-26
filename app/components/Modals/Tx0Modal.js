@@ -1,132 +1,113 @@
 // @flow
-import React from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button } from 'react-bootstrap';
 import * as Icon from 'react-feather';
-import utils from '../../services/utils';
 import mixService from '../../services/mixService';
-import AbstractModal from './AbstractModal';
-import poolsService from '../../services/poolsService';
 import { TX0_FEE_TARGET } from '../../const';
+import utils from '../../services/utils';
+import poolsService from '../../services/poolsService';
 import backendService from '../../services/backendService';
+import GenericModal from './GenericModal';
+import ModalUtils from '../../services/modalUtils';
 
-export default class Tx0Modal extends AbstractModal {
-  constructor(props) {
-    const initialState = {
-      pools: undefined,
-      feeTarget: TX0_FEE_TARGET.BLOCKS_2.value,
-      poolId: props.utxo.poolId,
-    }
-    super(props, 'modal-tx0', initialState)
+export default function Tx0Modal(props) {
+  const {utxos, onClose} = props
 
-    console.log('Tx0Modal', initialState)
-
-    this.handleChangeFeeTarget = this.handleChangeFeeTarget.bind(this);
-    this.handleChangePoolTx0 = this.handleChangePoolTx0.bind(this);
-    this.handleSubmitTx0 = this.handleSubmitTx0.bind(this)
-    this.fetchPoolsForTx0FeeTarget = this.fetchPoolsForTx0FeeTarget.bind(this)
-    this.setStateWithTx0Preview = this.setStateWithTx0Preview.bind(this)
-
-    this.fetchPoolsForTx0FeeTarget(initialState.feeTarget)
-  }
-
-  fetchPoolsForTx0FeeTarget(tx0FeeTarget) {
-    // fetch pools for tx0 feeTarget
-    this.loading("Fetching pools for tx0...", poolsService.fetchPoolsForTx0(this.props.utxo.value, tx0FeeTarget).then(pools => {
-      if (pools.length == 0) {
-        this.setError("No pool for this utxo and miner fee.")
+  // use first available poolId
+  const computeInitialPoolId = utxos => {
+    for (const utxo  of utxos) {
+      if (utxo.poolId) {
+        return utxo.poolId
       }
-
-      const defaultPoolId = pools.length > 0 ? pools[0].poolId : undefined
-
-      // preserve active poolId if still available
-      const poolId = (this.state.poolId && pools.filter(p => p.poolId === this.state.poolId).length > 0) ? this.state.poolId : defaultPoolId
-
-      return this.setStateWithTx0Preview({
-        poolId: poolId,
-        pools: pools
-      })
-    }))
-  }
-
-  setStateWithTx0Preview(newState) {
-    const fullState = Object.assign(this.state, newState)
-    if (!fullState.feeTarget || !fullState.poolId) {
-      // cannot preview yet
-      newState.tx0Preview = undefined
-      this.setState(
-        newState
-      )
-      return Promise.resolve()
     }
-    return this.loading("Fetching tx0 data...", backendService.utxo.tx0Preview(this.props.utxo.hash, this.props.utxo.index, fullState.feeTarget, fullState.poolId).then(tx0Preview => {
-      newState.tx0Preview = tx0Preview
-      this.setState(
-        newState
-      )
+  }
+  const [spendValue, setSpendValue] = useState(utils.sumUtxos(utxos))
+  const [poolId, setPoolId] = useState(computeInitialPoolId(utxos))
+  const [feeTarget, setFeeTarget] = useState(TX0_FEE_TARGET.BLOCKS_2.value)
+  const [pools, setPools] = useState([])
+  const [tx0Preview, setTx0Preview] = useState(undefined)
+
+  const modalUtils = new ModalUtils(useState, useEffect)
+
+  // compute spendValue
+  useEffect(() => {
+    const newSpendValue = utils.sumUtxos(utxos)
+    setSpendValue(newSpendValue)
+  }, [utxos])
+
+  // compute available pools
+  useEffect(() => {
+    // fetch pools for tx0 feeTarget
+    modalUtils.load("Fetching pools for tx0...", poolsService.fetchPoolsForTx0(spendValue, feeTarget).then(newPools => {
+      console.log('????newPools',newPools,spendValue)
+      if (newPools.length == 0) {
+        modalUtils.setError("No pool for this utxo and miner fee.")
+      }
+      setPools(newPools)
     }))
+  }, [feeTarget, spendValue])
+
+  // compute selected poolId
+  useEffect(() => {
+    const defaultPoolId = pools.length > 0 ? pools[0].poolId : undefined
+    // preserve selected poolId if still available
+    const newPoolId = (poolId && pools.filter(p => p.poolId === poolId).length > 0) ? poolId : defaultPoolId
+    setPoolId(newPoolId)
+  }, [pools])
+
+  const isTx0Possible = (feeTarget, poolId, utxos) => feeTarget && poolId && utxos && utxos.length > 0
+
+  // tx0 preview
+  useEffect(() => {
+    if (!isTx0Possible(feeTarget, poolId, utxos)) {
+      // cannot preview yet
+      setTx0Preview(undefined)
+    } else {
+      // preview
+      modalUtils.load("Fetching tx0 data...", backendService.tx0.tx0Preview(utxos, feeTarget, poolId).then(newTx0Preview => {
+        setTx0Preview(newTx0Preview)
+      }))
+    }
+  }, [feeTarget, poolId, utxos])
+
+  const submitTx0 = () => {
+    mixService.tx0(utxos, feeTarget, poolId)
+    onClose();
   }
 
-  handleChangeFeeTarget(e) {
-    const feeTarget = e.target.value
+  return <GenericModal dialogClassName='modal-tx0'
+                       modalUtils={modalUtils}
+                       title='Send to Premix'
+                       buttons={isTx0Possible(feeTarget, poolId, utxos) && <Button onClick={submitTx0}>Premix <Icon.ChevronsRight size={12}/></Button>}
+                       onClose={onClose}>
 
-    this.setStateWithTx0Preview({
-      feeTarget: feeTarget
-    })
-    this.fetchPoolsForTx0FeeTarget(feeTarget)
-  }
+    This will send <strong>{utils.toBtc(spendValue)}btc</strong> to Premix and prepare for mixing.<br/>
+    {utxos.length==1 && <div>Spending <strong>{utxos[0].hash}:{utxos[0].index}</strong></div>}
+    {utxos.length>1 && <Alert variant='warning'>You are spending <strong>{utxos.length} utxos</strong> at once, this may degrade your privacy. We recommend premixing utxos individually when possible.</Alert>}
+    <br/>
+    {!modalUtils.isLoading() && <div>
 
-  handleChangePoolTx0(e) {
-    const poolId = e.target.value
-
-    this.setStateWithTx0Preview({
-      poolId: poolId
-    })
-  }
-
-  handleSubmitTx0() {
-    mixService.tx0(this.props.utxo, this.state.feeTarget, this.state.poolId)
-    this.props.onClose();
-  }
-
-  renderTitle() {
-    return <div>
-      Send to Premix
-    </div>
-  }
-
-  renderButtons() {
-    return <Button onClick={this.handleSubmitTx0}>Premix <Icon.ChevronsRight size={12}/></Button>
-  }
-
-  renderBody() {
-    return <div>
-      This will send <strong>{utils.toBtc(this.props.utxo.value)}btc</strong> to Premix and prepare for mixing.<br/>
-      Spending <strong>{this.props.utxo.hash}:{this.props.utxo.index}</strong><br/>
+      {pools && pools.length>0 && <div>
+        Pool fee: {tx0Preview && <span><strong>{utils.toBtc(tx0Preview.feeValue)} btc</strong></span>}
+        <select className="form-control" onChange={e => setPoolId(e.target.value)} defaultValue={poolId}>
+          {pools.map(pool => <option key={pool.poolId} value={pool.poolId}>{pool.poolId} · denomination: {utils.toBtc(pool.denomination)} btc · fee: {utils.toBtc(pool.feeValue)} btc</option>)}
+        </select>
+      </div>}
       <br/>
-      {!this.isLoading() && <div>
 
-        {this.state.pools && this.state.pools.length>0 && <div>
-          Pool fee: {this.state.tx0Preview && <span><strong>{utils.toBtc(this.state.tx0Preview.feeValue)} btc</strong></span>}
-          <select className="form-control" onChange={this.handleChangePoolTx0} defaultValue={this.state.poolId}>
-            {this.state.pools.map(pool => <option key={pool.poolId} value={pool.poolId}>{pool.poolId} · denomination: {utils.toBtc(pool.denomination)} btc · fee: {utils.toBtc(pool.feeValue)} btc</option>)}
-          </select>
-        </div>}
-        <br/>
+      Miner fee: {tx0Preview && <strong>{utils.toBtc(tx0Preview.minerFee)} btc</strong>}
+      <select className="form-control" onChange={e => setFeeTarget(e.target.value)} defaultValue={feeTarget}>
+        {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
+          const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
+          return <option key={feeTargetItem.value} value={feeTargetItem.value}>{feeTargetItem.label}</option>
+        })}
+      </select><br/>
 
-        Miner fee: {this.state.tx0Preview && <strong>{utils.toBtc(this.state.tx0Preview.minerFee)} btc</strong>}
-        <select className="form-control" onChange={this.handleChangeFeeTarget} defaultValue={this.state.feeTarget}>
-          {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
-            const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
-            return <option key={feeTargetItem.value} value={feeTargetItem.value}>{feeTargetItem.label}</option>
-          })}
-        </select><br/>
-
-        {!this.isError() && <div>
-          {this.state.tx0Preview && <div>
-            This will generate <strong>{this.state.tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(this.state.tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(this.state.tx0Preview.changeValue)} btc</strong> change
-          </div>}
+      {!modalUtils.isError() && <div>
+        {tx0Preview && <div>
+          This will generate <strong>{tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(tx0Preview.changeValue)} btc</strong> change
         </div>}
       </div>}
-    </div>
-  }
+    </div>}
+  </GenericModal>
 }

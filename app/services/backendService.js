@@ -151,23 +151,30 @@ class BackendService {
     }
   };
 
-  utxo = {
-    tx0Preview: (hash, index, feeTarget, poolId) => {
+  tx0 = {
+    tx0Preview: (utxos, feeTarget, poolId) => {
+      const inputsRef = utils.utxoRefs(utxos)
       return this.withStatus('Utxo', 'Preview tx0', () =>
-        this.fetchBackendAsJson('/rest/utxos/'+hash+':'+index+'/tx0Preview', 'POST', {
+        this.fetchBackendAsJson('/rest/tx0/preview', 'POST', {
           feeTarget: feeTarget,
-          poolId: poolId
+          poolId: poolId,
+          inputs: inputsRef
         })
       )
     },
-    tx0: (hash, index, feeTarget, poolId) => {
+    tx0: (utxos, feeTarget, poolId) => {
+      const inputsRef = utils.utxoRefs(utxos)
       return this.withStatus('Utxo', 'New tx0', () =>
-        this.fetchBackendAsJson('/rest/utxos/'+hash+':'+index+'/tx0', 'POST', {
+        this.fetchBackendAsJson('/rest/tx0', 'POST', {
           feeTarget: feeTarget,
-          poolId: poolId
+          poolId: poolId,
+          inputs: inputsRef
         })
       )
-    },
+    }
+  };
+
+  utxo = {
     configure: (hash, index, poolId) => {
       return this.withStatus('Utxo', 'Configure utxo', () =>
         this.fetchBackendAsJson('/rest/utxos/'+hash+':'+index, 'POST', {

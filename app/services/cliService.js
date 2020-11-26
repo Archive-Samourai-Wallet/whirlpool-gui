@@ -412,7 +412,7 @@ class CliService {
     }
     if (cliService.getCliUrlError()) {
       // error
-      const status = 'CLI is disconnected'
+      const status = 'Connecting to CLI'
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='red' title={status} />, status)
     }
     // connected & initialization required
@@ -424,10 +424,7 @@ class CliService {
     if (cliService.isConnected()) {
       // ???
       let cliMessage = cliService.getCliMessage()
-      if (!cliMessage) {
-        cliMessage = 'not ready.'
-      }
-      const status = 'Waiting for CLI: '+cliMessage
+      const status = 'Waiting for CLI... '+(cliMessage ? cliMessage:'')
       return format(<FontAwesomeIcon icon={Icons.faWifi} color='lightgreen' title={status}/>, status)
     }
     // not connected
