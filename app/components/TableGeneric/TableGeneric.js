@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BTable from 'react-bootstrap/Table';
 import { useRowSelect, useSortBy, useTable } from 'react-table';
 import * as Icon from 'react-feather';
@@ -20,21 +20,36 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-export default function TableGeneric({ columns, data, size='sm', /*onFetchData, pageIndex, pageSize, filters, */sortBy, getRowStyle=()=>{}, getRowClassName=()=>{}, onSelect=undefined }) {
+export default function TableGeneric({ columns, data, tableKey, size='sm', /*onFetchData, pageIndex, pageSize, filters, */sortBy, getRowStyle=()=>{}, getRowClassName=()=>{}, onSelect=undefined }) {
   if (!data) {
     return
   }
+
+
+  const [lastTableKey, setLastTableKey] = useState()
+  const resetTable = !lastTableKey || lastTableKey != tableKey
+  useEffect(() => {
+    setLastTableKey(tableKey)
+  }, [tableKey])
 
   const initialState = {};
   if (sortBy) {
     initialState.sortBy = sortBy;
   }
+
   // Use the state and functions returned from useTable to build your UI
   const { getTableProps, headerGroups, rows, prepareRow, selectedFlatRows, state: { selectedRowIds } } = useTable(
     {
       columns,
       data,
       initialState,
+      autoResetPage: resetTable,
+      autoResetExpanded: resetTable,
+      autoResetGroupBy: resetTable,
+      autoResetSelectedRows: resetTable,
+      autoResetSortBy: resetTable,
+      autoResetFilters: resetTable,
+      autoResetRowState: resetTable,
     },
     useSortBy,
     useRowSelect,
@@ -60,7 +75,7 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
         },
         ...columns,
       ])
-    }
+    },
   );
 
   // When these table states change, fetch new data!

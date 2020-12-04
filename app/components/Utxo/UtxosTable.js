@@ -29,7 +29,7 @@ const UtxoControls = React.memo(({ utxo }) => {
 });
 
 /* eslint-disable react/prefer-stateless-function */
-const UtxosTable = ({ controls, account, utxos }) => {
+const UtxosTable = ({ controls, account, utxos, tableKey }) => {
 
   const [showReadOnly, setShowReadOnly] = useState(false)
 
@@ -154,6 +154,7 @@ const UtxosTable = ({ controls, account, utxos }) => {
       </div>}
       <div className='table-utxos'>
         <TableGeneric
+          tableKey={tableKey}
           columns={columns}
           data={visibleUtxos}
           sortBy={[{ id: 'lastActivityElapsed', desc: true }]}
