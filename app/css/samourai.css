@@ -1,5 +1,9 @@
 html,body{height:100%;}
 
+.badge-primary {
+  background-color: #700606;
+  border-color: #700606;
+}
 .btn-primary {
   background-color: #700606;
   border-color: #700606;

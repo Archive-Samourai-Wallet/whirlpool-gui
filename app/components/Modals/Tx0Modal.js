@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useState } from 'react';
-import { Alert, Button } from 'react-bootstrap';
+import { Alert, Button, Badge } from 'react-bootstrap';
 import * as Icon from 'react-feather';
 import mixService from '../../services/mixService';
 import { TX0_FEE_TARGET } from '../../const';
@@ -9,6 +9,8 @@ import poolsService from '../../services/poolsService';
 import backendService from '../../services/backendService';
 import GenericModal from './GenericModal';
 import ModalUtils from '../../services/modalUtils';
+import * as Icons from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Tx0Modal(props) {
   const {utxos, onClose} = props
@@ -88,7 +90,9 @@ export default function Tx0Modal(props) {
     {!modalUtils.isLoading() && <div>
 
       {pools && pools.length>0 && <div>
-        Pool fee: {tx0Preview && <span><strong>{utils.toBtc(tx0Preview.feeValue)} btc</strong></span>}
+        Pool fee: {tx0Preview && <span>
+          <strong>{utils.toBtc(tx0Preview.feeValue)} btc</strong> {tx0Preview.feeDiscountPercent>0 && <Badge variant="success">SCODE <FontAwesomeIcon icon={Icons.faLongArrowAltRight} /> {tx0Preview.feeDiscountPercent}% OFF!</Badge>}
+        </span>}
         <select className="form-control" onChange={e => setPoolId(e.target.value)} defaultValue={poolId}>
           {pools.map(pool => <option key={pool.poolId} value={pool.poolId}>{pool.poolId} · denomination: {utils.toBtc(pool.denomination)} btc · fee: {utils.toBtc(pool.feeValue)} btc</option>)}
         </select>
