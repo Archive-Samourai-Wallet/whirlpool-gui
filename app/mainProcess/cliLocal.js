@@ -165,7 +165,7 @@ export class CliLocal {
     const javaInstalled = await this.isJavaInstalled()
     if (!javaInstalled) {
       this.state.valid = false
-      this.state.error = 'Please install JAVA 8+ (OpenJDK recommended)'
+      this.state.error = 'Please install JAVA 8+ required for standalone GUI (OpenJDK recommended)'
       this.updateState(CLILOCAL_STATUS.ERROR)
       await this.stop(gotMutex)
       return
