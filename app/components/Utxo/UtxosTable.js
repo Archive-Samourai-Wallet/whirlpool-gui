@@ -29,7 +29,7 @@ const UtxoControls = React.memo(({ utxo }) => {
 });
 
 /* eslint-disable react/prefer-stateless-function */
-const UtxosTable = ({ controls, account, utxos, tableKey }) => {
+const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
 
   const [showReadOnly, setShowReadOnly] = useState(false)
 
@@ -100,21 +100,28 @@ const UtxosTable = ({ controls, account, utxos, tableKey }) => {
       Header: 'Amount',
       accessor: o => o.value,
       Cell: o => utils.toBtc(o.cell.value)
-    },
-    {
-      Header: 'Pool',
-      accessor: o => o.poolId,
-      Cell: o => {
-        const utxo = o.row.original
-        const allowNoPool = utxo.account === WHIRLPOOL_ACCOUNTS.DEPOSIT;
-        return !isReadOnly(utxo) && <UtxoPoolSelector utxo={utxo} noPool={allowNoPool}/>
+    }
+  );
+  if (pool) {
+    columns.push(
+      {
+        Header: 'Pool',
+        accessor: o => o.poolId,
+        Cell: o => {
+          const utxo = o.row.original
+          return utxo.poolId?utxo.poolId:'-'
+        }
       }
-    },
-    {
-      Header: 'Mixs',
-      accessor: o => o.mixsDone,
-      Cell: o => !isReadOnly(o.row.original) && <span>{o.cell.value}</span>
-    },
+    );
+  }
+  if (mixs) {
+    columns.push({
+        Header: 'Mixs',
+        accessor: o => o.mixsDone,
+        Cell: o => !isReadOnly(o.row.original) && <span>{o.cell.value}</span>
+      });
+  }
+  columns.push(
     {
       Header: 'Status',
       accessor: o => o.status,

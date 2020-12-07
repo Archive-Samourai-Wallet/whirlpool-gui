@@ -44,7 +44,7 @@ class DepositPage extends Component {
         </div>
         <div className='row h-100 d-flex flex-column'>
           <div className='col-sm-12 flex-grow-1 tablescroll'>
-            <UtxosTable tableKey='DepositPage' utxos={utxos} controls={true} account={false}/>
+            <UtxosTable tableKey='DepositPage' utxos={utxos} pool={false} mixs={false} controls={true} account={false}/>
           </div>
         </div>
       </div>

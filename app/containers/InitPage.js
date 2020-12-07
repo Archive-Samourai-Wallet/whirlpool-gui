@@ -473,7 +473,7 @@ class InitPage extends Component<Props> {
 
   step3() {
     return <div>
-      Success. Restarting...
+      Restarting...
     </div>
   }
 }

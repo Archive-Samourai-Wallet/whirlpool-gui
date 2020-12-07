@@ -50,9 +50,13 @@ export const TX0_FEE_TARGET = {
     value: 'BLOCKS_6',
     label: 'Medium priority · in 6 blocks'
   },
+  BLOCKS_12: {
+    value: 'BLOCKS_12',
+    label: 'Low priority · in 12 blocks'
+  },
   BLOCKS_24: {
     value: 'BLOCKS_24',
-    label: 'Low priority · in 24 blocks'
+    label: 'Lowest priority · in 24 blocks'
   }
 }
 

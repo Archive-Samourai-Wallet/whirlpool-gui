@@ -53,8 +53,8 @@ class PoolsService {
     return this.state.pools.pools;
   }
 
-  fetchPoolsForTx0(utxoBalance, tx0FeeTarget) {
-    return backendService.pools.fetchPools(tx0FeeTarget).then(poolsResponse => poolsResponse.pools.filter(pool => utxoBalance >= pool.tx0BalanceMin))
+  fetchPoolsForTx0(utxoBalance, tx0FeeTarget, mixFeeTarget) {
+    return backendService.pools.fetchPools(tx0FeeTarget, mixFeeTarget).then(poolsResponse => poolsResponse.pools.filter(pool => utxoBalance >= pool.tx0BalanceMin))
   }
 
   getPoolsForTx0(utxoBalance) {

@@ -25,7 +25,8 @@ export default function Tx0Modal(props) {
   }
   const [spendValue, setSpendValue] = useState(utils.sumUtxos(utxos))
   const [poolId, setPoolId] = useState(computeInitialPoolId(utxos))
-  const [feeTarget, setFeeTarget] = useState(TX0_FEE_TARGET.BLOCKS_2.value)
+  const [tx0FeeTarget, setTx0FeeTarget] = useState(TX0_FEE_TARGET.BLOCKS_2.value)
+  const [mixFeeTarget, setMixFeeTarget] = useState(TX0_FEE_TARGET.BLOCKS_12.value)
   const [pools, setPools] = useState([])
   const [tx0Preview, setTx0Preview] = useState(undefined)
 
@@ -40,14 +41,13 @@ export default function Tx0Modal(props) {
   // compute available pools
   useEffect(() => {
     // fetch pools for tx0 feeTarget
-    modalUtils.load("Fetching pools for tx0...", poolsService.fetchPoolsForTx0(spendValue, feeTarget).then(newPools => {
-      console.log('????newPools',newPools,spendValue)
+    modalUtils.load("Fetching pools for tx0...", poolsService.fetchPoolsForTx0(spendValue, tx0FeeTarget, mixFeeTarget).then(newPools => {
       if (newPools.length == 0) {
         modalUtils.setError("No pool for this utxo and miner fee.")
       }
       setPools(newPools)
     }))
-  }, [feeTarget, spendValue])
+  }, [tx0FeeTarget, mixFeeTarget, spendValue])
 
   // compute selected poolId
   useEffect(() => {
@@ -57,30 +57,30 @@ export default function Tx0Modal(props) {
     setPoolId(newPoolId)
   }, [pools])
 
-  const isTx0Possible = (feeTarget, poolId, utxos) => feeTarget && poolId && utxos && utxos.length > 0
+  const isTx0Possible = (tx0FeeTarget, mixFeeTarget, poolId, utxos) => tx0FeeTarget && mixFeeTarget && poolId && utxos && utxos.length > 0
 
   // tx0 preview
   useEffect(() => {
-    if (!isTx0Possible(feeTarget, poolId, utxos)) {
+    if (!isTx0Possible(tx0FeeTarget, mixFeeTarget, poolId, utxos)) {
       // cannot preview yet
       setTx0Preview(undefined)
     } else {
       // preview
-      modalUtils.load("Fetching tx0 data...", backendService.tx0.tx0Preview(utxos, feeTarget, poolId).then(newTx0Preview => {
+      modalUtils.load("Fetching tx0 data...", backendService.tx0.tx0Preview(utxos, tx0FeeTarget, mixFeeTarget, poolId).then(newTx0Preview => {
         setTx0Preview(newTx0Preview)
       }))
     }
-  }, [feeTarget, poolId, utxos])
+  }, [tx0FeeTarget, mixFeeTarget, poolId, utxos])
 
   const submitTx0 = () => {
-    mixService.tx0(utxos, feeTarget, poolId)
+    mixService.tx0(utxos, tx0FeeTarget, mixFeeTarget, poolId)
     onClose();
   }
 
   return <GenericModal dialogClassName='modal-tx0'
                        modalUtils={modalUtils}
                        title='Send to Premix'
-                       buttons={isTx0Possible(feeTarget, poolId, utxos) && <Button onClick={submitTx0}>Premix <Icon.ChevronsRight size={12}/></Button>}
+                       buttons={isTx0Possible(tx0FeeTarget, mixFeeTarget, poolId, utxos) && <Button onClick={submitTx0}>Premix <Icon.ChevronsRight size={12}/></Button>}
                        onClose={onClose}>
 
     This will send <strong>{utils.toBtc(spendValue)}btc</strong> to Premix and prepare for mixing.<br/>
@@ -99,13 +99,30 @@ export default function Tx0Modal(props) {
       </div>}
       <br/>
 
-      Miner fee: {tx0Preview && <strong>{utils.toBtc(tx0Preview.minerFee)} btc</strong>}
-      <select className="form-control" onChange={e => setFeeTarget(e.target.value)} defaultValue={feeTarget}>
-        {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
-          const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
-          return <option key={feeTargetItem.value} value={feeTargetItem.value}>{feeTargetItem.label}</option>
-        })}
-      </select><br/>
+      <div className='row'>
+        <div className='col-sm-6'>
+          Tx0 miner fee: {tx0Preview && <strong>{utils.toBtc(tx0Preview.tx0MinerFee)} btc</strong>}
+          <select className="form-control" onChange={e => setTx0FeeTarget(e.target.value)} defaultValue={tx0FeeTarget}>
+            {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
+              const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
+              return <option key={feeTargetItem.value} value={feeTargetItem.value}>{feeTargetItem.label}</option>
+            })}
+          </select>
+          <small className='text-muted'>Tx0 confirmation time (delay before start mixing)</small>
+        </div>
+
+        <div className='col-sm-6'>
+          Mix miner fee contribution: {tx0Preview && <strong>{tx0Preview.nbPremix} x {utils.toBtc(tx0Preview.premixMinerFee)} btc = {utils.toBtc(tx0Preview.mixMinerFee)} btc</strong>}
+          <select className="form-control" onChange={e => setMixFeeTarget(e.target.value)} defaultValue={mixFeeTarget}>
+            {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
+              const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
+              return <option key={feeTargetItem.value} value={feeTargetItem.value}>{feeTargetItem.label}</option>
+            })}
+          </select>
+          <small className='text-muted'>Mix speed and confirmation time (delay for completing mixing)</small>
+        </div>
+      </div>
+      <br/>
 
       {!modalUtils.isError() && <div>
         {tx0Preview && <div>

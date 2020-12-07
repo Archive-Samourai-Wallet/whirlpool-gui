@@ -112,9 +112,12 @@ class BackendService {
   };
 
   pools = {
-    fetchPools: (tx0FeeTarget=undefined) => {
+    fetchPools: (tx0FeeTarget=undefined, mixFeeTarget=undefined) => {
       return this.withStatus('Pools', 'Fetch pools', () =>
-          this.fetchBackendAsJson('/rest/pools'+(tx0FeeTarget!=undefined?'?tx0FeeTarget='+tx0FeeTarget:''), 'GET')
+          this.fetchBackendAsJson('/rest/pools?true=true'
+            +(tx0FeeTarget!=undefined?'&tx0FeeTarget='+tx0FeeTarget:'')
+            +(mixFeeTarget!=undefined?'&mixFeeTarget='+mixFeeTarget:'')
+            , 'GET')
         , 'pools.fetchPools', true)
     }
   };
@@ -152,21 +155,23 @@ class BackendService {
   };
 
   tx0 = {
-    tx0Preview: (utxos, feeTarget, poolId) => {
+    tx0Preview: (utxos, tx0FeeTarget, mixFeeTarget, poolId) => {
       const inputsRef = utils.utxoRefs(utxos)
       return this.withStatus('Utxo', 'Preview tx0', () =>
         this.fetchBackendAsJson('/rest/tx0/preview', 'POST', {
-          feeTarget: feeTarget,
+          tx0FeeTarget: tx0FeeTarget,
+          mixFeeTarget: mixFeeTarget,
           poolId: poolId,
           inputs: inputsRef
         })
       )
     },
-    tx0: (utxos, feeTarget, poolId) => {
+    tx0: (utxos, tx0FeeTarget, mixFeeTarget, poolId) => {
       const inputsRef = utils.utxoRefs(utxos)
       return this.withStatus('Utxo', 'New tx0', () =>
         this.fetchBackendAsJson('/rest/tx0', 'POST', {
-          feeTarget: feeTarget,
+          tx0FeeTarget: tx0FeeTarget,
+          mixFeeTarget: mixFeeTarget,
           poolId: poolId,
           inputs: inputsRef
         })

@@ -39,7 +39,7 @@ export default class PostmixPage extends Component<Props> {
         </div>
         <div className='row h-100 d-flex flex-column'>
           <div className='col-sm-12 flex-grow-1 tablescroll'>
-            <UtxosTable tableKey='PostmixPage' utxos={utxos} controls={true} account={false}/>
+            <UtxosTable tableKey='PostmixPage' utxos={utxos} pool={true} mixs={true} controls={true} account={false}/>
           </div>
         </div>
       </div>
