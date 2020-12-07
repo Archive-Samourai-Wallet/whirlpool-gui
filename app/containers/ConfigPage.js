@@ -19,7 +19,8 @@ export default class ConfigPage extends Component<Props> {
       info: undefined,
       error: undefined,
       cliConfig: undefined,
-      showDevelopersConfig: false
+      showDevelopersConfig: false,
+      showAdvancedConfig: false
     }
 
     this.cliConfigService = new CliConfigService(cliConfig => this.setState({
@@ -30,6 +31,7 @@ export default class ConfigPage extends Component<Props> {
     this.onChangeCliConfig = this.onChangeCliConfig.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.toogleDevelopersConfig = this.toogleDevelopersConfig.bind(this)
+    this.toogleAdvancedConfig = this.toogleAdvancedConfig.bind(this)
   }
 
   onResetConfig() {
@@ -69,6 +71,12 @@ export default class ConfigPage extends Component<Props> {
     })
   }
 
+  toogleAdvancedConfig() {
+    this.setState({
+      showAdvancedConfig: !this.state.showAdvancedConfig
+    })
+  }
+
   render() {
     if (!this.state.cliConfig) {
       return <small>Fetching CLI configuration...</small>
@@ -95,7 +103,7 @@ export default class ConfigPage extends Component<Props> {
           </div>
 
           <Card>
-            <Card.Header>CLI General configuration</Card.Header>
+            <Card.Header>General configuration</Card.Header>
             <Card.Body>
               <div className="form-group row">
                 <label htmlFor="autoMix" className="col-sm-2 col-form-label">Auto-MIX</label>
@@ -140,12 +148,57 @@ export default class ConfigPage extends Component<Props> {
             </Card.Body>
           </Card>
 
-          <small><a onClick={this.toogleDevelopersConfig} style={{cursor:'pointer'}}>Toggle developers settings</a></small><br/>
           <br/>
 
-          {this.state.showDevelopersConfig && <Card>
-            <Card.Header>CLI Developers settings</Card.Header>
-            <Card.Body>
+          <Card>
+            <Card.Header><a onClick={this.toogleAdvancedConfig} style={{cursor:'pointer'}}>Advanced settings</a></Card.Header>
+            {this.state.showAdvancedConfig && <Card.Body>
+              <div className="form-group row">
+                <label htmlFor="tx0MaxOutputs" className="col-sm-2 col-form-label">TX0 max outputs</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0MaxOutputs = myValue)
+                }} defaultValue={cliConfig.mix.tx0MaxOutputs} id="tx0MaxOutputs"/>
+                <label className='col-form-label col-sm-5 text-muted'>Max premixes per TX0 (0 = max limit)</label>
+              </div>
+
+              <div className="form-group row">
+                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 fake factor</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
+                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor"/>
+                <label className='col-form-label col-sm-5 text-muted'>Random factor for generating a second change output to simulate a multi-user TX0 (0 = never, 1 = always, 2 = 1/2 probability, 3 = 1/3 probability...)</label>
+              </div>
+
+              <div className="form-group row">
+                <label htmlFor="tx0FakeOutputMinValue" className="col-sm-2 col-form-label">TX0 min change</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputMinValue = myValue)
+                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue"/>
+                <label className='col-form-label col-sm-5 text-muted'>Minimum value per change output when using TX0 fake output</label>
+              </div>
+
+              <div className="form-group row">
+                <label htmlFor="proxy" className="col-sm-2 col-form-label">CLI proxy</label>
+                <input type="text" className='form-control col-sm-3' onChange={e => {
+                  const myValue = e.target.value
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.proxy = myValue)
+                }} defaultValue={cliConfig.proxy} id="proxy"/>
+                <label className='col-form-label col-sm-7 text-muted'>
+                  Set it only when blocked by a firewall (this is not <i>GUI Tor proxy</i>).<br/>
+                  <code>socks://host:port</code> or <code>http://host:port</code>
+                </label>
+              </div>
+            </Card.Body>}
+          </Card>
+
+          <br/>
+
+          <Card>
+            <Card.Header><a onClick={this.toogleDevelopersConfig} style={{cursor:'pointer'}}>Developers settings</a></Card.Header>
+            {this.state.showDevelopersConfig && <Card.Body>
 
               <div className="form-group row">
                 <label htmlFor="clientDelay" className="col-sm-2 col-form-label">Client delay</label>
@@ -154,15 +207,6 @@ export default class ConfigPage extends Component<Props> {
                   myThis.onChangeCliConfig(cliConfig => cliConfig.mix.clientDelay = myValue)
                 }} defaultValue={cliConfig.mix.clientDelay} id="clientDelay"/>
                 <label className='col-form-label col-sm-5 text-muted'>Delay (in seconds) between each client connection</label>
-              </div>
-
-              <div className="form-group row">
-                <label htmlFor="tx0MaxOutputs" className="col-sm-2 col-form-label">TX0 max outputs</label>
-                  <input type="number" className='form-control col-sm-3' onChange={e => {
-                    const myValue = parseInt(e.target.value)
-                    myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0MaxOutputs = myValue)
-                  }} defaultValue={cliConfig.mix.tx0MaxOutputs} id="tx0MaxOutputs"/>
-                <label className='col-form-label col-sm-5 text-muted'>Max premixes per TX0 (0 = max limit)</label>
               </div>
 
               {clientsPerPoolEditable && <div className="form-group row">
@@ -174,20 +218,8 @@ export default class ConfigPage extends Component<Props> {
                 <label className='col-form-label col-sm-5 text-muted'>Max simultaneous mixing clients per pool</label>
               </div>}
 
-              <div className="form-group row">
-                <label htmlFor="proxy" className="col-sm-2 col-form-label">CLI proxy</label>
-                  <input type="text" className='form-control col-sm-3' onChange={e => {
-                    const myValue = e.target.value
-                    myThis.onChangeCliConfig(cliConfig => cliConfig.proxy = myValue)
-                  }} defaultValue={cliConfig.proxy} id="proxy"/>
-                  <label className='col-form-label col-sm-7 text-muted'>
-                    Set it only when blocked by a firewall (this is not <i>GUI Tor proxy</i>).<br/>
-                    <code>socks://host:port</code> or <code>http://host:port</code>
-                  </label>
-              </div>
-
-            </Card.Body>
-          </Card>}
+            </Card.Body>}
+          </Card>
           <br/>
 
           <div className="form-group row">
