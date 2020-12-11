@@ -163,7 +163,7 @@ export default class ConfigPage extends Component<Props> {
               </div>
 
               <div className="form-group row">
-                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 fake factor</label>
+                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
                 <input type="number" className='form-control col-sm-3' onChange={e => {
                   const myValue = parseInt(e.target.value)
                   myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)

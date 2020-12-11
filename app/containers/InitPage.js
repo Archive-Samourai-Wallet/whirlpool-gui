@@ -426,7 +426,7 @@ class InitPage extends Component<Props> {
           </div>}
         </div>
       </div>
-      {this.navButtons(this.state.pairingPayload)}
+      {this.navButtons(this.state.pairingPayload && !this.state.pairingError)}
     </div>
   }
 

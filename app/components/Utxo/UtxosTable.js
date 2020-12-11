@@ -121,13 +121,16 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
         Cell: o => !isReadOnly(o.row.original) && <span>{o.cell.value}</span>
       });
   }
-  columns.push(
-    {
-      Header: 'Status',
-      accessor: o => o.status,
-      Cell: o => !isReadOnly(o.row.original) && <span className='text-primary'>{utils.statusLabel(o.row.original)}</span>
-    },
-    {
+  if (pool) {
+    columns.push(
+      {
+        Header: 'Status',
+        accessor: o => o.status,
+        Cell: o => !isReadOnly(o.row.original) &&
+          <span className='text-primary'>{utils.statusLabel(o.row.original)}</span>
+      });
+  }
+  columns.push({
       Header: 'Last activity',
       accessor: o => o.lastActivityElapsed,
       Cell: o => {
