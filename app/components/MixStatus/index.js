@@ -23,16 +23,13 @@ class MixStatus extends React.PureComponent {
           <div className='col-sm-10 mixThreads'>
             <div className='row no-gutters justify-content-center'>
               {mixService.getThreads().map((utxo,i) => {
-                const pool = poolsService.findPool(utxo.poolId)
-                const poolInfo = pool ? <small> • {pool.nbConfirmed}/{pool.mixAnonymitySet} peers</small> : undefined
                 const message = utils.utxoMessage(utxo)
                 let progressLabel = <div>
-                  <small>{utils.toBtc(utxo.value)}</small> <strong>{utils.statusLabel(utxo)}</strong>{poolInfo ? poolInfo : ''}<br/>
+                  <small>{utils.toBtc(utxo.value)}</small> <strong>{utils.statusLabel(utxo)}</strong><br/>
                   {message && <small>{message}</small>}
                 </div>
                 const progressPercent = utxo.progressPercent ? utxo.progressPercent : 0
                 const progressVariant = utxo.progressPercent ? undefined : 'info'
-                const poolProgress = pool ? (100 - progressPercent) * poolsService.computePoolProgress(pool) / 100 : undefined
 
                 return <div className='col-sm-3 align-self-center' key={i}>
                     <div className='row no-gutters'>
@@ -42,7 +39,6 @@ class MixStatus extends React.PureComponent {
                         <ProgressBar>
                           <ProgressBar animated now={progressPercent} variant={progressVariant} key={1}
                                        className={'progressBarSamourai' + (utxo.mixStep === 'CONNECTING' ? ' connecting' : '')}/>
-                          {poolProgress != undefined && <ProgressBar variant="warning" now={poolProgress} key={2}/>}
                         </ProgressBar>
                       </div>
                     </div>

@@ -1,7 +1,7 @@
 import ifNot from 'if-not-running';
 import backendService from './backendService';
 
-const REFRESH_RATE = 30000;
+const REFRESH_RATE = 600000;
 class PoolsService {
   constructor () {
     this.setState = undefined
@@ -71,13 +71,6 @@ class PoolsService {
   findPool(poolId) {
     const results = this.getPools().filter(pool => poolId === pool.poolId)
     return (results.length > 0 ? results[0] : undefined)
-  }
-
-  computePoolProgress(pool) {
-    if (!pool) {
-      return undefined
-    }
-    return pool.nbConfirmed / pool.mixAnonymitySet * 100
   }
 
   fetchState () {
