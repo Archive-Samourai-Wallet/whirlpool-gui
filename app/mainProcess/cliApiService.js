@@ -19,7 +19,7 @@ export class CliApiService {
     }
     this.apiMode = apiMode
     this.apiVersion = apiVersion
-    logger.info('Initializing CliApiService: '+this.getVersionName())
+    logger.info('Initializing CliApiService: apiVersion='+this.getVersionName()+", apiMode="+apiMode)
   }
 
   getApiMode() {

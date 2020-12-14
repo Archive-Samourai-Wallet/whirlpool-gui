@@ -4,7 +4,7 @@ import electron from "electron";
 
 export const computeLogPath = (fileName) => {
   const app = (electron.app || electron.remote.app)
-  return findLogPath(app.getName(), fileName)
+  return findLogPath(app.name, fileName)
 }
 
 const GUI_LOG_FILENAME='whirlpool-gui.log'

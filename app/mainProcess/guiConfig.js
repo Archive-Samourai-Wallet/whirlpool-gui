@@ -87,8 +87,10 @@ class GuiConfig {
       }
       // invalid
       logger.error("guiConfig is invalid: "+GUI_CONFIG_FILEPATH)
+    } else {
+      // or not existing
+      logger.info("guiConfig is empty: " + GUI_CONFIG_FILEPATH)
     }
-    // or not existing
     return false
   }
 
