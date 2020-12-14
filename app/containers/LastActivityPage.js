@@ -11,6 +11,7 @@ import walletService from '../services/walletService';
 import mixService from '../services/mixService';
 import poolsService from '../services/poolsService';
 import UtxosTable from '../components/Utxo/UtxosTable';
+import utils from '../services/utils';
 
 class LastActivityPage extends Component {
 
@@ -21,14 +22,8 @@ class LastActivityPage extends Component {
   // tx0
 
   render() {
-    if (!walletService.isReady()) {
-      return <small>Fetching wallet...</small>
-    }
-    if (!mixService.isReady()) {
-      return <small>Fetching mix state...</small>
-    }
-    if (!poolsService.isReady()) {
-      return <small>Fetching pools...</small>
+    if (!walletService.isReady() || !mixService.isReady() || !poolsService.isReady()) {
+      return utils.spinner()
     }
 
     const utxosDeposit = walletService.getUtxosDeposit().filter(a =>  a.lastActivityElapsed ? true : false)

@@ -20,7 +20,6 @@ export default class ConfigPage extends Component<Props> {
       error: undefined,
       cliConfig: undefined,
       showDevelopersConfig: false,
-      showAdvancedConfig: false
     }
 
     this.cliConfigService = new CliConfigService(cliConfig => this.setState({
@@ -31,7 +30,6 @@ export default class ConfigPage extends Component<Props> {
     this.onChangeCliConfig = this.onChangeCliConfig.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.toogleDevelopersConfig = this.toogleDevelopersConfig.bind(this)
-    this.toogleAdvancedConfig = this.toogleAdvancedConfig.bind(this)
   }
 
   onResetConfig() {
@@ -71,15 +69,9 @@ export default class ConfigPage extends Component<Props> {
     })
   }
 
-  toogleAdvancedConfig() {
-    this.setState({
-      showAdvancedConfig: !this.state.showAdvancedConfig
-    })
-  }
-
   render() {
     if (!this.state.cliConfig) {
-      return <small>Fetching CLI configuration...</small>
+      return <small>Loading configuration...</small>
     }
     const cliConfig = this.state.cliConfig
     if (!cliConfig.mix) {
@@ -151,8 +143,8 @@ export default class ConfigPage extends Component<Props> {
           <br/>
 
           <Card>
-            <Card.Header><a onClick={this.toogleAdvancedConfig} style={{cursor:'pointer'}}>Advanced settings</a></Card.Header>
-            {this.state.showAdvancedConfig && <Card.Body>
+            <Card.Header>Advanced settings</Card.Header>
+            <Card.Body>
               <div className="form-group row">
                 <label htmlFor="tx0MaxOutputs" className="col-sm-2 col-form-label">TX0 max outputs</label>
                 <input type="number" className='form-control col-sm-3' onChange={e => {
@@ -172,15 +164,6 @@ export default class ConfigPage extends Component<Props> {
               </div>
 
               <div className="form-group row">
-                <label htmlFor="tx0FakeOutputMinValue" className="col-sm-2 col-form-label">TX0 min change</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputMinValue = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue"/>
-                <label className='col-form-label col-sm-5 text-muted'>Minimum value per change output when using TX0 fake output</label>
-              </div>
-
-              <div className="form-group row">
                 <label htmlFor="proxy" className="col-sm-2 col-form-label">CLI proxy</label>
                 <input type="text" className='form-control col-sm-3' onChange={e => {
                   const myValue = e.target.value
@@ -191,7 +174,7 @@ export default class ConfigPage extends Component<Props> {
                   <code>socks://host:port</code> or <code>http://host:port</code>
                 </label>
               </div>
-            </Card.Body>}
+            </Card.Body>
           </Card>
 
           <br/>
@@ -217,6 +200,15 @@ export default class ConfigPage extends Component<Props> {
                 }} defaultValue={cliConfig.mix.clientsPerPool} id="clientsPerPool"/>
                 <label className='col-form-label col-sm-5 text-muted'>Max simultaneous mixing clients per pool</label>
               </div>}
+
+              <div className="form-group row">
+                <label htmlFor="tx0FakeOutputMinValue" className="col-sm-2 col-form-label">TX0 min change</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputMinValue = myValue)
+                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue"/>
+                <label className='col-form-label col-sm-5 text-muted'>Minimum value per change output when using TX0 fake output</label>
+              </div>
 
             </Card.Body>}
           </Card>

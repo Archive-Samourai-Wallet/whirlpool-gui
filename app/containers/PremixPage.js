@@ -15,14 +15,8 @@ export default class PremixPage extends Component<Props> {
   props: Props;
 
   render() {
-    if (!walletService.isReady()) {
-      return <small>Fetching wallet...</small>
-    }
-    if (!mixService.isReady()) {
-      return <small>Fetching mix state...</small>
-    }
-    if (!poolsService.isReady()) {
-      return <small>Fetching pools...</small>
+    if (!walletService.isReady() || !mixService.isReady() || !poolsService.isReady()) {
+      return utils.spinner()
     }
 
     const utxos = walletService.getUtxosPremix()

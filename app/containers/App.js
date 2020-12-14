@@ -147,7 +147,7 @@ class App extends React.Component<Props> {
           </div>}
         </div>
         <div className='col-md-10'>
-          {cliService.isLoggedIn() && (mixService.isReady() && poolsService.isReady() ? <MixStatus mixState={this.props.mix} poolsState={this.props.pools} mixActions={this.props.mixActions}/> : <small>Fetching mix state...</small>)}
+          {cliService.isLoggedIn() && (mixService.isReady() && poolsService.isReady() ? <MixStatus mixState={this.props.mix} poolsState={this.props.pools} mixActions={this.props.mixActions}/> : utils.spinner())}
           {cliService.isCliStatusReady() && !cliService.isLoggedIn() && <div className='text-center'>
             <Link to={routes.HOME}>
               <FontAwesomeIcon icon={Icons.faLock} size='3x' color='#CCC'/>
@@ -239,7 +239,7 @@ class App extends React.Component<Props> {
               </ul>
 
               {cliService.isLoggedIn() && !walletService.isReady() && <div>
-                <small>Fetching wallet...</small>
+                {utils.spinner()}
               </div>}
               <div className="footerNav">
                 <div>

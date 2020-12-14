@@ -29,9 +29,9 @@ export default class DepositModal extends AbstractModal {
       })
     }
     if (distinct) {
-      this.loading("Fetching another deposit address...", walletService.fetchDepositAddressDistinct(this.state.depositAddress).then(setState))
+      this.loading("Loading...", walletService.fetchDepositAddressDistinct(this.state.depositAddress).then(setState))
     } else {
-      this.loading("Fetching deposit address...", walletService.fetchDepositAddress().then(setState))
+      this.loading("Loading...", walletService.fetchDepositAddress().then(setState))
     }
   }
 

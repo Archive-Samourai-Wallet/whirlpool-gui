@@ -89,11 +89,10 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
     {
       Header: 'Confs',
       accessor: o => o.confirmations,
-      className: 'text-muted',
       Cell: o => o.cell.value > 0 ? (
           <small title="confirmations">{o.cell.value}</small>
         ) : (
-          <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed'/>
+          <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed' className='text-muted'/>
         )
     },
     {

@@ -158,8 +158,7 @@ class Utils {
   }
 
   statusLabelText(utxo) {
-    if ((utxo.status === UTXO_STATUS.READY && utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
-      || utxo.status === UTXO_STATUS.MIX_QUEUE || utxo.status === UTXO_STATUS.MIX_SUCCESS) {
+    if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX) {
       return 'MIXED'
     }
     if (utxo.mixableStatus === MIXABLE_STATUS.NO_POOL) {
@@ -171,6 +170,7 @@ class Utils {
       case UTXO_STATUS.TX0: return 'TX0'
       case UTXO_STATUS.TX0_SUCCESS: return 'TX0:SUCCESS'
       case UTXO_STATUS.TX0_FAILED: return 'TX0:ERROR'
+      case UTXO_STATUS.MIX_QUEUE: return 'QUEUE'
       case UTXO_STATUS.MIX_STARTED: return 'MIXING'
       case UTXO_STATUS.MIX_FAILED: return 'MIX:FAILED'
       default: return '?'
@@ -236,7 +236,7 @@ class Utils {
     if (len < 10) {
       return str
     }
-    return str.substring(0, 5)+'...'+str.substring(len - 3)
+    return str.substring(0, 5)+'...'+str.substring(len - 4)
   }
 
   durationElapsed(time) {
@@ -258,6 +258,10 @@ class Utils {
     document.execCommand('copy');
 
     document.body.removeChild(el);
+  }
+
+  spinner() {
+    return <FontAwesomeIcon icon={Icons.faSpinner} spin size='xs' />
   }
 }
 

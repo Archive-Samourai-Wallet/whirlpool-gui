@@ -16,7 +16,7 @@ class PoolsPage extends Component {
 
   render() {
     if (!poolsService.isReady()) {
-      return <small>Fetching pools...</small>
+      return utils.spinner()
     }
 
     return (
