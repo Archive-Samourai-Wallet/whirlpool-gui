@@ -134,7 +134,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
       accessor: o => o.lastActivityElapsed,
       Cell: o => {
         const lastActivity = mixService.computeLastActivity(o.row.original);
-        return lastActivity ? lastActivity : '-'
+        return <small>{lastActivity ? lastActivity : '-'}</small>
       }
     },
     {

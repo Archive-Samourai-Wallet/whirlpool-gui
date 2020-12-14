@@ -134,7 +134,7 @@ class Utils {
     if (utxo.status === UTXO_STATUS.MIX_FAILED) {
       return <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='MIX FAILED'/>
     }
-    if ((utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX && utxo.mixsDone >= 1 && utxo.mixableStatus === MIXABLE_STATUS.MIXABLE) || utxo.status === UTXO_STATUS.MIX_SUCCESS) {
+    if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX) {
       return <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>
     }
 
@@ -146,7 +146,7 @@ class Utils {
       case MIXABLE_STATUS.NO_POOL:
         return <span></span>
       case MIXABLE_STATUS.UNCONFIRMED:
-        return <FontAwesomeIcon icon={Icons.faClock} size='xs' color='orange' title='Unconfirmed'/>
+        return <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed' className='text-muted'/>
     }
     return undefined
   }
