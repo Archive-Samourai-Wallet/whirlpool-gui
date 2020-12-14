@@ -237,10 +237,6 @@ class App extends React.Component<Props> {
                   </Link>
                 </li>
               </ul>
-
-              {cliService.isLoggedIn() && !walletService.isReady() && <div>
-                {utils.spinner()}
-              </div>}
               <div className="footerNav">
                 <div>
                   {cliService.isConnected() && <small>{cliService.getServerName()}</small>}

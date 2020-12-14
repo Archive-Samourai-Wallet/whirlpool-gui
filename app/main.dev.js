@@ -13,12 +13,12 @@
 import { app, BrowserWindow, ipcMain, systemPreferences } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import path from 'path';
 import MenuBuilder from './menu';
 import { CliLocal } from './mainProcess/cliLocal';
 import fs from "fs";
 import { GUI_LOG_FILE, IPC_CAMERA } from './const';
 import guiConfig from './mainProcess/guiConfig';
-
 
 export default class AppUpdater {
   constructor() {
@@ -92,18 +92,18 @@ else {
       }
     });
 
+    const EXTRA_RESOURCES_PATH = app.isPackaged
+      ? path.join(process.resourcesPath, 'extraResources')
+      : path.join(__dirname, '../extraResources');
+
+    const getExtraResource = (resourceFilename: string): string => {
+      return path.join(EXTRA_RESOURCES_PATH, resourceFilename);
+    }
+
     // fix Linux icon
     const os = require('os');
-    switch (os.platform()) {
-      case 'darwin':
-        mainWindow.setIcon('resources/icon.icns');
-        break;
-      case 'win32':
-        mainWindow.setIcon('resources/icon.ico');
-        break;
-      default:
-        mainWindow.setIcon('resources/icon.png');
-        break;
+    if (os.platform() === 'linux') {
+      mainWindow.setIcon(getExtraResource("icon.png"));
     }
 
     // GUI proxy
