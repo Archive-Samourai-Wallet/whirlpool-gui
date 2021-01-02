@@ -101,7 +101,7 @@ export default function Tx0Modal(props) {
 
       <div className='row'>
         <div className='col-sm-6'>
-          Tx0 miner fee: {tx0Preview && <strong>{utils.toBtc(tx0Preview.tx0MinerFee)} btc</strong>}
+          Tx0 miner fee: {tx0Preview && <span><strong>{utils.toBtc(tx0Preview.tx0MinerFee)} btc</strong> <small className='text-muted'> · {tx0Preview.tx0MinerFeePrice} sats/b</small></span>}
           <select className="form-control" onChange={e => setTx0FeeTarget(e.target.value)} defaultValue={tx0FeeTarget}>
             {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
               const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]
@@ -112,7 +112,7 @@ export default function Tx0Modal(props) {
         </div>
 
         <div className='col-sm-6'>
-          Mix miner fee contribution: {tx0Preview && <strong>{tx0Preview.nbPremix} x {utils.toBtc(tx0Preview.premixMinerFee)} btc = {utils.toBtc(tx0Preview.mixMinerFee)} btc</strong>}
+          Mix miner fee contribution: {tx0Preview && <span><strong>{tx0Preview.nbPremix} x {utils.toBtc(tx0Preview.premixMinerFee)} btc = {utils.toBtc(tx0Preview.mixMinerFee)} btc</strong> <small className='text-muted'> · {tx0Preview.mixMinerFeePrice} sats/b</small></span>}
           <select className="form-control" onChange={e => setMixFeeTarget(e.target.value)} defaultValue={mixFeeTarget}>
             {Object.keys(TX0_FEE_TARGET).map(feeTargetKey => {
               const feeTargetItem = TX0_FEE_TARGET[feeTargetKey]

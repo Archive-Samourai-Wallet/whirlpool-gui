@@ -157,10 +157,6 @@ code {
   width: 100%;
 }
 
-.utxoPoolSelector .dropdown-item {
-  padding: 0 0.4em;
-}
-
 .table-utxos .dropdown .btn {
   padding:0;
 }

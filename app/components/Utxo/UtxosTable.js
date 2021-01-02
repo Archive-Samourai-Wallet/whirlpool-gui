@@ -9,10 +9,9 @@ import mixService from '../../services/mixService';
 import * as Icon from 'react-feather';
 import utils, { MIXABLE_STATUS, UTXO_STATUS, WHIRLPOOL_ACCOUNTS } from '../../services/utils';
 import LinkExternal from '../Utils/LinkExternal';
-import UtxoPoolSelector from './UtxoPoolSelector';
 import modalService from '../../services/modalService';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import {FormCheck} from 'react-bootstrap';
+import { FormCheck } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableGeneric from '../TableGeneric/TableGeneric';
 
@@ -80,7 +79,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
             <Icon.Clipboard
               className='clipboard-icon'
               size={18}
-              onClick={() => copyToClipboard(utxo.address)}
+              onClick={() => utils.copyToClipboard(utxo.address)}
             />
           </span>
         </small>

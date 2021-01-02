@@ -180,13 +180,6 @@ class BackendService {
   };
 
   utxo = {
-    configure: (hash, index, poolId) => {
-      return this.withStatus('Utxo', 'Configure utxo', () =>
-        this.fetchBackendAsJson('/rest/utxos/'+hash+':'+index, 'POST', {
-          poolId: poolId
-        })
-      )
-    },
     startMix: (hash, index) => {
       return this.withStatus('Utxo', 'Start mixing', () =>
         this.fetchBackend('/rest/utxos/'+hash+':'+index+'/startMix', 'POST')
