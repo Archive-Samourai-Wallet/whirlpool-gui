@@ -1,6 +1,6 @@
 export default class ModalUtils {
   constructor(useState, useEffect) {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState([])
     this.loading = loading
     this.setLoading = setLoading
 
@@ -20,7 +20,11 @@ export default class ModalUtils {
   }
 
   isLoading() {
-    return this.loading
+    return this.loading.length > 0
+  }
+
+  getLoadingMessage() {
+    return this.loading[this.loading.length-1]
   }
 
   isError() {
@@ -28,11 +32,15 @@ export default class ModalUtils {
   }
 
   load(loadingMessage, promise) {
-    this.loading = loadingMessage
-    this.error = undefined
+    const loading1 = this.loading
+    loading1.push(loadingMessage)
+    this.setLoading(loading1)
+    this.setError(undefined)
 
     return promise.then(result => {
-      this.setLoading(false)
+      const loading2 = this.loading
+      loading2.pop()
+      this.setLoading(loading2)
       if (this.error) {
         this.setError(false)
       }

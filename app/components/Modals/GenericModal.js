@@ -15,7 +15,7 @@ export default function GenericModal(props) {
       </Modal.Body>
       <Modal.Footer>
         {modalUtils.isLoading() && <div className="modal-status">
-          <div className="spinner-border spinner-border-sm" role="status"/> {modalUtils.loading}
+          <div className="spinner-border spinner-border-sm" role="status"/> {modalUtils.getLoadingMessage()}
         </div>}
         {!modalUtils.isLoading() && modalUtils.isError() && <div className="modal-status">
           <Alert variant='danger'>{modalUtils.error}</Alert>

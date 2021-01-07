@@ -61,10 +61,10 @@ export default function Tx0Modal(props) {
 
   // tx0 preview
   useEffect(() => {
-    if (!isTx0Possible(tx0FeeTarget, mixFeeTarget, poolId, utxos)) {
-      // cannot preview yet
-      setTx0Preview(undefined)
-    } else {
+    // clear old tx0Preview
+    setTx0Preview(undefined)
+
+    if (isTx0Possible(tx0FeeTarget, mixFeeTarget, poolId, utxos)) {
       // preview
       modalUtils.load("Loading...", backendService.tx0.tx0Preview(utxos, tx0FeeTarget, mixFeeTarget, poolId).then(newTx0Preview => {
         setTx0Preview(newTx0Preview)
