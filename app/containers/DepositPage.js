@@ -33,7 +33,6 @@ class DepositPage extends Component {
           </div>
           <div className='col-sm-10 stats'>
             <a className='zpubLink' href='#' onClick={e => {modalService.openZpub(WHIRLPOOL_ACCOUNTS.DEPOSIT, walletService.getZpubDeposit());e.preventDefault()}}>ZPUB</a>
-            <span className='text-primary'>{utxos.length} utxos ({utils.toBtc(walletService.getBalanceDeposit())}btc)</span>
           </div>
         </div>
         <div className='row h-100 d-flex flex-column'>

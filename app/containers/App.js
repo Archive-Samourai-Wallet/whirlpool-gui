@@ -191,21 +191,21 @@ class App extends React.Component<Props> {
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
-                  <Link to={routes.DEPOSIT} className="nav-link">
+                  <Link to={routes.DEPOSIT} className="nav-link" title='Utxos ready to enter Whirlpool'>
                       <span data-feather="plus"></span>
                       Deposit
                       ({walletService.getUtxosDeposit().length} · {utils.toBtc(walletService.getBalanceDeposit(), true)})
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
-                  <Link to={routes.PREMIX} className="nav-link">
+                  <Link to={routes.PREMIX} className="nav-link" title='Utxos being mixed'>
                     <span data-feather="play"></span>
                     Premix
                     ({walletService.getUtxosPremix().length} · {utils.toBtc(walletService.getBalancePremix(), true)})
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
-                  <Link to={routes.POSTMIX} className="nav-link">
+                  <Link to={routes.POSTMIX} className="nav-link" title='Utxos successfully mixed'>
                     <span data-feather="check"></span>
                     Postmix
                     ({walletService.getUtxosPostmix().length} · {utils.toBtc(walletService.getBalancePostmix(), true)})

@@ -20,7 +20,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-export default function TableGeneric({ columns, data, tableKey, size='sm', /*onFetchData, pageIndex, pageSize, filters, */sortBy, getRowStyle=()=>{}, getRowClassName=()=>{}, onSelect=undefined }) {
+export default function TableGeneric({ columns, data, tableKey, size='sm', /*onFetchData, pageIndex, pageSize, filters, */sortBy, getRowStyle=()=>{}, getRowClassName=()=>{}, onSelect=undefined, className=undefined }) {
   if (!data) {
     return
   }
@@ -83,6 +83,9 @@ export default function TableGeneric({ columns, data, tableKey, size='sm', /*onF
     onFetchData({ pageIndex, pageSize, sortBy, filters })
   }, [onFetchData, pageIndex, pageSize, sortBy, filters])*/
 
+
+  const rowsOriginal = rows.map(d => d.original)
+
   const selectedItems = selectedFlatRows.length>0 ? selectedFlatRows.map(
     d => d.original
   ) : undefined
@@ -90,7 +93,16 @@ export default function TableGeneric({ columns, data, tableKey, size='sm', /*onF
   // Render the UI for your table
   return (
     <div className='table-generic'>
-      <BTable hover size={size} {...getTableProps()}>
+      {onSelect && <div className='select-actions text-muted'>
+        {!selectedItems && <span>
+          {rowsOriginal.length} {onSelect.label} {onSelect.labelDetails? onSelect.labelDetails(rowsOriginal):''}
+        </span>}
+        {selectedItems && <span>
+          {selectedItems.length} {onSelect.label} {onSelect.labelDetails? onSelect.labelDetails(selectedItems):''} selected <Icon.ArrowRight size={12}/>{' '}
+          {onSelect.actions(selectedItems).map((action,i) => <span key={i}>{action}</span>)}
+        </span>}
+      </div>}
+      <BTable hover size={size} {...getTableProps()} className={className}>
         <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -121,10 +133,6 @@ export default function TableGeneric({ columns, data, tableKey, size='sm', /*onF
         })}
         </tbody>
       </BTable>
-      {onSelect && selectedItems && <div className='select-actions text-muted'>
-        {Object.keys(selectedRowIds).length} {onSelect.label} selected <Icon.ArrowRight size={12}/>{' '}
-        {onSelect.actions(selectedItems).map((action,i) => <span key={i}>{action}</span>)}
-      </div>}
     </div>
   );
 }

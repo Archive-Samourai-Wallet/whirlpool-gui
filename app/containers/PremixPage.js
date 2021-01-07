@@ -28,7 +28,6 @@ export default class PremixPage extends Component<Props> {
           </div>
           <div className='col-sm-10 stats'>
             <a className='zpubLink' href='#' onClick={e => {modalService.openZpub(WHIRLPOOL_ACCOUNTS.PREMIX, walletService.getZpubPremix());e.preventDefault()}}>ZPUB</a>
-            <span className='text-primary'>{utxos.length} utxos ({utils.toBtc(walletService.getBalancePremix())}btc)</span>
           </div>
         </div>
         <div className='row h-100 d-flex flex-column'>

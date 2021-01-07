@@ -5,14 +5,13 @@
  */
 
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as Icons from '@fortawesome/free-solid-svg-icons';
 import mixService from '../../services/mixService';
 import * as Icon from 'react-feather';
 import utils, { MIXABLE_STATUS, UTXO_STATUS, WHIRLPOOL_ACCOUNTS } from '../../services/utils';
 import LinkExternal from '../Utils/LinkExternal';
 import modalService from '../../services/modalService';
-import * as Icons from '@fortawesome/free-solid-svg-icons';
-import { FormCheck } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableGeneric from '../TableGeneric/TableGeneric';
 
 const UtxoControls = React.memo(({ utxo }) => {
@@ -139,8 +138,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
     {
       Header: 'Info',
       accessor: o => o.error,
-      className: 'utxoMessage',
-      Cell: o => !isReadOnly(o.row.original) && <small>{utils.utxoMessage(o.row.original)}</small>
+      Cell: o => !isReadOnly(o.row.original) && <div className='utxoMessage'><small>{utils.utxoMessage(o.row.original)}</small></div>
     }
   );
   if (controls) {
@@ -157,11 +155,9 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
 
   return (
     <div>
-      {utxosReadOnly.length>0 && <div className='text-center text-muted'>
-        <FormCheck id="showReadOnly" type="checkbox" label={<span>{utxosReadOnly.length} non-mixable utxos ({utils.toBtc(amountUtxosReadOnly)}btc)</span>} onClick={() => setShowReadOnly(!showReadOnly)} checked={showReadOnly}/>
-      </div>}
-      <div className='table-utxos'>
+      <div>
         <TableGeneric
+          className='table-utxos'
           tableKey={tableKey}
           columns={columns}
           data={visibleUtxos}
@@ -169,6 +165,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
           getRowClassName={row => isReadOnly(row.original) ? 'utxo-disabled' : ''}
           onSelect={{
             label: 'utxos',
+            labelDetails: utxos => '('+utils.toBtc(utils.sumUtxos(utxos))+' btc)',
             actions: utxos => [
               <button className='btn btn-sm btn-primary' title='Send to Premix' onClick={() => modalService.openTx0(utxos)}>Premix</button>
             ]
@@ -176,6 +173,10 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
         />
         {visibleUtxos.length == 0 && <div className='text-center text-muted'><small>No utxo yet</small></div>}
       </div>
+      {utxosReadOnly.length>0 && <div className='text-center text-muted'>
+        <button className='btn btn-sm btn-default text-muted' onClick={() => setShowReadOnly(!showReadOnly)}>
+          <FontAwesomeIcon icon={showReadOnly ? Icons.faAngleUp : Icons.faAngleDown} /> {showReadOnly?'Hide':'Show'} {utxosReadOnly.length} non-mixable utxos ({utils.toBtc(amountUtxosReadOnly)}btc)</button>
+      </div>}
     </div>
   );
 };

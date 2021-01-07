@@ -31,9 +31,9 @@ th.value, th.poolId, th.mixsDone, th.utxoStatus {
   width: 95px;
 }
 
-td.utxoMessage {
-  overflow: auto;
+.utxoMessage {
   max-width: 180px;
+  word-break: break-all;
 }
 
 .progress-bar {
@@ -111,7 +111,8 @@ td.utxoMessage {
 }
 
 .table-generic .select-actions {
- padding: 0 1em;
+  padding: 0 1em 0.3em 1em;
+  text-align:center;
 }
 
 .modal-body canvas.qr {
