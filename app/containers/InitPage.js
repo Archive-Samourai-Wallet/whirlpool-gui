@@ -186,7 +186,12 @@ class InitPage extends Component<Props> {
   }
 
   computeCliUrl() {
-    const cliUrl = (this.state.cliLocal ? CLILOCAL_URL:this.state.currentCliHostPort)
+    let cliUrl = (this.state.cliLocal ? CLILOCAL_URL:this.state.currentCliHostPort)
+
+    // remove ending '/' causing connection failure
+    if (cliUrl.substr(-1,1) === '/') {
+      cliUrl = cliUrl.substr(0, cliUrl.length-1);
+    }
     return cliUrl
   }
 
