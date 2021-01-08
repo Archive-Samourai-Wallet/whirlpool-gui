@@ -25,7 +25,7 @@ class MixStatus extends React.PureComponent {
               {mixService.getThreads().map((utxo,i) => {
                 const message = utils.utxoMessage(utxo)
                 let progressLabel = <div>
-                  <small>{utils.toBtc(utxo.value)}</small> <strong>{utils.statusLabel(utxo)}</strong><br/>
+                  <small>{utils.toBtc(utxo.value)}</small> <strong>{utils.statusLabel(utxo, false)}</strong><br/>
                   {message && <small>{message}</small>}
                 </div>
                 const progressPercent = utxo.progressPercent ? utxo.progressPercent : 0

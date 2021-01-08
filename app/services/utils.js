@@ -1,6 +1,7 @@
 import cliService from './cliService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
+import crypto from 'crypto';
 import * as React from 'react';
 import { shell } from 'electron';
 import moment from 'moment';
@@ -120,61 +121,53 @@ class Utils {
     return 'https://oxt.me/address/'+utxo.address
   }
 
-  statusIcon(utxo) {
-
-    if (utxo.status === UTXO_STATUS.MIX_STARTED) {
-      return <FontAwesomeIcon icon={Icons.faPlay} size='xs' color='green' title='MIXING'/>
-    }
-    if (utxo.status === UTXO_STATUS.TX0) {
-      return <FontAwesomeIcon icon={Icons.faPlay} size='xs' color='green' title='TX0'/>
-    }
-    if (utxo.status === UTXO_STATUS.TX0_FAILED) {
-      return <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='TX0 FAILED'/>
-    }
-    if (utxo.status === UTXO_STATUS.MIX_FAILED) {
-      return <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='MIX FAILED'/>
+  utxoStatus(utxo) {
+    switch (utxo.status) {
+      case UTXO_STATUS.MIX_STARTED:
+        return ['MIXING', <FontAwesomeIcon icon={Icons.faPlay} size='xs' color='green' title='MIXING'/>, true]
+      case UTXO_STATUS.TX0:
+        return ['TX', <FontAwesomeIcon icon={Icons.faPlay} size='xs' color='green' title='TX0'/>, true]
+      case UTXO_STATUS.TX0_SUCCESS:
+        return ['TX0:SUCCESS', <FontAwesomeIcon icon={Icons.faPlay} size='xs' color='green' title='TX0 SUCCESS'/>, true]
+      case UTXO_STATUS.TX0_FAILED:
+        return ['TX0:ERROR', <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='TX0 FAILED'/>, true]
+      case UTXO_STATUS.MIX_FAILED:
+        return ['MIX:FAILED', <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='MIX FAILED'/>, true]
+      case UTXO_STATUS.MIX_SUCCESS:
+        return ['MIXED', <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>, false]
+      case UTXO_STATUS.STOP:
+        return ['STOPPED', <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='TX0 FAILED'/>, false]
     }
     if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX) {
-      return <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>
+      return ['MIXED', <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>, false]
     }
+    const statusIcon = this.utxoStatusIcon(utxo)
+    switch (utxo.status) {
+      case UTXO_STATUS.READY:
+        return ['READY', statusIcon, false]
+      case UTXO_STATUS.MIX_QUEUE:
+        return ['QUEUE', statusIcon, false]
+    }
+    console.error('Unknown utxoStatus', utxo)
+    return ['?', statusIcon, false]
+  }
 
+  utxoStatusIcon(utxo) {
     switch(utxo.mixableStatus) {
       case MIXABLE_STATUS.MIXABLE:
         return <FontAwesomeIcon icon={Icons.faCircle} size='xs' color='green' title='Ready to mix'/>
       case MIXABLE_STATUS.HASH_MIXING:
         return <FontAwesomeIcon icon={Icons.faEllipsisH} size='xs' color='orange' title='Another utxo from same hash is currently mixing'/>
-      case MIXABLE_STATUS.NO_POOL:
-        return <span></span>
       case MIXABLE_STATUS.UNCONFIRMED:
         return <FontAwesomeIcon icon={Icons.faClock} size='xs' title='Unconfirmed' className='text-muted'/>
+      // case MIXABLE_STATUS.NO_POOL:
     }
     return undefined
   }
 
-  statusLabel(utxo) {
-    const icon = this.statusIcon(utxo)
-    const text = this.statusLabelText(utxo)
-    return <span>{icon?icon:''} {text?text:''}</span>
-  }
-
-  statusLabelText(utxo) {
-    if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX) {
-      return 'MIXED'
-    }
-    if (utxo.mixableStatus === MIXABLE_STATUS.NO_POOL) {
-      return undefined
-    }
-    switch(utxo.status) {
-      case UTXO_STATUS.READY: return 'READY'
-      case UTXO_STATUS.STOP: return 'STOPPED'
-      case UTXO_STATUS.TX0: return 'TX0'
-      case UTXO_STATUS.TX0_SUCCESS: return 'TX0:SUCCESS'
-      case UTXO_STATUS.TX0_FAILED: return 'TX0:ERROR'
-      case UTXO_STATUS.MIX_QUEUE: return 'QUEUE'
-      case UTXO_STATUS.MIX_STARTED: return 'MIXING'
-      case UTXO_STATUS.MIX_FAILED: return 'MIX:FAILED'
-      default: return '?'
-    }
+  statusLabel(utxo, showEmphase) {
+    const [text, icon, emphase] = this.utxoStatus(utxo)
+    return <span>{icon?icon:''} <span className={(showEmphase?(emphase?'text-primary':'text-muted'):undefined)}>{text?text:''}</span></span>
   }
 
   utxoMessage(utxo) {
@@ -262,6 +255,16 @@ class Utils {
 
   spinner() {
     return <FontAwesomeIcon icon={Icons.faSpinner} spin size='xs' />
+  }
+
+  computeUtxoDataKey(utxos) {
+    const utxoIds = utxos.map(utxo => utxo.hash + ':' + utxo.index)
+    const dataKey = this.md5(utxoIds.join(';'))
+    return dataKey
+  }
+
+  md5(str) {
+    return crypto.createHash('md5').update(str).digest('hex');
   }
 }
 

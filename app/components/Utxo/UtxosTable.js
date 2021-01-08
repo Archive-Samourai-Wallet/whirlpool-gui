@@ -124,7 +124,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
         Header: 'Status',
         accessor: o => o.status,
         Cell: o => !isReadOnly(o.row.original) &&
-          <span className='text-primary'>{utils.statusLabel(o.row.original)}</span>
+          <span>{utils.statusLabel(o.row.original, true)}</span>
       });
   }
   columns.push({
@@ -153,12 +153,13 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
   const utxosReadOnly = utxos.filter(utxo => isReadOnly(utxo))
   const amountUtxosReadOnly = utxosReadOnly.map(utxo => utxo.value).reduce((total,current) => total+current, 0)
 
+  const key = tableKey+utils.computeUtxoDataKey(visibleUtxos);
   return (
     <div>
       <div>
         <TableGeneric
+          key={key}
           className='table-utxos'
-          tableKey={tableKey}
           columns={columns}
           data={visibleUtxos}
           sortBy={[{ id: 'lastActivityElapsed', desc: true }]}
