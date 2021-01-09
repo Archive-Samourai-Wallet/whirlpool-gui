@@ -6,6 +6,7 @@ import cliService from '../services/cliService';
 import { Alert } from 'react-bootstrap';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import { cliLocalService } from '../services/cliLocalService';
+import cyclone from '../img/cyclone.png'
 
 class ConnectingPage extends Component<Props> {
   props: Props;
@@ -19,6 +20,10 @@ class ConnectingPage extends Component<Props> {
   }
 
   render() {
+    if (cliService.isStarting()) {
+      return this.renderStarting();
+    }
+
     const cliUrlError = cliService.getCliUrlError() // or undefined
     return this.renderConnecting(cliUrlError)
   }
@@ -35,6 +40,16 @@ class ConnectingPage extends Component<Props> {
     }
   }
 
+  renderStarting() {
+    return (
+      <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
+        <h1 className="h3 mb-3 font-weight-normal">Starting Whirlpool...</h1>
+        <div><img src={cyclone} className='spin'/></div><br/>
+        <div>whirlpool-cli @ <strong>{cliService.isCliLocal() ? 'standalone GUI' : cliService.getCliUrl()}</strong></div>
+      </form>
+    );
+  }
+
   renderConnecting(cliUrlError) {
     return (
       <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
@@ -44,7 +59,6 @@ class ConnectingPage extends Component<Props> {
         <br/>
         {cliService.isCliLocal() && <div>
           {cliLocalService.getStatusIcon((icon,text)=><span>{icon} {text}</span>)}<br/>
-          {(!cliService.isConnected() || cliService.isCliStatusStarting()) && <small className='text-muted'>Might take a minute to start... restart if longer.</small>}<br/>
         </div>}
         <br/>
 
@@ -72,23 +86,6 @@ class ConnectingPage extends Component<Props> {
       cliService.resetConfig()
     }
   }
-
-  renderCliUrlError() {
-    return (
-
-      <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
-        <h1 className="h3 mb-3 font-weight-normal">Connecting...</h1>
-        <div><FontAwesomeIcon icon={Icons.faWifi} size='3x' color='#343a40'/></div>
-        <p>Connecting to whirlpool-cli...<br/>
-          <strong>{cliService.getCliUrl()}</strong><br/>
-          {cliService.isCliLocal() && <div>{cliLocalService.getStatusIcon((icon,text)=><span>{icon} {text}<br/>(might take a minute to start... restart if longer)</span>)}</div>}
-        </p>
-
-
-      </form>
-    );
-  }
-
 }
 function mapStateToProps(state) {
   return {

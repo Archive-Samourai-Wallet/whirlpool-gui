@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import guiConfig from '../mainProcess/guiConfig';
 
 const REFRESH_RATE = 6000;
+const STARTUP_DURATION = 15*1000
 class CliService {
   constructor () {
     this.setState = undefined
@@ -23,6 +24,7 @@ class CliService {
     this.refreshTimeout = undefined
     this.servicesStarted = false
 
+    this.startTime = new Date().getTime()
     this.cliUrl = undefined
     this.apiKey = undefined
     this.cliLocal = undefined
@@ -164,6 +166,7 @@ class CliService {
   }
 
   restart() {
+    this.startTime = new Date().getTime()
     backendService.cli.restart()
 
     // force refresh
@@ -212,6 +215,10 @@ class CliService {
   }
 
   // state
+
+  isStarting() {
+    return (new Date().getTime() - this.startTime) < STARTUP_DURATION
+  }
 
   getCliUrlError() {
     return this.state ? this.state.cliUrlError : undefined
