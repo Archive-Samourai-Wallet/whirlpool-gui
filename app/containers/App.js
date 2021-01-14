@@ -147,7 +147,7 @@ class App extends React.Component<Props> {
           </div>}
         </div>
         <div className='col-md-10'>
-          {cliService.isLoggedIn() && (mixService.isReady() && poolsService.isReady() ? <MixStatus mixState={this.props.mix} poolsState={this.props.pools} mixActions={this.props.mixActions}/> : utils.spinner())}
+          {cliService.isLoggedIn() && mixService.isReady() && poolsService.isReady() && <MixStatus mixState={this.props.mix} poolsState={this.props.pools} mixActions={this.props.mixActions}/>}
           {cliService.isCliStatusReady() && !cliService.isLoggedIn() && <div className='text-center'>
             <Link to={routes.HOME}>
               <FontAwesomeIcon icon={Icons.faLock} size='3x' color='#CCC'/>

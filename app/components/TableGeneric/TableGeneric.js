@@ -83,6 +83,8 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
     d => d.original
   ) : undefined
 
+  const onSelectActions = selectedItems ? onSelect.actions(selectedItems) : []
+
   // Render the UI for your table
   return (
     <div className='table-generic'>
@@ -91,8 +93,10 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
           {rowsOriginal.length} {onSelect.label} {onSelect.labelDetails? onSelect.labelDetails(rowsOriginal):''}
         </span>}
         {selectedItems && <span>
-          {selectedItems.length} {onSelect.label} {onSelect.labelDetails? onSelect.labelDetails(selectedItems):''} selected <Icon.ArrowRight size={12}/>{' '}
-          {onSelect.actions(selectedItems).map((action,i) => <span key={i}>{action}</span>)}
+          {selectedItems.length} {onSelect.label} {onSelect.labelDetails? onSelect.labelDetails(selectedItems):''} selected{' '}
+          {onSelectActions.length>0 && <span>
+            <Icon.ArrowRight size={12}/> {onSelect.actions(selectedItems).map((action,i) => <span key={i}>{action}</span>)}
+          </span>}
         </span>}
       </div>}
       <BTable hover size={size} {...getTableProps()} className={className}>

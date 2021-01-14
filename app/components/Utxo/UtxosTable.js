@@ -26,6 +26,23 @@ const UtxoControls = React.memo(({ utxo }) => {
   )
 });
 
+const computeUtxosActions = utxos => {
+  const actions = []
+
+  let tx0Possible = true;
+
+  for (const utxo of utxos) {
+    if (utxo.account !== WHIRLPOOL_ACCOUNTS.DEPOSIT) {
+      tx0Possible = false
+    }
+  }
+
+  if (tx0Possible) {
+    actions.push(<button className='btn btn-sm btn-primary' title='Send to Premix' onClick={() => modalService.openTx0(utxos)}>Premix</button>)
+  }
+  return actions
+}
+
 /* eslint-disable react/prefer-stateless-function */
 const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
 
@@ -154,6 +171,8 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
   const amountUtxosReadOnly = utxosReadOnly.map(utxo => utxo.value).reduce((total,current) => total+current, 0)
 
   const key = tableKey+utils.computeUtxoDataKey(visibleUtxos);
+
+
   return (
     <div>
       <div>
@@ -167,9 +186,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
           onSelect={{
             label: 'utxos',
             labelDetails: utxos => '('+utils.toBtc(utils.sumUtxos(utxos))+' btc)',
-            actions: utxos => [
-              <button className='btn btn-sm btn-primary' title='Send to Premix' onClick={() => modalService.openTx0(utxos)}>Premix</button>
-            ]
+            actions: computeUtxosActions
           }}
         />
         {visibleUtxos.length == 0 && <div className='text-center text-muted'><small>No utxo yet</small></div>}
