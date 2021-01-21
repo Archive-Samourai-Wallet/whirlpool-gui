@@ -81,7 +81,7 @@ export default class ConfigPage extends Component<Props> {
     const checked = e => {
       return e.target.checked
     }
-    const clientsPerPoolEditable = cliConfig.server !== SERVER_MAIN
+    const isTestnet = cliConfig.server !== SERVER_MAIN
     return (
       <div>
         <h1>Configuration</h1>
@@ -155,15 +155,6 @@ export default class ConfigPage extends Component<Props> {
               </div>
 
               <div className="form-group row">
-                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor"/>
-                <label className='col-form-label col-sm-5 text-muted'>Random factor for generating a second change output to simulate a multi-user TX0 (0 = never, 1 = always, 2 = 1/2 probability, 3 = 1/3 probability...)</label>
-              </div>
-
-              <div className="form-group row">
                 <label htmlFor="proxy" className="col-sm-2 col-form-label">CLI proxy</label>
                 <input type="text" className='form-control col-sm-3' onChange={e => {
                   const myValue = e.target.value
@@ -173,6 +164,15 @@ export default class ConfigPage extends Component<Props> {
                   Set it only when blocked by a firewall (this is not <i>GUI Tor proxy</i>).<br/>
                   <code>socks://host:port</code> or <code>http://host:port</code>
                 </label>
+              </div>
+
+              <div className="form-group row">
+                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
+                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor" disabled={isTestnet}/>
+                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only): random factor for simulating a multi-user TX0 with a second change output (0 = never, 1 = always, 2 = 1/2 probability, 3 = 1/3 probability...).</label>
               </div>
             </Card.Body>
           </Card>
@@ -192,7 +192,7 @@ export default class ConfigPage extends Component<Props> {
                 <label className='col-form-label col-sm-5 text-muted'>Delay (in seconds) between each client connection</label>
               </div>
 
-              {clientsPerPoolEditable && <div className="form-group row">
+              {isTestnet && <div className="form-group row">
                 <label htmlFor="clientsPerPool" className="col-sm-2 col-form-label">Max clients per pool</label>
                 <input type="number" className='form-control col-sm-3' onChange={e => {
                   const myValue = parseInt(e.target.value)
