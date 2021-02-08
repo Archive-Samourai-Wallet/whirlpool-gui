@@ -36,6 +36,7 @@ class PoolsPage extends Component {
             <th>Max. deposit</th>
             <th>Max. mixs</th>
             <th>Anonymity set per mix</th>
+            <th>Max. premixs per Tx0</th>
             <th><u>Flat</u> entry fee</th>
           </tr>
           </thead>
@@ -47,6 +48,7 @@ class PoolsPage extends Component {
             <td>∞</td>
             <td>∞</td>
             <td>{pool.mixAnonymitySet}</td>
+            <td>{pool.tx0MaxOutputs}</td>
             <td>{utils.toBtc(pool.feeValue)}</td>
           </tr>)}
           </tbody>
