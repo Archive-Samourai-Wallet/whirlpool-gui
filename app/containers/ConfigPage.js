@@ -165,15 +165,6 @@ export default class ConfigPage extends Component<Props> {
                   <code>socks://host:port</code> or <code>http://host:port</code>
                 </label>
               </div>
-
-              <div className="form-group row">
-                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor" disabled={isTestnet}/>
-                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only): random factor for simulating a multi-user TX0 with a second change output (0 = never, 1 = always, 2 = 1/2 probability, 3 = 1/3 probability...).</label>
-              </div>
             </Card.Body>
           </Card>
 
@@ -202,12 +193,21 @@ export default class ConfigPage extends Component<Props> {
               </div>}
 
               <div className="form-group row">
+                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
+                <input type="number" className='form-control col-sm-3' onChange={e => {
+                  const myValue = parseInt(e.target.value)
+                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
+                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor" disabled={!isTestnet}/>
+                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only) TX0 fake output (0 = never, 1 = always).</label>
+              </div>
+
+              <div className="form-group row">
                 <label htmlFor="tx0FakeOutputMinValue" className="col-sm-2 col-form-label">TX0 min change</label>
                 <input type="number" className='form-control col-sm-3' onChange={e => {
                   const myValue = parseInt(e.target.value)
                   myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputMinValue = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue"/>
-                <label className='col-form-label col-sm-5 text-muted'>Minimum value per change output when using TX0 fake output</label>
+                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue" disabled={!isTestnet}/>
+                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only) minimum value per fake change output</label>
               </div>
 
             </Card.Body>}

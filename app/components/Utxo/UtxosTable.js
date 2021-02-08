@@ -44,7 +44,7 @@ const computeUtxosActions = utxos => {
 }
 
 /* eslint-disable react/prefer-stateless-function */
-const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
+const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions }) => {
 
   const [showReadOnly, setShowReadOnly] = useState(false)
 
@@ -186,7 +186,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey }) => {
           onSelect={{
             label: 'utxos',
             labelDetails: utxos => '('+utils.toBtc(utils.sumUtxos(utxos))+' btc)',
-            actions: computeUtxosActions
+            actions: actions ? computeUtxosActions : undefined
           }}
         />
         {visibleUtxos.length == 0 && <div className='text-center text-muted'><small>No utxo yet</small></div>}

@@ -33,6 +33,7 @@ export class CliConfigService {
     return backendService.cli.setConfig(cliConfig).then(() => {
       logger.info('Save CLI configuration: success')
       cliLocalService.reload()
+      cliService.setStartTime()
       cliService.fetchState()
     }).catch(e => {
       logger.error('Save CLI configuration: failed', e)

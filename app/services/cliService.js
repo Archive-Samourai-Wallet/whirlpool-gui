@@ -24,7 +24,7 @@ class CliService {
     this.refreshTimeout = undefined
     this.servicesStarted = false
 
-    this.startTime = new Date().getTime()
+    this.setStartTime()
     this.cliUrl = undefined
     this.apiKey = undefined
     this.cliLocal = undefined
@@ -49,6 +49,7 @@ class CliService {
 
   start() {
     if (this.refreshTimeout === undefined) {
+      this.setStartTime()
       this.refreshTimeout = setInterval(this.fetchState.bind(this), REFRESH_RATE)
       return this.fetchState()
     }
@@ -113,6 +114,9 @@ class CliService {
 
       // save configuration
       this.saveConfig(cliUrl, apiKey, cliLocal)
+
+      // CLI auto-restarts
+      this.setStartTime()
     })
   }
 
@@ -165,8 +169,12 @@ class CliService {
     this.doResetGUIConfig()
   }
 
-  restart() {
+  setStartTime() {
     this.startTime = new Date().getTime()
+  }
+
+  restart() {
+    this.setStartTime()
     backendService.cli.restart()
 
     // force refresh
