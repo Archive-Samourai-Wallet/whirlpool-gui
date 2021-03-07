@@ -355,6 +355,9 @@ class InitPage extends Component<Props> {
   }
 
   onChangePairingPayload(payloadStr) {
+    if (payloadStr) {
+      payloadStr = payloadStr.trim()
+    }
     this.setState({ pairingPayload: payloadStr });
 
     let payload = undefined
