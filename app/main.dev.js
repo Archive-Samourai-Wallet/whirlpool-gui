@@ -114,7 +114,8 @@ else {
         const session = mainWindow.webContents.session
         console.log('Using guiProxy:'+guiProxy)
         session.setProxy({
-          proxyRules: guiProxy
+          proxyRules: guiProxy+",direct://",
+          proxyBypassRules:"<-loopback>"
         })
       }
     } catch(e) {
