@@ -12,6 +12,7 @@ import { DEFAULT_CLIPORT, IPC_CAMERA } from '../const';
 import { cliLocalService } from '../services/cliLocalService';
 import utils from '../services/utils';
 import guiConfig from '../mainProcess/guiConfig';
+import { logger } from '../utils/logger';
 
 const STEP_LAST = 3
 const DEFAULT_CLIHOSTPORT = 'https://my-cli-host:'+DEFAULT_CLIPORT
@@ -241,7 +242,7 @@ class InitPage extends Component<Props> {
       if (error && error.message.indexOf('API Key')) {
         this.setState({showApiKey:true})
       }
-      console.error('testCliUrl failed',error)
+      logger.error('testCliUrl failed',error)
       this.setState({
         cliError: error.message
       })
@@ -378,7 +379,7 @@ class InitPage extends Component<Props> {
       this.goNextStep()
     } else {
       // invalid payload
-      console.error('Invalid payload: '+payloadStr)
+      logger.error('Invalid payload: '+payloadStr)
       this.setState({
         hasPairingPayload: false,
         hasPairingDojo: false,
@@ -411,7 +412,7 @@ class InitPage extends Component<Props> {
       // success!
       this.goNextStep()
     }).catch(error => {
-      console.error('initialization failed', error)
+      logger.error('initialization failed', error)
       this.setState({
         cliInitError: error.message
       })

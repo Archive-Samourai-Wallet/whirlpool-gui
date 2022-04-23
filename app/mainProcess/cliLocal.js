@@ -158,8 +158,10 @@ export class CliLocal {
   }
 
   async refreshState(downloadIfMissing=true, gotMutex=false) {
+    logger.info('refreshState', downloadIfMissing)
     if (cliApiService.isApiModeLocal()) {
       downloadIfMissing = false
+      logger.info('isApiModeLocal => download disabled')
     }
 
     const javaInstalled = await this.isJavaInstalled()
@@ -191,7 +193,7 @@ export class CliLocal {
       }
       if (downloadIfMissing) {
         if (this.state.status === CLILOCAL_STATUS.DOWNLOADING || this.state.status === CLILOCAL_STATUS.ERROR) {
-          console.log('refreshState: download skipped, status='+this.state.status+')')
+          logger.info('refreshState: download skipped, status='+this.state.status+')')
           return
         }
         // download
@@ -451,6 +453,8 @@ export class CliLocal {
   }
 
   async download(url) {
+    logger.info('download', url)
+
     // delete existing file if any
     const dlPathFile = cliApiService.getCliPath()+'/'+this.getCliFilename()
     if (fs.existsSync(dlPathFile)) {
