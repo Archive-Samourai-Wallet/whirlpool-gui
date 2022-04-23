@@ -86,10 +86,10 @@ class GuiConfig {
         return true
       }
       // invalid
-      logger.error("guiConfig is invalid: "+GUI_CONFIG_FILEPATH)
+      logger.warn("ignoring guiConfig: "+GUI_CONFIG_FILEPATH)
     } else {
       // or not existing
-      logger.info("guiConfig is empty: " + GUI_CONFIG_FILEPATH)
+      logger.info("no guiConfig: " + GUI_CONFIG_FILEPATH)
     }
     return false
   }
@@ -108,17 +108,27 @@ class GuiConfig {
 
   // CLI CONFIG
 
+  setStore(key, value) {
+    if (value) {
+      logger.info('setStore: set '+key)
+      this.store.set(key, value)
+    } else {
+      logger.info('setStore: delete '+key)
+      this.store.delete(key)
+    }
+  }
+
   setCliUrl(cliUrl) {
     logger.info('guiConfig: set cliUrl='+cliUrl)
-    this.store.set(STORE_CLIURL, cliUrl)
+    this.setStore(STORE_CLIURL, cliUrl)
   }
 
   setCliApiKey(apiKey) {
-    this.store.set(STORE_APIKEY, apiKey)
+    this.setStore(STORE_APIKEY, apiKey)
   }
 
   setCliLocal(cliLocal) {
-    this.store.set(STORE_CLILOCAL, cliLocal)
+    this.setStore(STORE_CLILOCAL, cliLocal)
   }
 
   resetCliConfig() {
@@ -143,7 +153,7 @@ class GuiConfig {
 
   setGuiProxy(guiProxy) {
     logger.info('guiConfig: set guiProxy='+guiProxy)
-    this.store.set(STORE_GUI_PROXY, guiProxy)
+    this.setStore(STORE_GUI_PROXY, guiProxy)
   }
 
   getGuiProxy() {
