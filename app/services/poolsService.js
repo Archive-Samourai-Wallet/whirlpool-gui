@@ -85,8 +85,11 @@ class PoolsService {
             pools: pools
           }
         } else {
-          console.log('poolsService: updating existing state', Object.assign({}, this.state))
-          this.state.pools = pools
+          // new state object
+          const currentState = Object.assign({}, this.state)
+          console.log('poolsService: updating existing state', currentState)
+          currentState.pools = pools
+          this.state = currentState
         }
         this.pushState()
       })

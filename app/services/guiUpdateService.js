@@ -76,8 +76,11 @@ class GuiUpdateService {
               guiLast: json.GUI.LAST
             }
           } else {
-            console.log('guiUpdateService: updating existing state', Object.assign({}, this.state))
-            this.state.guiLast = json.GUI.LAST
+            // new state object
+            const currentState = Object.assign({}, this.state)
+            console.log('guiUpdateService: updating existing state', currentState)
+            currentState.guiLast = json.GUI.LAST
+            this.state = currentState
           }
           this.pushState()
         })

@@ -110,8 +110,11 @@ class WalletService {
             wallet: wallet
           }
         } else {
-          console.log('walletService: updating existing state', Object.assign({}, this.state))
-          this.state.wallet = wallet
+          // new state object
+          const currentState = Object.assign({}, this.state)
+          console.log('walletService: updating existing state', currentState)
+          currentState.wallet = wallet
+          this.state = currentState
         }
         this.pushState()
       })

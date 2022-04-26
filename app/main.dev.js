@@ -11,22 +11,21 @@
  * @flow
  */
 import { app, BrowserWindow, ipcMain, systemPreferences } from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+//import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import MenuBuilder from './menu';
 import { CliLocal } from './mainProcess/cliLocal';
-import fs from "fs";
+import fs from 'fs';
 import { GUI_LOG_FILE, IPC_CAMERA } from './const';
 import guiConfig from './mainProcess/guiConfig';
 
-export default class AppUpdater {
+/*export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
-}
+}*/
 
 let mainWindow = null;
 
