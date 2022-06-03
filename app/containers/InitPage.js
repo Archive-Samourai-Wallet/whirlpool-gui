@@ -48,6 +48,7 @@ class InitPage extends Component<Props> {
       cameraError: null,
       pairingModal: false,
       cameraAccessGranted: false,
+      cliTestRequesting: false,
     }
 
     // configuration data
@@ -222,6 +223,8 @@ class InitPage extends Component<Props> {
     const apiKey = this.state.currentApiKey
     const cliLocal = this.state.cliLocal
 
+    this.setState({cliTestRequesting: true})
+
     cliService.testCliUrl(cliUrl, apiKey).then(cliStatusReady => {
       // connection success
       this.setState({
@@ -239,6 +242,7 @@ class InitPage extends Component<Props> {
         this.goNextStep()
       }
     }).catch(error => {
+      this.setState({cliTestRequesting: false})
       if (error && error.message.indexOf('API Key')) {
         this.setState({showApiKey:true})
       }
@@ -302,7 +306,12 @@ class InitPage extends Component<Props> {
               </div>
               <div className="row">
                 <div className='col-sm-2'></div>
-                <button type='button' className='btn btn-primary col-sm-4' disabled={!this.state.currentCliHostPort || this.state.cliUrl} onClick={this.connectCli}>Connect</button>
+                <button type='button'
+                  className='btn btn-primary col-sm-4'
+                  disabled={!this.state.currentCliHostPort || this.state.cliUrl || this.state.cliTestRequesting}
+                  onClick={this.connectCli}>
+                    {this.state.cliTestRequesting ? 'Loading' : 'Connect'}
+                </button>
               </div>
               &nbsp;
               {this.state.showGuiProxy && <div className="row">
