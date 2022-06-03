@@ -33,7 +33,7 @@ class InitPage extends Component<Props> {
       navNextStep: false,
       cliLocal: cliService.isCliLocal(),
       cliUrl: undefined,
-      currentCliHostPort: DEFAULT_CLIHOSTPORT,
+      currentCliHostPort: undefined,
       currentApiKey: DEFAULT_APIKEY,
       showGuiProxy: false,
       showApiKey: false,
@@ -300,11 +300,10 @@ class InitPage extends Component<Props> {
                   <code>{TOR_CLIHISTPORT}</code> for Hidden Service
                 </label>
               </div>
-              {this.state.currentCliHostPort
-              && !this.state.cliUrl && <div className="row">
+              <div className="row">
                 <div className='col-sm-2'></div>
-                <button type='button' className='btn btn-primary col-sm-4' onClick={this.connectCli}>Connect</button>
-              </div>}
+                <button type='button' className='btn btn-primary col-sm-4' disabled={!this.state.currentCliHostPort || this.state.cliUrl} onClick={this.connectCli}>Connect</button>
+              </div>
               &nbsp;
               {this.state.showGuiProxy && <div className="row">
                 <label htmlFor="guiProxy" className="col-sm-2 col-form-label">Tor proxy</label>
