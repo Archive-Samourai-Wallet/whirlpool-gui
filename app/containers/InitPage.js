@@ -335,11 +335,11 @@ class InitPage extends Component<Props> {
                 <div className="row">
                     <div className="col-sm-3 col-form-label">
                     {!this.state.showGuiProxy &&
-                      <a onClick={() => this.setState({showGuiProxy:true})}>Use a Tor proxy?</a>}
+                      <a onClick={() => this.setState({showGuiProxy:true})} role="button">Use a Tor proxy?</a>}
                     </div>
                     <div className="col-sm-3 col-form-label text-right">
                     {!this.state.showApiKey &&
-                      <a onClick={() => this.setState({showApiKey:true})}>Configure API key?</a>}
+                      <a onClick={() => this.setState({showApiKey:true})} role="button">Configure API key?</a>}
                     </div>
                 </div>
               }
