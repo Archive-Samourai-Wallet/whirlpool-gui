@@ -261,8 +261,7 @@ class InitPage extends Component<Props> {
         </div>
       </div>
       <div className="form-group row">
-        <label htmlFor="inputEmail3" className="col-sm-1 col-form-label"></label>
-        <div className="col-sm-11">
+        <div className="col-sm-12">
           <div className="form-check">
             <input className="form-check-input" type="radio" name="cliLocal" id="cliLocalTrue" value='true' checked={this.state.cliLocal} onChange={this.onChangeCliLocal}/>
             <label className="form-check-label" htmlFor="cliLocalTrue">
@@ -278,17 +277,16 @@ class InitPage extends Component<Props> {
         </div>
       </div>
 
-      {this.state.cliLocal && <div>
+      {this.state.cliLocal && <>
         <div className="row">
-          <div className="col-sm-1"></div>
-          {cliLocalService.getStatusIcon((icon,text)=><div className='col-sm-8'><Alert variant='success'>{icon} {text}</Alert></div>)}
+          {cliLocalService.getStatusIcon((icon,text)=><div className='col-sm-12'><Alert variant='success'>{icon} {text}</Alert></div>)}
           {!cliLocalService.isStatusDownloading() && !cliLocalService.isValid() && <div className='col-sm-12'><Alert variant='danger'>No valid CLI found. Please reinstall GUI.</Alert></div>}
         </div>
         {cliLocalService.isValid() && <div className="row">
           <div className="col-sm-3"></div>
           <button type="button" className="btn btn-primary col-sm-3" onClick={this.connectCli}> Continue <FontAwesomeIcon icon={Icons.faArrowRight} /></button>
         </div>}
-      </div>}
+      </>}
 
       {!this.state.cliLocal &&
       <Card>
