@@ -157,7 +157,7 @@ class InitPage extends Component<Props> {
     const newState = {
       cliUrl: undefined,
       cliError: undefined,
-      currentCliHostPort: DEFAULT_CLIHOSTPORT,
+      currentCliHostPort: undefined,
       currentApiKey: DEFAULT_APIKEY
     }
     if (resetToggles) {
