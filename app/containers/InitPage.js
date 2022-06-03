@@ -294,7 +294,7 @@ class InitPage extends Component<Props> {
             <div className="col-sm-11">
               <div className="row">
                 <label htmlFor="cliHostPort" className="col-sm-2 col-form-label">CLI address</label>
-                <input type="text" id="cliHostPort" className="form-control col-sm-4" placeholder={DEFAULT_CLIHOSTPORT} defaultValue={this.state.currentCliHostPort} ref={this.inputCliHostPort} onChange={this.onChangeInputCliHostPort} required/>
+                <input type="text" id="cliHostPort" className="form-control col-sm-4" placeholder={DEFAULT_CLIHOSTPORT} ref={this.inputCliHostPort} onChange={this.onChangeInputCliHostPort} required/>
                 <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0,'padding-bottom':0}}>
                   <code>{DEFAULT_CLIHOSTPORT}</code> for standard usage<br/>
                   <code>{TOR_CLIHISTPORT}</code> for Hidden Service
