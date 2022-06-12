@@ -28,6 +28,13 @@ Whirlpool files are stored in ```userData``` which varies depending on your OS:
 - CLI state for wallet: ```whirlpool-cli-state-xxx.properties```
 - CLI state for utxos: ```whirlpool-cli-utxos-xxx.properties```
 
+## Gnome + Wayland users
+If whirlpool-gui fails to start with error:
+```
+32290:0303/061855.130963:FATAL:gpu_data_manager_impl_private.cc(986)] The display compositor is frequently crashing. Goodbye.
+fish: Job 1, '/opt/whirlpool-gui/whirlpool-gui' terminated by signal SIGTRAP (Trace or breakpoint trap)
+```
+A workaround is to use ```--no-sandbox``` to launch whirlpool-gui.
 
 ## Resources
 
