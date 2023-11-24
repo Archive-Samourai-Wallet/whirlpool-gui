@@ -23,6 +23,7 @@ export const IPC_CLILOCAL = {
   GET_STATE: 'cliLocal.getState',
   STATE: 'cliLocal.state',
   RELOAD: 'cliLocal.reload',
+  STOP: 'cliLocal.stop',
   DELETE_CONFIG: 'cliLocal.deleteConfig'
 };
 export const IPC_CAMERA = {

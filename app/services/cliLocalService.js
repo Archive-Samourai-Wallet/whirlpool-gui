@@ -29,6 +29,11 @@ class CliLocalService {
     ipcRenderer.send(IPC_CLILOCAL.RELOAD)
   }
 
+  stop() {
+    console.log('CliLocalService: stop')
+    ipcRenderer.send(IPC_CLILOCAL.STOP)
+  }
+
   deleteConfig() {
     console.log('CliLocalService: reset local CLI')
     ipcRenderer.send(IPC_CLILOCAL.DELETE_CONFIG)

@@ -11,11 +11,9 @@ import {
   CLI_LOG_FILE,
   cliApiService,
   CLILOCAL_STATUS,
-  DEFAULT_CLI_LOCAL,
   DEFAULT_CLIPORT,
   IPC_CLILOCAL,
   IS_DEV,
-  STORE_CLILOCAL
 } from '../const';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
@@ -35,6 +33,7 @@ export class CliLocal {
     this.ipcMutex = new AwaitLock()
 
     this.onIpcMain = this.onIpcMain.bind(this)
+    this.ipcMain.on(IPC_CLILOCAL.STOP, () => this.onIpcMain(IPC_CLILOCAL.STOP))
     this.ipcMain.on(IPC_CLILOCAL.RELOAD, () => this.onIpcMain(IPC_CLILOCAL.RELOAD))
     this.ipcMain.on(IPC_CLILOCAL.GET_STATE, () => this.onIpcMain(IPC_CLILOCAL.GET_STATE));
     this.ipcMain.on(IPC_CLILOCAL.DELETE_CONFIG, () => this.onIpcMain(IPC_CLILOCAL.DELETE_CONFIG));
@@ -42,14 +41,13 @@ export class CliLocal {
     this.findCliProcesses = this.findCliProcesses.bind(this)
 
     this.handleExit()
-
-    this.reload()
   }
 
   async onIpcMain(id) {
     await this.ipcMutex.acquireAsync();
     try {
       switch(id) {
+        case IPC_CLILOCAL.STOP: await this.stop(true, true); break
         case IPC_CLILOCAL.RELOAD: await this.reload(true); break
         case IPC_CLILOCAL.GET_STATE: await this.onGetState(true); break
         case IPC_CLILOCAL.DELETE_CONFIG: await this.onDeleteConfig(true); break
@@ -138,6 +136,7 @@ export class CliLocal {
   getStoreOrSetDefault(key, defaultValue) {
     let value = this.store.get(key)
     if (value === undefined) {
+      logger.debug("getStoreOrSetDefault('+key+'): setting default value: "+defaultValue)
       this.store.set(key, defaultValue)
       value = defaultValue
     }
@@ -152,9 +151,6 @@ export class CliLocal {
   }
   getCliChecksum() {
     return this.state.cliApi.checksum
-  }
-  isCliLocal() {
-    return this.getStoreOrSetDefault(STORE_CLILOCAL, DEFAULT_CLI_LOCAL)
   }
 
   async refreshState(downloadIfMissing=true, gotMutex=false) {
@@ -220,7 +216,8 @@ export class CliLocal {
     } else {
       this.state.error = undefined
       this.updateState(CLILOCAL_STATUS.READY)
-      if (!this.state.started && this.isCliLocal()) {
+      if (!this.state.started) {
+        logger.debug("cliLocal.refreshState: CLI not started yet => starting")
         await this.start(gotMutex)
       }
     }
@@ -359,19 +356,12 @@ export class CliLocal {
           logger.info('[CLI_LOCAL] => terminated without error.')
         } else {
           // finishing with error
-          if (code === 143) {
-            // reloading? TODO
-            reloading = true
-            cliLogError.write('[CLI_LOCAL] => terminated for reloading...\n')
-            logger.error('[CLI_LOCAL] => terminated for reloading...')
-          } else {
-            cliLogError.write('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
-            logger.error('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '. Check logs for details')
-            myThis.state.info = undefined
-            myThis.state.error = 'CLI terminated with error: '+code+'. Check logs for details.'
-            myThis.state.progress = undefined
-            myThis.updateState(CLILOCAL_STATUS.ERROR)
-          }
+          cliLogError.write('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
+          logger.error('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '. Check logs for details')
+          myThis.state.info = undefined
+          myThis.state.error = 'CLI terminated with error: '+code+'. Check logs for details.'
+          myThis.state.progress = undefined
+          myThis.updateState(CLILOCAL_STATUS.ERROR)
         }
         if (!reloading) {
           myThis.stop(true, false) // just update state

@@ -140,6 +140,11 @@ class CliService {
     if (!this.isConfigured()) {
       logger.info('cliService is not configured.')
       this.setCliLocal(DEFAULT_CLI_LOCAL)
+    } else {
+      if (this.isCliLocal()) {
+        // start local CLI
+        this.reloadCliLocal()
+      }
     }
   }
 
@@ -150,7 +155,13 @@ class CliService {
     if (!cliLocal) {
       cliLocalService.deleteConfig()
     }
-    cliLocalService.reload()
+    this.reloadCliLocal()
+  }
+
+  reloadCliLocal() {
+    if (this.cliLocal) {
+      cliLocalService.reload()
+    }
   }
 
   getResetLabel() {
@@ -319,8 +330,24 @@ class CliService {
     return this.isCliStatusReady() && this.state.cli.torProgress
   }
 
+  getExternalDestination() {
+    return this.isCliStatusReady() && this.state.cli.externalDestination
+  }
+
   getVersion() {
     return this.isCliStatusReady() && this.state.cli.version
+  }
+
+  getExternalDestinationIcon() {
+    const externalDestination = this.getExternalDestination()
+    if (!externalDestination) {
+      return undefined;
+    }
+    const xpub = externalDestination.xpub;
+    const mixs = externalDestination.mixs;
+    return <small className='externalDestinationIcon' title={'Mixing to external destination "'+xpub+'" after at least '+mixs+' mixs'}>
+      <strong>XPUB</strong>
+    </small>
   }
 
   getTorProgressIcon() {
