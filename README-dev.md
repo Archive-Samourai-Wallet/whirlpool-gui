@@ -29,7 +29,15 @@ yarn start
 
 ### Build
 
+Build on linux for linux + windows:
 ```
 cd whirlpool-gui
 yarn package
+yarn package-win
+```
+
+Build on mac for mac:
+```
+cd whirlpool-gui
+yarn package-mac
 ```
