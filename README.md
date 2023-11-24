@@ -23,6 +23,7 @@ Whirlpool files are stored in ```userData``` which varies depending on your OS:
 
 #### Configuration file
 - CLI configuration: ```whirlpool-cli-config.properties```
+- GUI configuration: ```config.json```
 
 #### System files
 - CLI state for wallet: ```whirlpool-cli-state-xxx.properties```

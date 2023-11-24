@@ -58,6 +58,7 @@ if (!gotTheLock) {
   app.quit()
 }
 else {
+  app.commandLine.appendSwitch('--no-sandbox')
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
@@ -87,7 +88,8 @@ else {
       width: 1280,
       height: 728,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        sandbox: false
       }
     });
 
