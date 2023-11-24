@@ -459,8 +459,8 @@ export class CliLocal {
     this.updateState(CLILOCAL_STATUS.DOWNLOADING)
 
     const onProgress = progress => {
-      logger.verbose('CLI downloading, progress='+progress)
-      const progressPercent = parseInt(progress * 100)
+      logger.verbose('CLI downloading, progress='+progress.percent)
+      const progressPercent = parseInt(progress.percent * 100)
       this.state.progress = progressPercent
       this.updateState(CLILOCAL_STATUS.DOWNLOADING)
     }
