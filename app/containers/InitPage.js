@@ -18,7 +18,7 @@ const STEP_LAST = 3
 const DEFAULT_CLIHOSTPORT = 'https://my-cli-host:'+DEFAULT_CLIPORT
 const TOR_CLIHISTPORT = 'http://my-hiddenservice.onion:'+DEFAULT_CLIPORT
 const DEFAULT_APIKEY = ''
-const DEFAUT_GUI_PROXY = 'socks5://127.0.0.1:9050'
+const DEFAULT_GUI_PROXY = 'socks5://127.0.0.1:9050'
 const TORBROWSER_PROXY = 'socks5://127.0.0.1:9150'
 
 const CLILOCAL_URL = 'https://localhost:'+DEFAULT_CLIPORT
@@ -33,7 +33,7 @@ class InitPage extends Component<Props> {
       navNextStep: false,
       cliLocal: cliService.isCliLocal(),
       cliUrl: undefined,
-      currentCliHostPort: DEFAULT_CLIHOSTPORT,
+      currentCliHostPort: undefined,
       currentApiKey: DEFAULT_APIKEY,
       showGuiProxy: false,
       showApiKey: false,
@@ -48,6 +48,7 @@ class InitPage extends Component<Props> {
       cameraError: null,
       pairingModal: false,
       cameraAccessGranted: false,
+      cliTestRequesting: false,
     }
 
     // configuration data
@@ -157,7 +158,7 @@ class InitPage extends Component<Props> {
     const newState = {
       cliUrl: undefined,
       cliError: undefined,
-      currentCliHostPort: DEFAULT_CLIHOSTPORT,
+      currentCliHostPort: undefined,
       currentApiKey: DEFAULT_APIKEY
     }
     if (resetToggles) {
@@ -182,7 +183,7 @@ class InitPage extends Component<Props> {
       newState.showGuiProxy = isHiddenService
       if (!guiConfig.getGuiProxy()) {
         // set default GUI proxy
-        guiConfig.setGuiProxy(DEFAUT_GUI_PROXY)
+        guiConfig.setGuiProxy(DEFAULT_GUI_PROXY)
       }
     }
     this.setState(newState)
@@ -222,6 +223,8 @@ class InitPage extends Component<Props> {
     const apiKey = this.state.currentApiKey
     const cliLocal = this.state.cliLocal
 
+    this.setState({cliTestRequesting: true})
+
     cliService.testCliUrl(cliUrl, apiKey).then(cliStatusReady => {
       // connection success
       this.setState({
@@ -239,6 +242,7 @@ class InitPage extends Component<Props> {
         this.goNextStep()
       }
     }).catch(error => {
+      this.setState({cliTestRequesting: false})
       if (error && error.message.indexOf('API Key')) {
         this.setState({showApiKey:true})
       }
@@ -257,8 +261,7 @@ class InitPage extends Component<Props> {
         </div>
       </div>
       <div className="form-group row">
-        <label htmlFor="inputEmail3" className="col-sm-1 col-form-label"></label>
-        <div className="col-sm-11">
+        <div className="col-sm-12">
           <div className="form-check">
             <input className="form-check-input" type="radio" name="cliLocal" id="cliLocalTrue" value='true' checked={this.state.cliLocal} onChange={this.onChangeCliLocal}/>
             <label className="form-check-label" htmlFor="cliLocalTrue">
@@ -274,17 +277,16 @@ class InitPage extends Component<Props> {
         </div>
       </div>
 
-      {this.state.cliLocal && <div>
+      {this.state.cliLocal && <>
         <div className="row">
-          <div className="col-sm-1"></div>
-          {cliLocalService.getStatusIcon((icon,text)=><div className='col-sm-8'><Alert variant='success'>{icon} {text}</Alert></div>)}
+          {cliLocalService.getStatusIcon((icon,text)=><div className='col-sm-12'><Alert variant='success'>{icon} {text}</Alert></div>)}
           {!cliLocalService.isStatusDownloading() && !cliLocalService.isValid() && <div className='col-sm-12'><Alert variant='danger'>No valid CLI found. Please reinstall GUI.</Alert></div>}
         </div>
         {cliLocalService.isValid() && <div className="row">
           <div className="col-sm-3"></div>
           <button type="button" className="btn btn-primary col-sm-3" onClick={this.connectCli}> Continue <FontAwesomeIcon icon={Icons.faArrowRight} /></button>
         </div>}
-      </div>}
+      </>}
 
       {!this.state.cliLocal &&
       <Card>
@@ -294,41 +296,62 @@ class InitPage extends Component<Props> {
             <div className="col-sm-11">
               <div className="row">
                 <label htmlFor="cliHostPort" className="col-sm-2 col-form-label">CLI address</label>
-                <input type="text" id="cliHostPort" className="form-control col-sm-4" placeholder={DEFAULT_CLIHOSTPORT} defaultValue={this.state.currentCliHostPort} ref={this.inputCliHostPort} onChange={this.onChangeInputCliHostPort} required/>
+                <input type="text" id="cliHostPort" className="form-control col-sm-4" placeholder={DEFAULT_CLIHOSTPORT} ref={this.inputCliHostPort} onChange={this.onChangeInputCliHostPort} required/>
                 <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0,'padding-bottom':0}}>
                   <code>{DEFAULT_CLIHOSTPORT}</code> for standard usage<br/>
                   <code>{TOR_CLIHISTPORT}</code> for Hidden Service
                 </label>
               </div>
-              {this.state.currentCliHostPort
-              && !this.state.cliUrl && <div className="row">
-                <div className='col-sm-2'></div>
-                <button type='button' className='btn btn-primary col-sm-4' onClick={this.connectCli}>Connect</button>
-              </div>}
-              &nbsp;
-              {this.state.showGuiProxy && <div className="row">
-                <label htmlFor="guiProxy" className="col-sm-2 col-form-label">Tor proxy</label>
-                <input type="text" id="guiProxy" className="form-control col-sm-4" defaultValue={guiConfig.getGuiProxy()} onChange={this.onChangeGuiProxy}/>
-                <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
-                  Required when CLI is behind a Hidden Service.<br/>
-                  <code>{DEFAUT_GUI_PROXY}</code> with Tor,<br/><code>{TORBROWSER_PROXY}</code> with Tor Browser
-                </label>
-              </div>}
-              {this.state.showApiKey && <div className="row">
-                <label htmlFor="apiKey" className="col-sm-2 col-form-label">API Key</label>
-                <input type="password" id="apiKey" className="form-control col-sm-4" defaultValue={this.state.currentApiKey} ref={this.inputApiKey} onChange={this.onChangeInputCliHostPort} />
-                <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
-                  Required when CLI was already initialized<br/>(<code>cli.apiKey</code> in <code>whirlpool-cli-config.properties</code>)
-                </label>
-              </div>}
+
+              {this.state.showGuiProxy && <hr />}
               <div className="row">
-                <div className="col-sm-1"></div>
-                {!this.state.showGuiProxy && <div className="col-sm-3 col-form-label">
-                  <a onClick={() => this.setState({showGuiProxy:true})}>Use a Tor proxy?</a>
-                </div>}
-                {!this.state.showApiKey && <div className="col-sm-3 col-form-label">
-                  <a onClick={() => this.setState({showApiKey:true})}>Configure API key?</a>
-                </div>}
+                {this.state.showGuiProxy && <>
+                  <label htmlFor="guiProxy" className="col-sm-2 col-form-label">Tor proxy</label>
+                  <input type="text"
+                    id="guiProxy"
+                    className="form-control col-sm-4"
+                    placeholder={DEFAULT_GUI_PROXY}
+                    defaultValue={guiConfig.getGuiProxy()}
+                    onChange={this.onChangeGuiProxy}/>
+                  <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
+                    Required when CLI is behind a Hidden Service.<br/>
+                    <code>{DEFAULT_GUI_PROXY}</code> with Tor,<br/><code>{TORBROWSER_PROXY}</code> with Tor Browser
+                  </label>
+                </>}
+              </div>
+
+              {this.state.showApiKey && <hr />}
+              <div className="row">
+                {this.state.showApiKey && <>
+                  <label htmlFor="apiKey" className="col-sm-2 col-form-label">API Key</label>
+                  <input type="password" id="apiKey" className="form-control col-sm-4" defaultValue={this.state.currentApiKey} ref={this.inputApiKey} onChange={this.onChangeInputCliHostPort} />
+                  <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
+                    Required when CLI was already initialized<br/>(<code>cli.apiKey</code> in <code>whirlpool-cli-config.properties</code>)
+                  </label>
+                </>}
+              </div>
+
+              {(!this.state.showGuiProxy || !this.state.showApiKey) &&
+                <div className="row">
+                    <div className="col-sm-3 col-form-label">
+                    {!this.state.showGuiProxy &&
+                      <a onClick={() => this.setState({showGuiProxy:true})} role="button">Use a Tor proxy?</a>}
+                    </div>
+                    <div className="col-sm-3 col-form-label text-right">
+                    {!this.state.showApiKey &&
+                      <a onClick={() => this.setState({showApiKey:true})} role="button">Configure API key?</a>}
+                    </div>
+                </div>
+              }
+
+              <hr />
+              <div className="row">
+                <button type='button'
+                  className='btn btn-primary col-sm-4 offset-sm-2'
+                  disabled={!this.state.currentCliHostPort || this.state.cliUrl || this.state.cliTestRequesting}
+                  onClick={this.connectCli}>
+                    {this.state.cliTestRequesting ? 'Loading' : 'Connect'}
+                </button>
               </div>
             </div>
           </div>
