@@ -40,6 +40,12 @@ class ConnectingPage extends Component<Props> {
     }
   }
 
+  onReloadCliLocal() {
+    if (confirm('This will reload CLI. Are you sure?')) {
+      cliService.reloadCliLocal()
+    }
+  }
+
   renderStarting() {
     return (
       <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
@@ -64,6 +70,7 @@ class ConnectingPage extends Component<Props> {
 
         {cliService.getCliMessage() && <Alert variant='info'>{cliService.getCliMessage()}</Alert>}
         {!cliService.isConnected() && <button type='button' className='btn btn-primary' onClick={this.reconnect}><FontAwesomeIcon icon={Icons.faSync} /> Retry to connect</button>}
+        {!cliService.isConnected() && cliService.isCliLocal() && <button type='button' className='btn btn-danger' onClick={this.onReloadCliLocal}>Reload CLI</button>}
         {cliService.isConnected() && <button type='button' className='btn btn-danger' onClick={this.onRestartCli}>Restart CLI</button>}
 
         {cliUrlError && <div>

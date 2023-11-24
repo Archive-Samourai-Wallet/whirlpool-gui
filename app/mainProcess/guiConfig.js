@@ -40,9 +40,15 @@ class GuiConfig {
   loadConfig() {
     let config = undefined
     try {
-      config = JSON.parse(fs.readFileSync(GUI_CONFIG_FILEPATH, 'utf8'));
-    } catch(e) {
-    }
+      const data = fs.readFileSync(GUI_CONFIG_FILEPATH, 'utf8')
+      if (data) {
+        try {
+          config = JSON.parse(data);
+        } catch (e) {
+          logger.error("Could not parse GUI configuration: "+GUI_CONFIG_FILEPATH, e)
+        }
+      }
+    } catch(e) {}
     if (!this.validate(config)) {
       logger.info("Using GUI configuration: default")
       config = CONFIG_DEFAULT
@@ -86,7 +92,7 @@ class GuiConfig {
         return true
       }
       // invalid
-      logger.warn("ignoring guiConfig: "+GUI_CONFIG_FILEPATH)
+      logger.error("ignoring invalid guiConfig (unknown API_MODE): "+GUI_CONFIG_FILEPATH)
     } else {
       // or not existing
       logger.info("no guiConfig: " + GUI_CONFIG_FILEPATH)
