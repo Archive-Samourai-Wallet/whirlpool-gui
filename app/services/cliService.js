@@ -345,7 +345,7 @@ class CliService {
     }
     const xpub = externalDestination.xpub;
     const mixs = externalDestination.mixs;
-    return <small className='externalDestinationIcon' title={'Mixing to external destination "'+xpub+'" after at least '+mixs+' mixs'}>
+    return <small className='externalDestinationIcon' title={'Mixing to external XPUB "'+xpub+'" after at least '+mixs+' mixs'}>
       <strong>XPUB</strong>
     </small>
   }
