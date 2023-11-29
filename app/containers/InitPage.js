@@ -451,12 +451,11 @@ class InitPage extends Component<Props> {
         <div className="col-sm-11">
           <div className="row">
             <div className="col-sm-12">
-              Get your <strong>pairing payload</strong> from Samourai Wallet, go
-              to <strong>Settings/Transactions/Experimental</strong> then{' '}
+              Get your <strong>Whirlpool pairing payload</strong> from Samourai Wallet. Navigate to: <strong>Settings &gt; Transactions &gt; Pair to Whirlpool GUI</strong>, then{' '}
               <a onClick={(event) => {
                 event.preventDefault();
                 this.openPairingModal();
-              }} href="#"><strong>scan it using webcam</strong></a>.<br/>
+              }} href="#"><strong>scan using webcam</strong></a>.<br/>
               <br/>
               <div className="row">
                 <div className="col-sm-10">

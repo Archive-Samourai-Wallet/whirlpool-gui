@@ -56,7 +56,7 @@ export default class WebcamPayloadModal extends AbstractModal {
     return (
       <div className="row">
         <div className="col-sm-12">
-          Get your <strong>pairing payload</strong> from Samourai Wallet, go to <strong>Settings/Transactions/Experimental</strong>
+          Get your <strong>Whirlpool pairing payload</strong> from Samourai Wallet. Navigate to: <strong>Settings &gt; Transactions &gt; Pair to Whirlpool GUI</strong>
           <div className="text-center pt-4">
             <Webcam
               ref={this.webcamRef}
