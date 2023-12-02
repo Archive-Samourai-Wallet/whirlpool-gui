@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import electron from 'electron';
 import { Route, Switch, withRouter } from 'react-router';
 import backendService from '../services/backendService';
 import { connect } from 'react-redux';
@@ -32,6 +33,7 @@ import ZpubModal from '../components/Modals/ZpubModal';
 import poolsService from '../services/poolsService';
 import cliService from '../services/cliService';
 import ConnectingPage from './ConnectingPage';
+import { logger } from '../utils/logger';
 import StatusPage from './StatusPage';
 import LoginPage from './LoginPage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -117,6 +119,18 @@ class App extends React.Component<Props> {
   }
 
   render() {
+    try {
+      return this.doRender()
+    } catch (e) {
+      // crash recovery
+      logger.error('GUI crashed, reloading...', e)
+      const BrowserWindow = (electron.BrowserWindow || electron.remote.BrowserWindow)
+      BrowserWindow.getFocusedWindow().reload();
+      return <h1>Error: {e.message}</h1>
+    }
+  }
+
+  doRender() {
     const cliLocalStatusIcon = cliService.isCliLocal() ? cliLocalService.getStatusIcon((icon,text)=>icon) : undefined
     const cliStatusIcon = cliService.getStatusIcon((icon,text)=>icon)
     const loginLogoutIcon = cliService.getLoginStatusIcon((icon,text)=>icon)
