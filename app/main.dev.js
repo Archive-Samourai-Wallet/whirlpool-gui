@@ -18,6 +18,8 @@ import { CliLocal } from './mainProcess/cliLocal';
 import fs from 'fs';
 import { GUI_LOG_FILE, IPC_CAMERA } from './const';
 import guiConfig from './mainProcess/guiConfig';
+import unhandled from 'electron-unhandled';
+import { logger } from './utils/logger';
 
 /*export default class AppUpdater {
   constructor() {
@@ -91,6 +93,14 @@ else {
         nodeIntegration: true,
         sandbox: false
       }
+    });
+
+    // log unhandled exceptions
+    unhandled({
+      showDialog: process.env.NODE_ENV === 'development',
+      logger: (e) => {
+        logger.error('[MAIN PROCESS] unhandled exception',e)
+      },
     });
 
     const EXTRA_RESOURCES_PATH = app.isPackaged

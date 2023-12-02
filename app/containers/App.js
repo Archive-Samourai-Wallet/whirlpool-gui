@@ -99,14 +99,14 @@ class App extends React.Component<Props> {
       // not configured/initialized
       return <Switch>
         <Route path={routes.STATUS} component={StatusPage}/>
-        <Route path={routes.HOME} component={InitPage} />
+        <Route path={routes.HOME} component={InitPage}/>
       </Switch>
     }
     if (!cliService.isCliStatusReady()) {
       // not connected
       return <Switch>
         <Route path={routes.STATUS} component={StatusPage}/>
-        <Route path={routes.HOME} component={ConnectingPage} />
+        <Route path={routes.HOME} component={ConnectingPage}/>
       </Switch>
     }
     if (!cliService.isLoggedIn()) {

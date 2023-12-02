@@ -260,6 +260,7 @@
     "electron-dl": "^3.5.1",
     "electron-log": "^3.0.1",
     "electron-store": "^5.1.0",
+    "electron-unhandled": "^3.0.2",
     "electron-updater": "^4.2.2",
     "feather-icons": "^4.26.0",
     "history": "^4.7.2",
