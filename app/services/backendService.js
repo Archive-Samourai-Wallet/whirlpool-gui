@@ -32,6 +32,9 @@ class BackendService {
     if (!cliUrl) {
       cliUrl = cliService.getCliUrl()
     }
+    if (!cliUrl) {
+      throw new Error('CLI url is undefined')
+    }
     return utils.fetch(cliUrl + url, {
       method,
       headers: this.computeHeaders(apiKey),
@@ -112,12 +115,9 @@ class BackendService {
   };
 
   pools = {
-    fetchPools: (tx0FeeTarget=undefined, mixFeeTarget=undefined) => {
+    fetchPools: () => {
       return this.withStatus('Pools', 'Fetch pools', () =>
-          this.fetchBackendAsJson('/rest/pools?true=true'
-            +(tx0FeeTarget!=undefined?'&tx0FeeTarget='+tx0FeeTarget:'')
-            +(mixFeeTarget!=undefined?'&mixFeeTarget='+mixFeeTarget:'')
-            , 'GET')
+          this.fetchBackendAsJson('/rest/pools', 'GET')
         , 'pools.fetchPools', true)
     }
   };

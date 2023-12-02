@@ -13,7 +13,6 @@ import {
   CLILOCAL_STATUS,
   DEFAULT_CLIPORT,
   IPC_CLILOCAL,
-  IS_DEV,
 } from '../const';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
@@ -268,7 +267,7 @@ export class CliLocal {
           myThis.pushState()
           const cmd = 'java'
           const args = ['-jar', myThis.getCliFilename(), '--listen', '--debug', '--logging.file='+CLI_LOG_FILE, ARG_CLI_GUI]
-          if (IS_DEV) {
+          if (cliApiService.isApiModeLocal()) {
             args.push('--debug-client')
           }
           myThis.startProc(cmd, args, cliApiService.getCliPath(), CLI_LOG_ERROR_FILE)

@@ -1,4 +1,4 @@
-import { APP_USERDATA, CLI_QA_URL, CLI_STABLE_URL, IS_DEV } from '../const';
+import { APP_USERDATA, CLI_QA_URL, CLI_STABLE_URL } from '../const';
 import cliVersion from './cliVersion';
 import { logger } from '../utils/logger';
 import guiConfig from './guiConfig';
@@ -8,7 +8,9 @@ export const API_MODES = {
   LOCAL: 'LOCAL',
   QA: 'QA'
 }
-const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli/target/'
+const IS_DEV = (process.env.NODE_ENV === 'development')
+const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli-develop/target/'
+const DL_FILE_LOCAL = 'whirlpool-client-cli-0.10.16.1-QA3-SNAPSHOT-run.jar'
 
 export class CliApiService {
   constructor (apiVersion) {
@@ -58,7 +60,7 @@ export class CliApiService {
       // use local jar
       return {
         cliVersion: 'develop-SNAPSHOT',
-        filename: 'whirlpool-client-cli-develop-SNAPSHOT-run.jar',
+        filename: DL_FILE_LOCAL,
         url: false,
         checksum: false
       }

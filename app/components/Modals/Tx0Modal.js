@@ -41,13 +41,13 @@ export default function Tx0Modal(props) {
   // compute available pools
   useEffect(() => {
     // fetch pools for tx0 feeTarget
-    modalUtils.load("Loading...", poolsService.fetchPoolsForTx0(spendValue, tx0FeeTarget, mixFeeTarget).then(newPools => {
+    modalUtils.load("Loading...", poolsService.fetchPoolsForTx0(spendValue).then(newPools => {
       if (newPools.length == 0) {
         modalUtils.setError("No pool for such utxo and miner fee.")
       }
       setPools(newPools)
     }))
-  }, [tx0FeeTarget, mixFeeTarget, spendValue])
+  }, [spendValue])
 
   // compute selected poolId
   useEffect(() => {
