@@ -3,7 +3,7 @@ import { computeLogPath, logger } from './utils/logger';
 import { CliApiService } from './mainProcess/cliApiService';
 import electron from 'electron';
 
-export const IS_DEV = (process.env.NODE_ENV === 'development')
+export const IS_DEV = false //(process.env.NODE_ENV === 'development')
 
 /* shared with mainProcess */
 

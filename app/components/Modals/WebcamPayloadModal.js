@@ -1,79 +1,36 @@
 // @flow
-import React from 'react';
-import AbstractModal from './AbstractModal';
-import Webcam from 'react-webcam';
-import QrcodeDecoder from 'qrcode-decoder';
+import React, { useEffect, useState } from 'react';
+import { QrReader } from 'react-qr-reader';
+import ModalUtils from '../../services/modalUtils';
+import GenericModal from './GenericModal';
 
-const qr = new QrcodeDecoder();
+export default function WebcamPayloadModal(props) {
+  const modalUtils = new ModalUtils(useState, useEffect)
+  const {onScan, onClose} = props
 
-type Props = {};
-
-export default class WebcamPayloadModal extends AbstractModal {
-  webcamRef = React.createRef<Webcam>();
-  captureInterval: IntervalID | null = null;
-
-  constructor(props: Props) {
-    const initialState = {};
-    super(props, 'modal-webcam-payload', initialState);
-  }
-
-  componentDidMount() {
-    this.captureInterval = setInterval(this.captureImage, 2000);
-  }
-
-  componentWillUnmount() {
-    if (this.captureInterval) {
-      clearInterval(this.captureInterval);
-    }
-  }
-
-  captureImage = async () => {
-    if (this.webcamRef.current) {
-      const imageData = this.webcamRef.current.getScreenshot();
-
-      if (imageData) {
-        const result = await qr.decodeFromImage(imageData).catch(err => {
-          console.log('QR code not readable: ', err);
-        });
-
-        if (result) {
-          this.props.onScan(result.data);
-          this.props.onClose();
-        }
-      }
-    }
-  };
-
-  renderTitle() {
-    return <span>Scan your pairing payload</span>;
-  }
-
-  renderButtons() {
-    return <div />;
-  }
-
-  renderBody() {
-    return (
+  return <GenericModal dialogClassName='modal-webcam-payload'
+                       modalUtils={modalUtils}
+                       title='Scan your pairing payload'
+                       buttons={<span/>}
+                       onClose={onClose}>
       <div className="row">
         <div className="col-sm-12">
           Get your <strong>Whirlpool pairing payload</strong> from Samourai Wallet. Navigate to: <strong>Settings &gt; Transactions &gt; Pair to Whirlpool GUI</strong>
           <div className="text-center pt-4">
-            <Webcam
-              ref={this.webcamRef}
-              audio={false}
-              width={300}
-              height={300}
-              screenshotQuality={1}
-              screenshotFormat={'image/png'}
-              videoConstraints={{
-                width: 300,
-                height: 300,
-                facingMode: 'user'
+            <QrReader
+              onResult={(result, error) => {
+                if (!!result) {
+                  onScan(result?.text);
+                  onClose();
+                }
+                if (!!error) {
+                  modalUtils.setError('Could not read QR code: ' + error.message)
+                }
               }}
+              style={{ width: '80%' }}
             />
           </div>
         </div>
       </div>
-    );
-  }
+  </GenericModal>
 }

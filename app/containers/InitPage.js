@@ -146,10 +146,10 @@ class InitPage extends Component<Props> {
   // cli instance selection
 
   onChangeCliLocal(e) {
-    const valueBool = e.target.value === 'true'
-    cliService.setCliLocal(valueBool)
+    const cliLocal = e.target.value === 'true'
+    cliService.setCliLocal(cliLocal)
     this.setState({
-      cliLocal: valueBool
+      cliLocal: cliLocal
     });
     this.resetCliUrl()
   }
@@ -297,7 +297,7 @@ class InitPage extends Component<Props> {
               <div className="row">
                 <label htmlFor="cliHostPort" className="col-sm-2 col-form-label">CLI address</label>
                 <input type="text" id="cliHostPort" className="form-control col-sm-4" placeholder={DEFAULT_CLIHOSTPORT} ref={this.inputCliHostPort} onChange={this.onChangeInputCliHostPort} required/>
-                <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0,'padding-bottom':0}}>
+                <label className='col-form-label col-sm-6 text-muted' style={{'paddingTop':0,'paddingBottom':0}}>
                   <code>{DEFAULT_CLIHOSTPORT}</code> for standard usage<br/>
                   <code>{TOR_CLIHISTPORT}</code> for Hidden Service
                 </label>
@@ -313,7 +313,7 @@ class InitPage extends Component<Props> {
                     placeholder={DEFAULT_GUI_PROXY}
                     defaultValue={guiConfig.getGuiProxy()}
                     onChange={this.onChangeGuiProxy}/>
-                  <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
+                  <label className='col-form-label col-sm-6 text-muted' style={{'paddingTop':0}}>
                     Required when CLI is behind a Hidden Service.<br/>
                     <code>{DEFAULT_GUI_PROXY}</code> with Tor,<br/><code>{TORBROWSER_PROXY}</code> with Tor Browser
                   </label>
@@ -325,7 +325,7 @@ class InitPage extends Component<Props> {
                 {this.state.showApiKey && <>
                   <label htmlFor="apiKey" className="col-sm-2 col-form-label">API Key</label>
                   <input type="password" id="apiKey" className="form-control col-sm-4" defaultValue={this.state.currentApiKey} ref={this.inputApiKey} onChange={this.onChangeInputCliHostPort} />
-                  <label className='col-form-label col-sm-6 text-muted' style={{'padding-top':0}}>
+                  <label className='col-form-label col-sm-6 text-muted' style={{'paddingTop':0}}>
                     Required when CLI was already initialized<br/>(<code>cli.apiKey</code> in <code>whirlpool-cli-config.properties</code>)
                   </label>
                 </>}

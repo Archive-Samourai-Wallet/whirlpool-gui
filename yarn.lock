@@ -5484,10 +5484,10 @@ electron-devtools-installer@^2.2.4:
     rimraf "^2.5.2"
     semver "^5.3.0"
 
-electron-dl@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/electron-dl/-/electron-dl-3.3.1.tgz#14164595bebcc636c671eb791b2a3265003f76c4"
-  integrity sha512-kmcSYZyHVEHHHFKlZWW58GiCmu2NSu3Rdwnl3+/fr/ftQYHJULVf1QkrCBPFE2bp/Ly113Za7c8wJZs1nBy04A==
+electron-dl@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/electron-dl/-/electron-dl-3.5.1.tgz#781287c0c8537e707f034eb3415f4adaded8a7de"
+  integrity sha512-5Yb9s/iPVJ5mW5x3j6XkKxt7WEqREr/AhYxZmtEfW1ffQHs1+aGoiQ2fXCAU6UIXMnWog2MXK82vrxJsjA3nbQ==
   dependencies:
     ext-name "^5.0.0"
     pupa "^2.0.1"
@@ -9428,11 +9428,6 @@ jsprim@^1.2.2:
     json-schema "0.4.0"
     verror "1.10.0"
 
-jsqr@^1.3.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-1.4.0.tgz#8efb8d0a7cc6863cb6d95116b9069123ce9eb2d1"
-  integrity sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==
-
 jsx-ast-utils@^2.2.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.4.1.tgz#1114a4c1209481db06c690c2b4f488cc665f657e"
@@ -12216,13 +12211,6 @@ qr.js@0.0.0:
   resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
   integrity sha1-ys6GOG9ZoNuAUPqQ2baw6IoeNk8=
 
-qrcode-decoder@^0.1.2:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/qrcode-decoder/-/qrcode-decoder-0.1.3.tgz#bb313038e3b1ee6666dad0b7d0dd04371d77048c"
-  integrity sha512-1DcdBWMO9elb+WQ8YxIFKEGbNtwfkS59z560jRVP+CoxcfXcB/+qoGhlhVnT5nqe4ioxMaTp4aiQoCpdup3ysA==
-  dependencies:
-    jsqr "^1.3.1"
-
 qrcode-terminal@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/qrcode-terminal/-/qrcode-terminal-0.10.0.tgz#a76a48e2610a18f97fa3a2bd532b682acff86c53"
@@ -12543,10 +12531,10 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-webcam@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-4.2.0.tgz#e5dd18f1c62d7e7dc59bc7a6702c2cd162b6c81b"
-  integrity sha512-ylUAOo7OtzoLdXzcLFglNtoljl8PGVOLFJ35kCj7xaVbcsim2/7W7iOAHklwn3GyHJdMZBtj01gXa2XtXj/Q5Q==
+react-webcam@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-7.2.0.tgz#64141c4c7bdd3e956620500187fa3fcc77e1fd49"
+  integrity sha512-xkrzYPqa1ag2DP+2Q/kLKBmCIfEx49bVdgCCCcZf88oF+0NPEbkwYk3/s/C7Zy0mhM8k+hpdNkBLzxg8H0aWcg==
 
 react@^16.6.3:
   version "16.14.0"
