@@ -141,6 +141,7 @@ class GuiConfig {
     this.store.delete(STORE_CLIURL)
     this.store.delete(STORE_APIKEY)
     this.store.delete(STORE_CLILOCAL)
+    this.store.delete(STORE_GUI_PROXY)
   }
 
   getCliUrl() {

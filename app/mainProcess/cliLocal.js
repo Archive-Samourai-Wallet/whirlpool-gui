@@ -456,6 +456,7 @@ export class CliLocal {
       }
     }
 
+    this.state.progress = 0
     this.updateState(CLILOCAL_STATUS.DOWNLOADING)
 
     const onProgress = progress => {

@@ -83,6 +83,14 @@ export default class StatusPage extends Component<Props> {
                     <div>GUI <strong>{GUI_VERSION}</strong>, API <strong>{cliApiService.getVersionName()}</strong></div>
                   </div>
                 </div>
+                <div className='row'>
+                  <div className='col-sm-2'>
+                    <strong>Proxy:</strong>
+                  </div>
+                  <div className='col-sm-10'>
+                    <div><strong>{guiConfig.getGuiProxy() ? guiConfig.getGuiProxy() : 'none'}</strong></div>
+                  </div>
+                </div>
                 {cliService.isConfigured() && <div className='row'>
                   <div className='col-sm-2'>
                     <strong>Mode:</strong>

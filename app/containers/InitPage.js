@@ -76,6 +76,11 @@ class InitPage extends Component<Props> {
     ipcRenderer.on(IPC_CAMERA.DENIED, () => {
       this.setState({ cameraAccessGranted: false, pairingModal: false, cameraError: "Camera access was denied or is unavailable." })
     });
+
+    // disable proxy for local CLI (fix for previous gui versions)
+    if (cliService.isCliLocal() && guiConfig.getGuiProxy()) {
+      guiConfig.setGuiProxy(undefined)
+    }
   }
 
   openPairingModal = () => {
@@ -147,6 +152,10 @@ class InitPage extends Component<Props> {
 
   onChangeCliLocal(e) {
     const cliLocal = e.target.value === 'true'
+    if (cliLocal) {
+      // disable proxy for local CLI
+      guiConfig.setGuiProxy(undefined)
+    }
     cliService.setCliLocal(cliLocal)
     this.setState({
       cliLocal: cliLocal
