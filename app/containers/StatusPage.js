@@ -59,14 +59,14 @@ export default class StatusPage extends Component<Props> {
               <Card.Header>
                 <div className='row'>
                   <div className='col-sm-12'>
+                    <div className='float-right text-right'>
+                      <button type='button' className='btn btn-danger btn-sm' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
+                    </div>
                     <strong>GUI</strong>
                   </div>
                 </div>
               </Card.Header>
               <Card.Body>
-                <div style={{'float':'right'}}>
-                  <button type='button' className='btn btn-danger btn-sm' onClick={this.onResetConfig}><FontAwesomeIcon icon={Icons.faExclamationTriangle} /> Reset {cliService.getResetLabel()}</button>
-                </div>
                 <div className='row'>
                   <div className='col-sm-2'>
                     <strong>Version:</strong>
@@ -80,25 +80,17 @@ export default class StatusPage extends Component<Props> {
                     <strong>Proxy:</strong>
                   </div>
                   <div className='col-sm-10'>
-                    <div><strong>{guiConfig.getGuiProxy() ? guiConfig.getGuiProxy() : 'none'}</strong></div>
+                    <div><strong>{guiConfig.getGuiProxy()||'None'}</strong></div>
                   </div>
                 </div>
-                {cliService.isConfigured() && <div className='row'>
+                <div className='row'>
                   <div className='col-sm-2'>
                     <strong>Mode:</strong>
                   </div>
                   <div className='col-sm-10'>
-                    <div><strong>{cliService.isCliLocal()?'Standalone':'Remote CLI'}</strong></div>
+                    <div><strong>{cliService.isConfigured() ? (cliService.isCliLocal()?'Standalone':'Remote CLI') : 'Not configured'}</strong></div>
                   </div>
-                </div>}
-                {cliService.isConfigured() && !cliService.isCliLocal() && <div className='row'>
-                  <div className='col-sm-2'>
-                    <strong>GUI proxy:</strong>
-                  </div>
-                  <div className='col-sm-10'>
-                    <div><strong>{guiConfig.getGuiProxy()||'None'}</strong></div>
-                  </div>
-                </div>}
+                </div>
                 <div className='row small'>
                   <div className='col-sm-12'>
                     <hr/>
@@ -125,16 +117,16 @@ export default class StatusPage extends Component<Props> {
         <Card>
           <Card.Header>
             <div className='row'>
-              <div className='col-sm-6'>
+              <div className='col-sm-12'>
+                <div className='float-right text-right'>
+                  <button type='button' className='btn btn-primary btn-sm' onClick={this.onRestartCli}>Restart CLI</button>{' '}
+                  {walletService.isReady() && <button type='button' className='btn btn-secondary btn-sm' onClick={this.onResync}>Resync postmix counters</button>}
+                </div>
                 <strong>CLI</strong>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
-            <div className='float-right text-right'>
-              <button type='button' className='btn btn-primary btn-sm' onClick={this.onRestartCli}>Restart CLI</button>{' '}
-              {walletService.isReady() && <button type='button' className='btn btn-secondary btn-sm' onClick={this.onResync}>Resync postmix counters</button>}
-            </div>
             <div className='row'>
               <div className='col-sm-2'>
                 <strong>Status:</strong>
@@ -162,14 +154,14 @@ export default class StatusPage extends Component<Props> {
                   {cliLocalService.getStatusIcon((icon,text)=><div>{icon} {text}</div>)}
                 </div>
               </div>
-              <div className='row'>
+              {cliLocalService.hasCliApi() && <div className='row'>
                 <div className='col-sm-2'>
-                  {cliLocalService.hasCliApi() && <strong>JAR:<br/></strong>}
+                  <strong>JAR:<br/></strong>
                 </div>
                 <div className='col-sm-10'>
-                  {cliLocalService.hasCliApi() && <div>{cliLocalService.getCliFilename()} ({cliLocalService.getCliChecksum()})</div>}
+                  <div>{cliLocalService.getCliFilename()} ({cliLocalService.getCliChecksum() || 'no checksum'})</div>
                 </div>
-              </div>
+              </div>}
             </div>}
 
             {cliService.isConfigured() && cliService.isConnected() && <div>

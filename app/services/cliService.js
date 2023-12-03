@@ -138,7 +138,7 @@ class CliService {
     console.log('cliService.loadConfig: cliUrl='+this.cliUrl)
 
     if (!this.isConfigured()) {
-      logger.info('cliService is not configured.')
+      console.log('cliService is not configured.')
       this.setCliLocal(DEFAULT_CLI_LOCAL)
     } else {
       if (this.isCliLocal()) {
@@ -386,14 +386,14 @@ class CliService {
   }
 
   fetchState () {
+    if (!this.isConfigured()) {
+      console.warn("CLI not configured yet");
+      return
+    }
     if (this.isCliLocal()) {
-      if (!this.getCliUrl()) {
-        console.warn("local CLI not configured yet");
-        return
-      }
       cliLocalService.fetchState()
       if (!cliLocalService.isStarted()) {
-        console.warn("local CLI not configured yet");
+        console.warn("local CLI not started yet");
         return
       }
     }

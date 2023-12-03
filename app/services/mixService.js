@@ -3,6 +3,7 @@ import backendService from './backendService';
 import utils, { TX0_MIN_CONFIRMATIONS, UTXO_STATUS, WHIRLPOOL_ACCOUNTS } from './utils';
 import poolsService from './poolsService';
 import walletService from './walletService';
+import cliService from './cliService';
 
 const REFRESH_RATE = 3000;
 class MixService {
@@ -138,6 +139,10 @@ class MixService {
 
   fetchState () {
     return ifNot.run('mixService:fetchState', () => {
+      if (!cliService.isConfigured()) {
+        console.log('CLI is not configured yet')
+        return;
+      }
       // fetchState backend
       return backendService.mix.fetchState().then(mix => {
         mix.fetchTime = new Date().getTime()
@@ -155,6 +160,8 @@ class MixService {
           this.state = currentState
         }
         this.pushState()
+      }).catch(e => {
+        console.warn('', e)
       })
     })
   }

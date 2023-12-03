@@ -33,7 +33,7 @@ class BackendService {
       cliUrl = cliService.getCliUrl()
     }
     if (!cliUrl) {
-      throw new Error('CLI url is undefined')
+      return Promise.reject('CLI url is undefined for '+method+' '+url)
     }
     return utils.fetch(cliUrl + url, {
       method,

@@ -325,7 +325,7 @@ export class CliLocal {
 
   startProc(cmd, args, cwd, logErrorFile) {
     const cliLogError = fs.createWriteStream(logErrorFile, {flags: 'a'})
-    const logError = msg => cliLogError.write(new Date()+' '+msg+'\n')
+    const logError = msg => cliLogError.write(new Date().toLocaleString()+' '+msg+'\n')
     const myThis = this
 
     const cmdStr = cmd+' '+args.join(' ')

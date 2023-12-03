@@ -71,18 +71,17 @@ class GuiConfig {
   }
 
   validate(config) {
-    if (config) {
-      if (config.API_MODE && API_MODES[config.API_MODE]) {
-        // valid
-        return true
-      }
-      // invalid
-      logger.error("ignoring invalid guiConfig (unknown API_MODE '"+config.API_MODE+"'): "+GUI_CONFIG_FILE)
-    } else {
-      // or not existing
+    if (!config) {
+      // not existing
       logger.info("no guiConfig: " + GUI_CONFIG_FILE)
+      return false
     }
-    return false
+    // fix invalid API_MODE
+    if (!config.API_MODE || !API_MODES[config.API_MODE]) {
+      logger.info("using default API_MODE="+config.API_MODE)
+      config.API_MODE = CONFIG_DEFAULT.API_MODE
+    }
+    return true
   }
 
   getApiMode() {
