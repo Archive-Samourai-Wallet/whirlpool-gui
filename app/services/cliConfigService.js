@@ -2,7 +2,6 @@ import ifNot from 'if-not-running';
 import backendService from './backendService';
 import { logger } from '../utils/logger';
 import cliService from './cliService';
-import { cliLocalService } from './cliLocalService';
 
 export class CliConfigService {
   constructor (setState=()=>{}) {

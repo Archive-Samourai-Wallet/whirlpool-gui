@@ -388,11 +388,13 @@ class CliService {
   fetchState () {
     if (this.isCliLocal()) {
       if (!this.getCliUrl()) {
-        return Promise.reject("local CLI not configured yet")
+        console.warn("local CLI not configured yet");
+        return
       }
       cliLocalService.fetchState()
       if (!cliLocalService.isStarted()) {
-        return Promise.reject("local CLI not started yet")
+        console.warn("local CLI not configured yet");
+        return
       }
     }
     return ifNot.run('cliService:fetchState', () => {

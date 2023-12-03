@@ -1,12 +1,11 @@
 import { version } from '../package.json';
-import { computeLogPath, logger } from './utils/logger';
-import { CliApiService } from './mainProcess/cliApiService';
 import electron from 'electron';
+import log from 'electron-log';
+import { logger } from './utils/logger';
 
 /* shared with mainProcess */
 
-const API_VERSION = '0.10';
-export const cliApiService = new CliApiService(API_VERSION)
+export const API_VERSION = '0.10';
 
 export const GUI_VERSION = version;
 
@@ -59,16 +58,35 @@ export const TX0_FEE_TARGET = {
   }
 }
 
+export const API_MODES = {
+  RELEASE: 'RELEASE',
+  LOCAL: 'LOCAL',
+  QA: 'QA'
+}
+
+
 export const STORE_CLILOCAL = 'cli.local';
 
-export const CLI_LOG_FILE = computeLogPath('whirlpool-cli.log');
-export const CLI_LOG_ERROR_FILE = computeLogPath('whirlpool-cli.error.log');
-export const GUI_LOG_FILE = logger.getFile();
-export const GUI_CONFIG_FILENAME = 'config.json';
-export const CLI_CONFIG_FILENAME = 'whirlpool-cli-config.properties';
+const app = electron.app || electron.remote.app
+const APP_USERDATA = app.getPath('userData')
 
-const app = electron.app || electron.remote.app;
-export const APP_USERDATA = app.getPath('userData')
+export const GUI_PATH = APP_USERDATA
+export const GUI_LOG_FILENAME='whirlpool-gui.log'
+export const GUI_LOG_FILE = GUI_PATH+'/'+GUI_LOG_FILENAME
+log.transports.file.resolvePath = () => GUI_LOG_FILE
+export const GUI_CONFIG_FILENAME = 'config.json';
+export const GUI_CONFIG_FILE = GUI_PATH+'/'+GUI_CONFIG_FILENAME
+
+export const CLI_CONFIG_FILENAME = 'whirlpool-cli-config.properties';
+export const CLI_DL_PATH = APP_USERDATA
+export const CLI_LOG_FILE = CLI_DL_PATH+'/whirlpool-cli.log'
+export const CLI_LOG_ERROR_FILE = CLI_DL_PATH+'/whirlpool-cli.error.log'
+
+logger.debug('CLI_LOG_FILE='+CLI_LOG_FILE)
+logger.debug('CLI_LOG_ERROR_FILE='+CLI_LOG_ERROR_FILE)
+logger.debug('GUI_LOG_FILE='+GUI_LOG_FILE)
+logger.debug('GUI_CONFIG_FILE='+GUI_CONFIG_FILE)
 
 // accept CLI self-signed certificate
 app.commandLine.appendSwitch('ignore-certificate-errors');
+

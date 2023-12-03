@@ -38,11 +38,12 @@ import StatusPage from './StatusPage';
 import LoginPage from './LoginPage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { cliLocalService } from '../services/cliLocalService';
-import { cliApiService, GUI_VERSION } from '../const';
+import { GUI_VERSION } from '../const';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import PoolsPage from './PoolsPage';
 import guiUpdateService from '../services/guiUpdateService';
 import { Alert } from 'react-bootstrap';
+import { cliApiService } from '../mainProcess/cliApiService';
 
 type Props = {
   children: React.Node

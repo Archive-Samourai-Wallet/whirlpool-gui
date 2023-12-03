@@ -1,18 +1,10 @@
-import log from 'electron-log'
-import findLogPath from "electron-log/lib/transports/file/findLogPath";
-import electron from "electron";
+import log from 'electron-log';
 
-export const computeLogPath = (fileName) => {
-  const app = (electron.app || electron.remote.app)
-  return findLogPath(app.name, fileName)
-}
-
-const GUI_LOG_FILENAME='whirlpool-gui.log'
 class Logger {
 
-  constructor(fileName, level='info') {
-    log.transports.file.fileName = fileName
+  constructor(level) {
     this.setLevel(level)
+    this.debug("logger started: "+log.transports.file.getFile().path)
   }
 
   error(...args) {
@@ -39,11 +31,6 @@ class Logger {
     log.transports.file.level = level;
     log.transports.console.level = level;
   }
-
-  getFile() {
-    return computeLogPath(log.transports.file.fileName)
-  }
 }
 
-export const logger = new Logger(GUI_LOG_FILENAME)
-logger.setLevel('debug')
+export const logger = new Logger('debug')

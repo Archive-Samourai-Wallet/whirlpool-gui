@@ -1,26 +1,11 @@
 import { logger } from '../utils/logger';
 import fs from 'fs';
-import electron from 'electron';
 import Store from 'electron-store';
-import { STORE_CLILOCAL } from '../const';
-
-// for some reason cliApiService.API_MODES is undefined here
-const API_MODES = {
-  RELEASE: 'RELEASE',
-  LOCAL: 'LOCAL',
-  QA: 'QA'
-}
+import { API_MODES, GUI_CONFIG_FILE, STORE_CLILOCAL } from '../const';
 
 const CONFIG_DEFAULT = {
   API_MODE: API_MODES.RELEASE
 }
-
-// for some reason const.APP_USERDATA is undefined here...
-const app = electron.app || electron.remote.app;
-const APP_USERDATA = app.getPath('userData')
-
-const GUI_CONFIG_FILENAME = 'whirlpool-gui-config.json';
-const GUI_CONFIG_FILEPATH = APP_USERDATA+'/'+GUI_CONFIG_FILENAME
 
 const STORE_CLIURL = "cli.url"
 const STORE_APIKEY = "cli.apiKey"
@@ -40,12 +25,12 @@ class GuiConfig {
   loadConfig() {
     let config = undefined
     try {
-      const data = fs.readFileSync(GUI_CONFIG_FILEPATH, 'utf8')
+      const data = fs.readFileSync(GUI_CONFIG_FILE, 'utf8')
       if (data) {
         try {
           config = JSON.parse(data);
         } catch (e) {
-          logger.error("Could not parse GUI configuration: "+GUI_CONFIG_FILEPATH, e)
+          logger.error("Could not parse GUI configuration: "+GUI_CONFIG_FILE, e)
         }
       }
     } catch(e) {}
@@ -54,7 +39,7 @@ class GuiConfig {
       config = CONFIG_DEFAULT
       this.hasConfig = false
     } else {
-      logger.info("Using GUI configuration: "+GUI_CONFIG_FILEPATH)
+      logger.info("Using GUI configuration: "+GUI_CONFIG_FILE)
       this.hasConfig = true
     }
     return config
@@ -92,10 +77,10 @@ class GuiConfig {
         return true
       }
       // invalid
-      logger.error("ignoring invalid guiConfig (unknown API_MODE): "+GUI_CONFIG_FILEPATH)
+      logger.error("ignoring invalid guiConfig (unknown API_MODE '"+config.API_MODE+"'): "+GUI_CONFIG_FILE)
     } else {
       // or not existing
-      logger.info("no guiConfig: " + GUI_CONFIG_FILEPATH)
+      logger.info("no guiConfig: " + GUI_CONFIG_FILE)
     }
     return false
   }
@@ -106,10 +91,6 @@ class GuiConfig {
 
   hasConfig() {
     return this.hasConfig
-  }
-
-  getConfigFile() {
-    return GUI_CONFIG_FILEPATH
   }
 
   // CLI CONFIG

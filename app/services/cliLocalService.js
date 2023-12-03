@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import { ProgressBar } from 'react-bootstrap';
-import { cliApiService, CLILOCAL_STATUS, IPC_CLILOCAL } from '../const';
+import { CLILOCAL_STATUS, IPC_CLILOCAL } from '../const';
 import cliService from './cliService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import utils from './utils';
+import { cliApiService } from '../mainProcess/cliApiService';
 
 class CliLocalService {
   constructor() {

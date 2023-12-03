@@ -1,9 +1,8 @@
 import ifNot from 'if-not-running';
-import { GUI_VERSION } from '../const';
+import { GUI_VERSION, API_MODES } from '../const';
 import cliService from './cliService';
 import backendService from './backendService';
 import guiConfig from '../mainProcess/guiConfig';
-import { API_MODES } from '../mainProcess/cliApiService';
 
 const REFRESH_RATE = 1800000; //30min
 class GuiUpdateService {

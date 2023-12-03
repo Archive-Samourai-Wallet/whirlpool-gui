@@ -3,22 +3,14 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { cliLocalService } from '../services/cliLocalService';
 import cliService from '../services/cliService';
-import {
-  APP_USERDATA,
-  CLI_CONFIG_FILENAME,
-  CLI_LOG_ERROR_FILE,
-  CLI_LOG_FILE,
-  cliApiService,
-  GUI_CONFIG_FILENAME,
-  GUI_LOG_FILE,
-  GUI_VERSION
-} from '../const';
+import { CLI_LOG_ERROR_FILE, CLI_LOG_FILE, GUI_CONFIG_FILE, GUI_LOG_FILE, GUI_PATH, GUI_VERSION } from '../const';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import LinkExternal from '../components/Utils/LinkExternal';
 import { Card } from 'react-bootstrap';
 import utils from '../services/utils';
 import guiConfig from '../mainProcess/guiConfig';
 import walletService from '../services/walletService';
+import { cliApiService } from '../mainProcess/cliApiService';
 
 type Props = {};
 
@@ -119,8 +111,8 @@ export default class StatusPage extends Component<Props> {
                     <strong>Logs:</strong>
                   </div>
                   <div className='col-sm-10'>
-                    <div><LinkExternal href={'file://'+APP_USERDATA}>{APP_USERDATA}</LinkExternal></div>
-                    <div></div><LinkExternal href={'file://'+APP_USERDATA+'/'+GUI_CONFIG_FILENAME}>{APP_USERDATA+'/'+GUI_CONFIG_FILENAME}</LinkExternal><br/>
+                    <div><LinkExternal href={'file://'+GUI_PATH}>{GUI_PATH}</LinkExternal></div>
+                    <div></div><LinkExternal href={'file://'+GUI_CONFIG_FILE}>{GUI_CONFIG_FILE}</LinkExternal><br/>
                     <div><LinkExternal href={'file://'+this.guiLogFile}>{this.guiLogFile}</LinkExternal></div>
                   </div>
                 </div>
@@ -212,7 +204,7 @@ export default class StatusPage extends Component<Props> {
                 </div>
                 <div className='col-sm-10'>
                   <LinkExternal href={'file://'+cliApiService.getCliPath()}>{cliApiService.getCliPath()}</LinkExternal><br/>
-                  <LinkExternal href={'file://'+cliApiService.getCliPath()+CLI_CONFIG_FILENAME}>{cliApiService.getCliPath()+CLI_CONFIG_FILENAME}</LinkExternal><br/>
+                  <LinkExternal href={'file://'+cliApiService.getCliConfigFile()}>{cliApiService.getCliConfigFile()}</LinkExternal><br/>
                   <LinkExternal href={'file://'+this.cliLogFile}>{this.cliLogFile}</LinkExternal><br/>
                   <LinkExternal href={'file://'+this.cliLogErrorFile}>{this.cliLogErrorFile}</LinkExternal>
                 </div>

@@ -1,7 +1,7 @@
 import utils from './utils';
 import status from './status';
 import cliService from './cliService';
-import { cliApiService, VERSIONS_URL } from '../const';
+import { API_VERSION, VERSIONS_URL } from '../const';
 
 const HEADER_API_VERSION = 'apiVersion'
 const HEADER_API_KEY = 'apiKey'
@@ -19,7 +19,7 @@ class BackendService {
     const headers = {
       'Content-Type': 'application/json'
     }
-    headers[HEADER_API_VERSION] = cliApiService.getApiVersion()
+    headers[HEADER_API_VERSION] = API_VERSION
 
     if (apiKey === undefined) {
       apiKey = cliService.getApiKey()

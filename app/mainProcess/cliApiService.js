@@ -1,18 +1,13 @@
-import { APP_USERDATA, CLI_QA_URL, CLI_STABLE_URL } from '../const';
+import { API_MODES, API_VERSION, CLI_CONFIG_FILENAME, CLI_DL_PATH, CLI_QA_URL, CLI_STABLE_URL } from '../const';
 import cliVersion from './cliVersion';
 import { logger } from '../utils/logger';
 import guiConfig from './guiConfig';
 
-export const API_MODES = {
-  RELEASE: 'RELEASE',
-  LOCAL: 'LOCAL',
-  QA: 'QA'
-}
 const IS_DEV = (process.env.NODE_ENV === 'development')
 const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli-develop/target/'
 const DL_FILE_LOCAL = 'whirlpool-client-cli-0.10.16.1-QA3-SNAPSHOT-run.jar'
 
-export class CliApiService {
+class CliApiService {
   constructor (apiVersion) {
     let apiMode = guiConfig.getApiMode()
     if (IS_DEV) {
@@ -26,10 +21,6 @@ export class CliApiService {
 
   getApiMode() {
     return this.apiMode
-  }
-
-  getApiVersion() {
-    return this.apiVersion
   }
 
   isApiModeRelease() {
@@ -52,7 +43,11 @@ export class CliApiService {
     }
 
     // standard CLI download path
-    return APP_USERDATA
+    return CLI_DL_PATH
+  }
+
+  getCliConfigFile() {
+    return cliApiService.getCliPath()+CLI_CONFIG_FILENAME
   }
 
   async fetchCliApi() {
@@ -92,3 +87,5 @@ export class CliApiService {
   }
 
 }
+
+export const cliApiService = new CliApiService(API_VERSION)

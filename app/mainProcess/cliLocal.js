@@ -5,17 +5,10 @@ import { exec, spawn } from 'child_process';
 import Store from 'electron-store';
 import AwaitLock from 'await-lock';
 import ps from 'ps-node';
-import {
-  CLI_CONFIG_FILENAME,
-  CLI_LOG_ERROR_FILE,
-  CLI_LOG_FILE,
-  cliApiService,
-  CLILOCAL_STATUS,
-  DEFAULT_CLIPORT,
-  IPC_CLILOCAL,
-} from '../const';
+import { CLI_LOG_ERROR_FILE, CLI_LOG_FILE, CLILOCAL_STATUS, DEFAULT_CLIPORT, IPC_CLILOCAL } from '../const';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
+import { cliApiService } from './cliApiService';
 
 const START_TIMEOUT = 10000
 const ARG_CLI_GUI = '--whirlpool-cli-gui'
@@ -115,7 +108,7 @@ export class CliLocal {
   }
 
   async onDeleteConfig(gotMutex=false) {
-    const cliConfigPath = cliApiService.getCliPath()+'/'+CLI_CONFIG_FILENAME
+    const cliConfigPath = cliApiService.getCliConfigFile()
     logger.info("CLI deleting local config... "+cliConfigPath)
 
     await this.stop(gotMutex)
@@ -332,15 +325,16 @@ export class CliLocal {
 
   startProc(cmd, args, cwd, logErrorFile) {
     const cliLogError = fs.createWriteStream(logErrorFile, {flags: 'a'})
+    const logError = msg => cliLogError.write(new Date()+' '+msg+'\n')
     const myThis = this
 
     const cmdStr = cmd+' '+args.join(' ')
-    cliLogError.write('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')\n')
+    logError('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')\n')
     logger.info('[CLI_LOCAL] => start: '+cmdStr+' (cwd='+cwd+')')
     try {
       this.cliProc = spawn(cmd, args, { cwd: cwd })
       this.cliProc.on('error', function(err) {
-        cliLogError.write('[CLI_LOCAL][ERROR] => ' + err + '\n')
+        logError('[CLI_LOCAL][ERROR] => ' + err + '\n')
         logger.error('[CLI_LOCAL] => ', err)
         myThis.state.info = undefined
         myThis.state.error = ''+err
@@ -351,11 +345,11 @@ export class CliLocal {
         let reloading = false
         if (code == 0) {
           // finishing normal
-          cliLogError.write('[CLI_LOCAL] => terminated without error.\n')
+          logError('[CLI_LOCAL] => terminated without error.\n')
           logger.info('[CLI_LOCAL] => terminated without error.')
         } else {
           // finishing with error
-          cliLogError.write('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
+          logError('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
           logger.error('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '. Check logs for details')
           myThis.state.info = undefined
           myThis.state.error = 'CLI terminated with error: '+code+'. Check logs for details.'
@@ -376,7 +370,7 @@ export class CliLocal {
         if (dataStr.match(/ ERROR ([0-9]+) \-\-\- /g)) {
           console.error('[CLI_LOCAL][ERROR] ' + dataLine);
           logger.error('[CLI_LOCAL][ERROR] ' + dataLine)
-          cliLogError.write('[ERROR]' + data)
+          logError('[ERROR]' + data)
         }
       });
       this.cliProc.stderr.on('data', function(data) {
@@ -384,7 +378,7 @@ export class CliLocal {
         const dataLine = dataStr.substring(0, (dataStr.length - 1))
         console.error('[CLI_LOCAL][ERROR] ' + dataLine);
         logger.error('[CLI_LOCAL][ERROR] ' + dataLine)
-        cliLogError.write('[ERROR]' + data)
+        logError('[ERROR]' + data)
 
         //myThis.state.error = dataLine
         //myThis.updateState(CLILOCAL_STATUS.ERROR)
