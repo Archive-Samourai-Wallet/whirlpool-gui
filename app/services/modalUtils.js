@@ -10,7 +10,7 @@ export default class ModalUtils {
 
     useEffect(() => {
       if (error) {
-        setLoading(false)
+        setLoading([])
       }
     }, [error])
 
@@ -32,13 +32,13 @@ export default class ModalUtils {
   }
 
   load(loadingMessage, promise) {
-    const loading1 = this.loading
+    const loading1 = [...this.loading]
     loading1.push(loadingMessage)
     this.setLoading(loading1)
     this.setError(undefined)
 
     return promise.then(result => {
-      const loading2 = this.loading
+      const loading2 = [...this.loading]
       loading2.pop()
       this.setLoading(loading2)
       if (this.error) {
