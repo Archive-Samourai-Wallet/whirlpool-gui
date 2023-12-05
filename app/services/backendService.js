@@ -142,6 +142,11 @@ class BackendService {
         this.fetchBackendAsJson('/rest/mix', 'GET')
         , 'mix.fetchState', true)
     },
+    fetchHistory: () => {
+      return this.withStatus('Mix', 'Fetch mix history', () =>
+          this.fetchBackendAsJson('/rest/mix/history', 'GET')
+        , 'mix.fetchHistory', true)
+    },
     start: () => {
       return this.withStatus('Mix', 'Start mixing', () =>
         this.fetchBackend('/rest/mix/start', 'POST')

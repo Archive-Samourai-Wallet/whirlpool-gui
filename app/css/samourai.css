@@ -38,6 +38,14 @@ html,body{height:100%;}
   margin-top: 10%;
 }
 
+.page-item.active .page-link {
+  background-color: #700606 !important;
+  border-color: #700606 !important;
+}
+.pagination {
+  justify-content: center;
+}
+
 code {
   color: #b71c1c;
 }
@@ -213,7 +221,7 @@ code {
 
 @keyframes spinning {
   from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
+  to { transform: rotate(-360deg) }
 }
 .spin {
   animation-name: spinning;

@@ -87,7 +87,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
         const utxo = o.row.original
         return <small>
           <span title={utxo.address+'\n('+utxo.path+')'}>
-            <LinkExternal href={utils.linkExplorerAddress(utxo)}>
+            <LinkExternal href={utils.linkExplorerAddress(utxo.address)}>
               {utils.shorten(utxo.address)}
             </LinkExternal>
           </span>{' '}

@@ -137,6 +137,38 @@ class MixService {
     return this.state.mix.threads;
   }
 
+  getStartupTime() {
+    const mixHistory = this.state.mix.mixHistory
+    if (!mixHistory) {
+      return 0
+    }
+    return mixHistory.startupTime
+  }
+
+  getNbMixed() {
+    const mixHistory = this.state.mix.mixHistory
+    if (!mixHistory) {
+      return 0
+    }
+    return mixHistory.nbMixed
+  }
+
+  getNbFailed() {
+    const mixHistory = this.state.mix.mixHistory
+    if (!mixHistory) {
+      return 0
+    }
+    return mixHistory.nbFailed
+  }
+
+  getMixedVolume() {
+    const mixHistory = this.state.mix.mixHistory
+    if (!mixHistory) {
+      return 0
+    }
+    return mixHistory.mixedVolume
+  }
+
   fetchState () {
     return ifNot.run('mixService:fetchState', () => {
       if (!cliService.isConfigured()) {
@@ -164,6 +196,15 @@ class MixService {
         console.warn('', e)
       })
     })
+  }
+
+  fetchMixHistory () {
+    if (!cliService.isConfigured()) {
+      console.log('CLI is not configured yet')
+      return;
+    }
+    // fetchState backend
+    return backendService.mix.fetchHistory()
   }
 
   pushState () {

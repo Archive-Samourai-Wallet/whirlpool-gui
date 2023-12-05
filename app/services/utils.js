@@ -114,11 +114,11 @@ class Utils {
     return 'https://oxt.me/transaction/'+utxo.hash
   }
 
-  linkExplorerAddress(utxo) {
+  linkExplorerAddress(address) {
     if (cliService.isTestnet()) {
-      return 'https://blockstream.info/testnet/address/'+utxo.address
+      return 'https://blockstream.info/testnet/address/'+address
     }
-    return 'https://oxt.me/address/'+utxo.address
+    return 'https://oxt.me/address/'+address
   }
 
   utxoStatus(utxo) {

@@ -116,6 +116,7 @@ else {
     if (os.platform() === 'linux') {
       mainWindow.setIcon(getExtraResource("icon.png"));
     }
+    mainWindow.setTitle('Whirlpool GUI')
 
     // GUI proxy
     try {

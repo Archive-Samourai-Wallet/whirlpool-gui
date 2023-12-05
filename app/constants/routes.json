@@ -5,6 +5,6 @@
   "PREMIX": "/premix",
   "POSTMIX": "/postmix",
   "POOLS": "/pools",
-  "LAST_ACTIVITY": "/last",
+  "MIX_HISTORY": "/mixHistory",
   "HOME": "/"
 }

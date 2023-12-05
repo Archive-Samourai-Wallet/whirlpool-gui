@@ -19,7 +19,7 @@ import ConfigPage from '../containers/ConfigPage';
 import InitPage from '../containers/InitPage';
 import PremixPage from './PremixPage';
 import DepositPage from '../containers/DepositPage';
-import LastActivityPage from './LastActivityPage';
+import MixHistoryPage from './MixHistoryPage';
 import Status from '../components/Status';
 import { statusActions } from '../services/statusActions';
 import PostmixPage from './PostmixPage';
@@ -92,7 +92,7 @@ class App extends React.Component<Props> {
         <Route path={routes.POSTMIX} component={PostmixPage}/>
         <Route path={routes.POOLS} component={PoolsPage}/>
         <Route path={routes.CONFIG} component={ConfigPage}/>
-        <Route path={routes.HOME} component={LastActivityPage}/>
+        <Route path={routes.HOME} component={MixHistoryPage}/>
       </Switch>
     }
 
@@ -126,7 +126,10 @@ class App extends React.Component<Props> {
       // crash recovery
       logger.error('GUI crashed, reloading...', e)
       const BrowserWindow = (electron.BrowserWindow || electron.remote.BrowserWindow)
-      BrowserWindow.getFocusedWindow().reload();
+      const window = BrowserWindow.getFocusedWindow()
+      if (window) {
+        window.reload();
+      }
       return <h1>Error: {e.message}</h1>
     }
   }
@@ -202,9 +205,9 @@ class App extends React.Component<Props> {
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
-                  <Link to={routes.LAST_ACTIVITY} className="nav-link">
+                  <Link to={routes.MIX_HISTORY} className="nav-link">
                       <span data-feather="terminal"></span>
-                      Last activity
+                      Mix history ({mixService.isReady() && <span>{mixService.getNbMixed()} · {utils.toBtc(mixService.getMixedVolume(), true)}</span>})
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">

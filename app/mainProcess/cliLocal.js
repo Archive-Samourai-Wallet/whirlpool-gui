@@ -469,7 +469,11 @@ export class CliLocal {
 
   pushState () {
     console.log('cliLocal: pushState',this.state)
-    this.window.send(IPC_CLILOCAL.STATE, this.state)
+    try {
+      this.window.send(IPC_CLILOCAL.STATE, this.state)
+    } catch (e) {
+      console.error('', e)
+    }
   }
 
   sha256File(filename, algorithm = 'sha256') {
