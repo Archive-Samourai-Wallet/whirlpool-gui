@@ -1,6 +1,7 @@
 import React from 'react';
 import BTable from 'react-bootstrap/Table';
-import { useRowSelect, useSortBy, useTable } from 'react-table';
+import Pagination from '@vlsergey/react-bootstrap-pagination';
+import { useRowSelect, useSortBy, useTable, usePagination } from 'react-table';
 import * as Icon from 'react-feather';
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -29,9 +30,20 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
   if (sortBy) {
     initialState.sortBy = sortBy;
   }
+  initialState.currentPage = 0
 
   // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow, selectedFlatRows, state: { selectedRowIds } } = useTable(
+  const { getTableProps, headerGroups, prepareRow, selectedFlatRows, state: { selectedRowIds, pageIndex, pageSize },
+    rows,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize
+  } = useTable(
     {
       columns,
       data,
@@ -45,6 +57,7 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
       autoResetRowState: false,
     },
     useSortBy,
+    usePagination,
     useRowSelect,
     hooks => {
       if (onSelect && onSelect.actions) {
@@ -87,6 +100,22 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
 
   const onSelectActions = selectedItems ? onSelect.actions(selectedItems) : []
 
+  // pagination
+  const totalPages = Math.ceil(rows.length / pageSize)
+  console.log('rows',rows)
+  console.log('pageSize='+pageSize+', pageIndex='+pageIndex+', totalPages='+totalPages)
+  const paginationOnChange = o => {
+    if (o && o.target && o.target.name === 'page') {
+      gotoPage(o.target.value)
+    }
+  }
+  const PAGE_SIZE = 50
+  React.useEffect(() => {
+    if (pageSize != PAGE_SIZE) {
+      setPageSize(PAGE_SIZE)
+    }
+  }, [pageSize])
+
   // Render the UI for your table
   return (
     <div className='table-generic'>
@@ -117,7 +146,7 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
         ))}
         </thead>
         <tbody>
-        {rows.map((row, i) => {
+        {page.map((row, i) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps({
@@ -132,6 +161,10 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
         })}
         </tbody>
       </BTable>
+
+      {totalPages>1 && <div className='text-center'>
+        <Pagination value={pageIndex} totalPages={totalPages} onChange={paginationOnChange}/>
+      </div>}
     </div>
   );
 }
