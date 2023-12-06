@@ -102,8 +102,7 @@ export default function TableGeneric({ columns, data, size='sm', /*onFetchData, 
 
   // pagination
   const totalPages = Math.ceil(rows.length / pageSize)
-  console.log('rows',rows)
-  console.log('pageSize='+pageSize+', pageIndex='+pageIndex+', totalPages='+totalPages)
+  //console.log('pageSize='+pageSize+', pageIndex='+pageIndex+', totalPages='+totalPages)
   const paginationOnChange = o => {
     if (o && o.target && o.target.name === 'page') {
       gotoPage(o.target.value)

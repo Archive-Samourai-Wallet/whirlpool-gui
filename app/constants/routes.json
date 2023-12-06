@@ -4,6 +4,7 @@
   "DEPOSIT": "/deposit",
   "PREMIX": "/premix",
   "POSTMIX": "/postmix",
+  "EXTERNAL_XPUB": "/externalXpub",
   "POOLS": "/pools",
   "MIX_HISTORY": "/mixHistory",
   "HOME": "/"

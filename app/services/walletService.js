@@ -47,13 +47,6 @@ class WalletService {
 
   // wallet
 
-  computeLastActivity(utxo) {
-    if (!utxo.lastActivityElapsed) {
-      return undefined
-    }
-    return utils.durationElapsed(this.state.wallet.fetchTime-utxo.lastActivityElapsed)
-  }
-
   getBalance() {
     return this.state.wallet.balance;
   }

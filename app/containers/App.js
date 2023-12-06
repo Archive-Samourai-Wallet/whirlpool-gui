@@ -23,6 +23,7 @@ import MixHistoryPage from './MixHistoryPage';
 import Status from '../components/Status';
 import { statusActions } from '../services/statusActions';
 import PostmixPage from './PostmixPage';
+import ExternalXpubPage from './ExternalXpubPage';
 import utils from '../services/utils';
 import MixStatus from '../components/MixStatus';
 import mixService from '../services/mixService';
@@ -90,6 +91,7 @@ class App extends React.Component<Props> {
         <Route path={routes.DEPOSIT} component={DepositPage}/>
         <Route path={routes.PREMIX} component={PremixPage}/>
         <Route path={routes.POSTMIX} component={PostmixPage}/>
+        <Route path={routes.EXTERNAL_XPUB} component={ExternalXpubPage}/>
         <Route path={routes.POOLS} component={PoolsPage}/>
         <Route path={routes.CONFIG} component={ConfigPage}/>
         <Route path={routes.HOME} component={MixHistoryPage}/>
@@ -196,7 +198,7 @@ class App extends React.Component<Props> {
                   </small>
                 </div>
               </div>}
-
+              <br/>
               <ul className="nav flex-column">
                 {cliService.isCliStatusReady() && !cliService.isLoggedIn() && <li className="nav-item">
                   <Link to={routes.HOME} className="nav-link">
@@ -207,9 +209,17 @@ class App extends React.Component<Props> {
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
                   <Link to={routes.MIX_HISTORY} className="nav-link">
                       <span data-feather="terminal"></span>
-                      Mix history ({mixService.isReady() && <span>{mixService.getNbMixed()} · {utils.toBtc(mixService.getMixedVolume(), true)}</span>})
+                      Mix history ({mixService.isReady() && <span>{mixService.getMixHistory().mixedCount} · {utils.toBtc(mixService.getMixHistory().mixedVolume, true)}</span>})
                   </Link>
                 </li>}
+                {cliService.isLoggedIn() && walletService.isReady() && cliService.getExternalDestination() && <li className="nav-item">
+                  <Link to={routes.EXTERNAL_XPUB} className="nav-link" title='Utxos successfully mixed to external XPub'>
+                    <span data-feather="check"></span>
+                    XPub history
+                    ({mixService.getMixHistory().externalXpubCount} · {utils.toBtc(mixService.getMixHistory().externalXpubVolume, true)})
+                  </Link>
+                </li>}
+                {cliService.isLoggedIn() && walletService.isReady() && <br/>}
                 {cliService.isLoggedIn() && walletService.isReady() && <li className="nav-item">
                   <Link to={routes.DEPOSIT} className="nav-link" title='Utxos ready to enter Whirlpool'>
                       <span data-feather="plus"></span>

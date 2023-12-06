@@ -6,6 +6,17 @@ import walletService from './walletService';
 import cliService from './cliService';
 
 const REFRESH_RATE = 3000;
+const MIX_HISTORY_INITIAL = {
+  "startupTime":new Date().getTime(),
+  "mixedCount":0,
+  "failedCount":0,
+  "mixedLastTime":undefined,
+  "failedLastTime":undefined,
+  "mixedVolume":0,
+  "externalXpubCount":0,
+  "externalXpubVolume":0,
+  "externalXpubLastTime":undefined,
+}
 class MixService {
   constructor () {
     this.setState = undefined
@@ -115,10 +126,10 @@ class MixService {
   // state
 
   computeLastActivity(utxo) {
-    if (!utxo.lastActivityElapsed) {
+    if (!utxo.lastActivity) {
       return undefined
     }
-    return utils.durationElapsed(this.state.mix.fetchTime-utxo.lastActivityElapsed)
+    return utils.durationElapsed(utxo.lastActivity)
   }
 
   isStarted () {
@@ -137,36 +148,8 @@ class MixService {
     return this.state.mix.threads;
   }
 
-  getStartupTime() {
-    const mixHistory = this.state.mix.mixHistory
-    if (!mixHistory) {
-      return 0
-    }
-    return mixHistory.startupTime
-  }
-
-  getNbMixed() {
-    const mixHistory = this.state.mix.mixHistory
-    if (!mixHistory) {
-      return 0
-    }
-    return mixHistory.nbMixed
-  }
-
-  getNbFailed() {
-    const mixHistory = this.state.mix.mixHistory
-    if (!mixHistory) {
-      return 0
-    }
-    return mixHistory.nbFailed
-  }
-
-  getMixedVolume() {
-    const mixHistory = this.state.mix.mixHistory
-    if (!mixHistory) {
-      return 0
-    }
-    return mixHistory.mixedVolume
+  getMixHistory() {
+    return this.state.mix.mixHistory || MIX_HISTORY_INITIAL
   }
 
   fetchState () {
@@ -205,6 +188,15 @@ class MixService {
     }
     // fetchState backend
     return backendService.mix.fetchHistory()
+  }
+
+  fetchMixHistoryExternalXpub () {
+    if (!cliService.isConfigured()) {
+      console.log('CLI is not configured yet')
+      return;
+    }
+    // fetchState backend
+    return backendService.mix.fetchHistoryExternalXpub()
   }
 
   pushState () {

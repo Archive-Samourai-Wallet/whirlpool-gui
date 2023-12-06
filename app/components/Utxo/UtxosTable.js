@@ -146,7 +146,8 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
   }
   columns.push({
       Header: 'Last activity',
-      accessor: o => o.lastActivityElapsed,
+      id: 'lastActivity',
+      accessor: o => o.lastActivity,
       Cell: o => {
         const lastActivity = mixService.computeLastActivity(o.row.original);
         return <small>{lastActivity ? lastActivity : '-'}</small>
@@ -181,7 +182,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
           className='table-utxos'
           columns={columns}
           data={visibleUtxos}
-          sortBy={[{ id: 'lastActivityElapsed', desc: true }]}
+          sortBy={[{ id: 'lastActivity', desc: true }]}
           getRowClassName={row => isReadOnly(row.original) ? 'utxo-disabled' : ''}
           onSelect={{
             label: 'utxos',
