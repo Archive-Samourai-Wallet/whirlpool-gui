@@ -35,6 +35,9 @@ export default function MixHistoryPage(props) {
           <div className='text-muted'><strong>{mixService.getMixHistory().mixedCount} utxos</strong> (<strong>{utils.toBtc(mixService.getMixHistory().mixedVolume)} btc</strong>) mixed since startup (<strong>{utils.durationElapsed(mixService.getMixHistory().startupTime)} ago</strong>)
             {mixService.getMixHistory().mixedLastTime &&<span>, last one <strong>{utils.durationElapsed(mixService.getMixHistory().mixedLastTime)} ago</strong></span>}
           </div>
+          {mixService.getMixHistory().failedCount>0 && <div className='text-muted'>
+            Whirlpool will automatically retry on failed mixs.
+          </div>}
           <MixResultsTable tableKey='MixHistoryPage' mixResults={mixResults}/>
         </div>
       </div>

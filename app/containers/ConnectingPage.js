@@ -51,7 +51,7 @@ class ConnectingPage extends Component<Props> {
     return (
       <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
         <h1 className="h3 mb-3 font-weight-normal">Starting Whirlpool...</h1>
-        <div><img src={cyclone} className='spin'/></div><br/>
+        <div><img src={cyclone} className='whirl'/></div><br/>
         <div>whirlpool-cli @ <strong>{cliService.isCliLocal() ? 'standalone GUI' : cliService.getCliUrl()}</strong>
           {guiConfig.getGuiProxy() && <div> via <strong>{guiConfig.getGuiProxy()}</strong></div>}
         </div>
@@ -63,7 +63,7 @@ class ConnectingPage extends Component<Props> {
     return (
       <form className="form-signin text-center" onSubmit={(e) => {this.onSubmit();e.preventDefault()}}>
         <h1 className="h3 mb-3 font-weight-normal">{cliService.getStatusIcon((icon,status)=><span>{status}</span>)}</h1>
-        <div><FontAwesomeIcon icon={Icons.faCloud} size='3x' color='#343a40'/></div><br/>
+        <div className='opacityOnOff'><FontAwesomeIcon icon={Icons.faCloud} size='3x' color='#343a40'/></div><br/>
         <div>whirlpool-cli @ <strong>{cliService.isCliLocal() ? 'standalone GUI' : cliService.getCliUrl()}</strong>
           {guiConfig.getGuiProxy() && <div> via <strong>{guiConfig.getGuiProxy()}</strong></div>}
         </div>

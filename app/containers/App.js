@@ -144,7 +144,7 @@ class App extends React.Component<Props> {
     const cliInfo = cliService.isCliLocal() ? 'CLI '+cliLocalService.getCliVersionStr():'CLI_API '+cliApiService.getVersionName()
     const torIcon = cliService.isConnected() && cliService.getTorProgressIcon() ? <span className='icon'>{cliService.getTorProgressIcon()}</span> : undefined
     const dojoIcon = cliService.isConnected() && cliService.getDojoIcon() ? <span className='icon'>{cliService.getDojoIcon()}</span> : undefined
-    const externalDestinationIcon = cliService.getExternalDestination() ? <span className='icon'>{cliService.getExternalDestinationIcon()}</span> : undefined
+    const externalDestinationIcon = cliService.getExternalDestinationIcon()
 
     const guiUpdate = guiUpdateService.getGuiUpdate()
 

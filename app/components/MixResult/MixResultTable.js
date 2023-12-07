@@ -20,17 +20,16 @@ const MixResultsTable = ({ mixResults, tableKey, actions, showAsUtxo }) => {
   if (!showAsUtxo) {
     columns.push(
       {
-        Header: 'Status',
-        accessor: o => o.success,
-        Cell: o => <span><FontAwesomeIcon icon={o.cell.value?Icons.faCheck:Icons.faCircle} color={o.cell.value ? 'green' : 'red'}
-                                           title={status}/> <span className='text-muted'>{o.cell.value ? 'MIXED' : 'FAILED'}</span></span>
-      },
-      {
         Header: 'Type',
         accessor: o => o.remix,
         Cell: o => <small>{o.cell.value ? 'REMIX' : 'MIX'}</small>
+      },
+      {
+        Header: 'Destination',
+        accessor: o => o.destinationType,
+        Cell: o => o.cell.value ? <small>{o.cell.value}</small> : ''
       }
-    )
+    );
   }
   columns.push(
     {
@@ -86,46 +85,30 @@ const MixResultsTable = ({ mixResults, tableKey, actions, showAsUtxo }) => {
       Header: 'Amount',
       accessor: o => o.amount,
       Cell: o => utils.toBtc(o.cell.value)
-    }
-  );
-  if (showAsUtxo) {
-    columns.push(
-      {
-        Header: 'Pool',
-        accessor: o => o.poolId,
-        Cell: o => o.cell.value ? <small>{o.cell.value}</small> : ''
-      },
-      {
-        Header: 'Status',
-        accessor: o => UTXO_STATUS.MIX_SUCCESS,
-        Cell: o => <span className='text-primary'><FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/> <span className='text-muted'>MIXED</span></span>
-      },
-      {
-        Header: 'Last activity',
-        id: 'time',
-          accessor: o => o.time,
-        Cell: o => <small>{utils.durationElapsed(o.cell.value)}</small>
-      }
-    )
-  } else {
-    columns.push(
-      {
-        Header: 'Destination',
-        accessor: o => o.destinationType,
-        Cell: o => o.cell.value ? <small>{o.cell.value}</small> : ''
-      },
-      {
-        Header: 'Date',
-        id: 'time',
-          accessor: o => o.time,
-        Cell: o => <small>{utils.durationElapsed(o.cell.value)}</small>
-      },
-    );
-  }
-  columns.push(
+    },
+    {
+      Header: 'Pool',
+      accessor: o => o.poolId,
+      Cell: o => o.cell.value ? <small>{o.cell.value}</small> : ''
+    },
+    {
+      Header: 'Status',
+      accessor: o => o.success,
+      Cell: o => (showAsUtxo ? <span><FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/> <span className='text-muted'>MIXED</span></span>
+        : <span>{o.cell.value&&<FontAwesomeIcon icon={Icons.faCheck} color='green'title={status}/>} <span className='text-muted'>{o.cell.value ? 'MIXED' : 'FAILED'}</span></span>)
+    },
+    {
+      Header: 'Last activity',
+      id: 'time',
+      accessor: o => o.time,
+      Cell: o => <small>{utils.durationElapsed(o.cell.value)}</small>
+    },
     {
       Header: 'Info',
       accessor: o => o.failReason,
+
+
+
       Cell: o => {
         if (!o.cell.value) {
           return ''

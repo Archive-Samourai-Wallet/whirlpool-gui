@@ -220,14 +220,27 @@ code {
 }
 
 
-@keyframes spinning {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(-360deg) }
+@keyframes whirlAnim {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(-360deg) scale(0);
+  }
 }
-.spin {
-  animation-name: spinning;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  /* linear | ease | ease-in | ease-out | ease-in-out */
+.whirl {
+  animation: whirlAnim 1s infinite;
   animation-timing-function: ease-out;
 }
+
+
+@keyframes opacityOnOffAnim {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+.opacityOnOff {
+  animation: opacityOnOffAnim 6s infinite;
+  animation-timing-function: ease;
+}
+

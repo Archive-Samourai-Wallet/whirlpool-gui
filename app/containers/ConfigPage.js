@@ -133,7 +133,7 @@ export default class ConfigPage extends Component<Props> {
                 <label htmlFor="scode" className="col-sm-2 col-form-label">SCODE</label>
                   <input type="text" className='form-control col-sm-3' onChange={e => {
                     const myValue = e.target.value
-                    myThis.onChangeCliConfig(cliConfig => cliConfig.scode = myValue)
+                    myThis.onChangeCliConfig(cliConfig => cliConfig.e = myValue)
                   }} defaultValue={cliConfig.scode} id="scode"/>
                   <label className='col-form-label col-sm-5 text-muted'>A Samourai Discount Code for reduced-cost mixing.</label>
               </div>
@@ -164,6 +164,20 @@ export default class ConfigPage extends Component<Props> {
                   Set it only when blocked by a firewall (this is not <i>GUI Tor proxy</i>).<br/>
                   <code>socks://host:port</code> or <code>http://host:port</code>
                 </label>
+              </div>
+
+              <div className="form-group row">
+                <label htmlFor="externalDestinationEnabled" className="col-sm-2 col-form-label">Mix to XPub</label>
+                {cliService.getExternalDestination() && <div className="col-sm-10 custom-control custom-switch">
+                  <input type="checkbox" className="custom-control-input" onChange={e => myThis.onChangeCliConfig(cliConfig => cliConfig.externalDestination.enabled = checked(e))} defaultChecked={cliConfig.externalDestination.enabled} id="externalDestinationEnabled"/>
+                  <label className="custom-control-label" htmlFor="externalDestinationEnabled">Enable mixing to external XPub</label>
+                  <span className="text-muted" title='Run CLI with --set-external-xpub to reconfigure'>
+                    {' '}(<strong>{cliService.getExternalDestination().xpub?cliService.getExternalDestination().xpub:''}</strong> after at least <strong>{cliService.getExternalDestination().mixs} mixs</strong>)
+                  </span>
+                </div>}
+                {!cliService.getExternalDestination() && <div className="col-sm-10 custom-control custom-switch">
+                  <label className="custom-control-label text-muted">Disabled: no external XPub configured yet, run CLI with <code>--set-external-xpub</code> to configure</label>
+                </div>}
               </div>
             </Card.Body>
           </Card>

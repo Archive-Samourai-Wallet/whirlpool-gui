@@ -334,6 +334,10 @@ class CliService {
     return this.isCliStatusReady() && this.state.cli.externalDestination
   }
 
+  isExternalDestinationEnabled() {
+    return this.isCliStatusReady() && this.state.cli.externalDestination && this.state.cli.externalDestination.enabled
+  }
+
   getVersion() {
     return this.isCliStatusReady() && this.state.cli.version
   }
@@ -343,11 +347,13 @@ class CliService {
     if (!externalDestination) {
       return undefined;
     }
-    const xpub = externalDestination.xpub;
-    const mixs = externalDestination.mixs;
-    return <small className='externalDestinationIcon' title={'Mixing to external XPUB "'+xpub+'" after at least '+mixs+' mixs'}>
-      <strong>XPUB</strong>
-    </small>
+    const enabled = externalDestination.enabled;
+    const title = enabled ? 'Mixing to external XPUB is ENABLED: '+(externalDestination.xpub?externalDestination.xpub:'')+'" after at least '+externalDestination.mixs+' mixs' : 'Mixing to external XPUB is DISABLED'
+    return <span className={'icon '+(enabled?'text-success':'text-warning')}>
+      <small className='externalDestinationIcon' title={title}>
+        <strong>XPUB</strong>
+      </small>
+    </span>
   }
 
   getTorProgressIcon() {
