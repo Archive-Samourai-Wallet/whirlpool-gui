@@ -152,6 +152,10 @@ class MixService {
     return this.state.mix.mixHistory || MIX_HISTORY_INITIAL
   }
 
+  getLastBlock() {
+    return this.state.mix.lastBlock
+  }
+
   fetchState () {
     return ifNot.run('mixService:fetchState', () => {
       if (!cliService.isConfigured()) {

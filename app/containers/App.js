@@ -45,6 +45,7 @@ import PoolsPage from './PoolsPage';
 import guiUpdateService from '../services/guiUpdateService';
 import { Alert } from 'react-bootstrap';
 import { cliApiService } from '../mainProcess/cliApiService';
+import LinkExternal from '../components/Utils/LinkExternal';
 
 type Props = {
   children: React.Node
@@ -271,8 +272,11 @@ class App extends React.Component<Props> {
                 <div>
                   {cliService.isConnected() && <small>{cliService.getServerName()}</small>}
                   {cliService.isCliLocal() && <small> {cliLocalStatusIcon} standalone</small>}
+                  {!cliService.isCliLocal() && <small>{cliService.getCliUrl()}</small>}
+                  {cliService.isConfigured() && cliService.isLoggedIn() && mixService.isReady() && mixService.getLastBlock() && <div title={'Last block: '+mixService.getLastBlock().hash}>
+                    <small>at block <LinkExternal href={utils.linkExplorerBlock(mixService.getLastBlock())}>{mixService.getLastBlock().height}</LinkExternal></small>
+                  </div>}
                 </div>
-                {!cliService.isCliLocal() && <div><small>{cliService.getCliUrl()}</small></div>}
               </div>
             </div>
             <Status

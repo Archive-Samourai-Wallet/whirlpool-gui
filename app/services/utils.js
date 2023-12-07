@@ -114,6 +114,13 @@ class Utils {
     return 'https://oxt.me/transaction/'+utxo.hash
   }
 
+  linkExplorerBlock(block) {
+    if (cliService.isTestnet()) {
+      return 'https://blockstream.info/testnet/block/'+block.hash
+    }
+    return 'https://oxt.me/block/'+block.height
+  }
+
   linkExplorerAddress(address) {
     if (cliService.isTestnet()) {
       return 'https://blockstream.info/testnet/address/'+address
@@ -265,6 +272,18 @@ class Utils {
 
   md5(str) {
     return crypto.createHash('md5').update(str).digest('hex');
+  }
+
+  intervalOnUseEffect(fetchData, timeoutSeconds=30) {
+    fetchData(); // Fetch data initially
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, timeoutSeconds*1000);
+
+    return () => {
+      return clearInterval(intervalId);
+    }
   }
 }
 
