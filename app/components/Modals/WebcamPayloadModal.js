@@ -18,16 +18,23 @@ export default function WebcamPayloadModal(props) {
           Get your <strong>Whirlpool pairing payload</strong> from Samourai Wallet. Navigate to: <strong>Settings &gt; Transactions &gt; Pair to Whirlpool GUI</strong>
           <div className="text-center pt-4">
             <QrReader
+              constraints={{
+                aspectRatio: "1",
+                facingMode: "environment"
+              }}
+              scanDelay={250}
               onResult={(result, error) => {
                 if (!!result) {
+                  console.log('qr: '+result.getText())
                   onScan(result?.text);
                   onClose();
                 }
-                if (!!error) {
+                if (!!error && error.message) {
                   modalUtils.setError('Could not read QR code: ' + error.message)
                 }
               }}
-              style={{ width: '80%' }}
+              videoContainerStyle={{}}
+              videoStyle={{}}
             />
           </div>
         </div>

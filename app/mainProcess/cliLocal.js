@@ -119,6 +119,12 @@ export class CliLocal {
         await fs.unlinkSync(cliConfigPath)
       } catch (e) {
         logger.error("unable to unlink " + cliConfigPath, e)
+        try {
+          const newName = cliConfigPath + "." + new Date().getTime()
+          await fs.rename(cliConfigPath, newName)
+        } catch (e) {
+          logger.error("unable to rename "+cliConfigPath, e)
+        }
       }
     }
 
@@ -146,10 +152,10 @@ export class CliLocal {
   }
 
   async refreshState(downloadIfMissing=true, gotMutex=false) {
-    logger.info('refreshState', downloadIfMissing)
+    console.log('refreshState', downloadIfMissing)
     if (cliApiService.isApiModeLocal()) {
       downloadIfMissing = false
-      logger.info('isApiModeLocal => download disabled')
+      console.log('isApiModeLocal => download disabled')
     }
 
     const javaInstalled = await this.isJavaInstalled()
@@ -343,10 +349,10 @@ export class CliLocal {
       })
       this.cliProc.on('exit', (code) => {
         let reloading = false
-        if (code == 0) {
+        if (code == 0 || !code) {
           // finishing normal
-          logError('[CLI_LOCAL] => terminated without error.\n')
-          logger.info('[CLI_LOCAL] => terminated without error.')
+          logError('[CLI_LOCAL] => terminated.\n')
+          logger.info('[CLI_LOCAL] => terminated.')
         } else {
           // finishing with error
           logError('[CLI_LOCAL][ERROR] => terminated with error: ' + code + '\n')
@@ -389,10 +395,10 @@ export class CliLocal {
   }
 
   async stop(gotMutex=false, kill=true) {
-    if (!gotMutex) {
-      await this.ipcMutex.acquireAsync();
-    }
     try {
+      if (!gotMutex) {
+        await this.ipcMutex.acquireAsync();
+      }
       if (!this.state.started) {
         console.error("CliLocal: stop skipped: not started")
         return
@@ -407,6 +413,8 @@ export class CliLocal {
         this.cliProc.stderr.pause()
         this.cliProc.kill()
       }
+    } catch (e) {
+      logger.error("failed to stop local CLI", e)
     } finally {
       if (!gotMutex) {
         this.ipcMutex.release();

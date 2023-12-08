@@ -3,7 +3,7 @@ import cliVersion from './cliVersion';
 import { logger } from '../utils/logger';
 import guiConfig from './guiConfig';
 
-const IS_DEV = (process.env.NODE_ENV === 'development')
+const IS_DEV = false //(process.env.NODE_ENV === 'development')
 const DL_PATH_LOCAL = '/zl/workspaces/whirlpool/whirlpool-client-cli-develop/target/'
 const DL_FILE_LOCAL = 'whirlpool-client-cli-0.10.16.1-run.jar'
 

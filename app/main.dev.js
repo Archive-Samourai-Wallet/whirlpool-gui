@@ -43,7 +43,7 @@ if (
   require('electron-debug')();
 }
 
-const installExtensions = async () => {
+/*const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
@@ -51,7 +51,7 @@ const installExtensions = async () => {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
-};
+};*/
 
 // prevent multiple processes
 const gotTheLock = app.requestSingleInstanceLock()
@@ -78,12 +78,12 @@ else {
   });
 
   app.on('ready', async () => {
-    if (
+    /*if (
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
     ) {
       await installExtensions();
-    }
+    }*/
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -91,7 +91,8 @@ else {
       height: 728,
       webPreferences: {
         nodeIntegration: true,
-        sandbox: false
+        sandbox: false,
+        enableRemoteModule: true
       }
     });
 
@@ -112,10 +113,10 @@ else {
     }
 
     // fix Linux icon
-    const os = require('os');
-    if (os.platform() === 'linux') {
+    /*const os = require('os');
+    if (os.platform() === 'linux') {*/
       mainWindow.setIcon(getExtraResource("icon.png"));
-    }
+    //}
     mainWindow.setTitle('Whirlpool GUI')
 
     // GUI proxy

@@ -78,8 +78,8 @@ class GuiConfig {
     }
     // fix invalid API_MODE
     if (!config.API_MODE || !API_MODES[config.API_MODE]) {
-      logger.info("using default API_MODE="+config.API_MODE)
       config.API_MODE = CONFIG_DEFAULT.API_MODE
+      logger.info("using default API_MODE="+config.API_MODE)
     }
     return true
   }
