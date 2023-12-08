@@ -44,7 +44,7 @@ const computeUtxosActions = utxos => {
 }
 
 /* eslint-disable react/prefer-stateless-function */
-const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions }) => {
+const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions, showReadOnlyToggle=true }) => {
 
   const [showReadOnly, setShowReadOnly] = useState(false)
 
@@ -167,7 +167,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
     })
   }
 
-  const visibleUtxos = showReadOnly ? utxos : utxos.filter(utxo => !isReadOnly(utxo))
+  const visibleUtxos = (!showReadOnlyToggle || !showReadOnly) ? utxos : utxos.filter(utxo => !isReadOnly(utxo))
   const utxosReadOnly = utxos.filter(utxo => isReadOnly(utxo))
   const amountUtxosReadOnly = utxosReadOnly.map(utxo => utxo.value).reduce((total,current) => total+current, 0)
 
@@ -183,7 +183,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
           columns={columns}
           data={visibleUtxos}
           sortBy={[{ id: 'lastActivity', desc: true }]}
-          getRowClassName={row => isReadOnly(row.original) ? 'utxo-disabled' : ''}
+          getRowClassName={row => showReadOnlyToggle && isReadOnly(row.original) ? 'utxo-disabled' : ''}
           onSelect={{
             label: 'utxos',
             labelDetails: utxos => '('+utils.toBtc(utils.sumUtxos(utxos))+' btc)',
@@ -192,7 +192,7 @@ const UtxosTable = ({ controls, pool, mixs, account, utxos, tableKey, actions })
         />
         {visibleUtxos.length == 0 && <div className='text-center text-muted'><small>No utxo yet</small></div>}
       </div>
-      {utxosReadOnly.length>0 && <div className='text-center text-muted'>
+      {showReadOnlyToggle && utxosReadOnly.length>0 && <div className='text-center text-muted'>
         <button className='btn btn-sm btn-default text-muted' onClick={() => setShowReadOnly(!showReadOnly)}>
           <FontAwesomeIcon icon={showReadOnly ? Icons.faAngleUp : Icons.faAngleDown} /> {showReadOnly?'Hide':'Show'} {utxosReadOnly.length} non-mixable utxos ({utils.toBtc(amountUtxosReadOnly)}btc)</button>
       </div>}

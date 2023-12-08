@@ -39,7 +39,7 @@ class LoginPage extends Component<Props> {
         <div><FontAwesomeIcon icon={Icons.faLock} size='3x' color='#343a40'/></div><br/>
         <p>Your passphrase is required<br/>for opening wallet.</p>
         <input type="password" id="seedPassphrase" className="form-control" placeholder="Wallet passphrase" ref={this.inputPassphrase} required autoFocus/>
-        <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button className="btn btn-lg btn-primary btn-block" type="submit">Login</button>
         <br/>
         {cliService.isTor() && <div>
           {utils.torIcon()} Please be patient signing in with Tor<br/><br/></div>}

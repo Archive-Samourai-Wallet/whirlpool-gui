@@ -28,12 +28,12 @@ export default function MixHistoryPage(props) {
     <div className='externalXpubPage'>
       <div className='row'>
         <div className='col-sm-12'>
-          <h2>XPub history</h2>
+          <h2>Mix-to XPUB history</h2>
         </div>
       </div>
       <div className='row h-100 d-flex flex-column'>
         <div className='col-sm-12 flex-grow-1 tablescroll'>
-          <div className='text-muted'><strong>{mixService.getMixHistory().externalXpubCount} utxos</strong> (<strong>{utils.toBtc(mixService.getMixHistory().externalXpubVolume)} btc</strong>) mixed to external XPub since startup (<strong>{utils.durationElapsed(mixService.getMixHistory().startupTime)} ago</strong>)
+          <div className='text-muted'><strong>{mixService.getMixHistory().externalXpubCount} utxos</strong> (<strong>{utils.toBtc(mixService.getMixHistory().externalXpubVolume)} btc</strong>) mixed-to external XPUB since startup (<strong>{utils.durationElapsed(mixService.getMixHistory().startupTime)} ago</strong>)
             {mixService.getMixHistory().externalXpubLastTime &&<span>, last one <strong>{utils.durationElapsed(mixService.getMixHistory().externalXpubLastTime)} ago</strong></span>}
           </div>
           <MixResultsTable tableKey='ExternalXpubPage' mixResults={mixResults} showAsUtxo={true}/>

@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import {QrScanner} from '@yudiel/react-qr-scanner';
 import ModalUtils from '../../services/modalUtils';
 import GenericModal from './GenericModal';
 
@@ -17,24 +17,15 @@ export default function WebcamPayloadModal(props) {
         <div className="col-sm-12">
           Get your <strong>Whirlpool pairing payload</strong> from Samourai Wallet. Navigate to: <strong>Settings &gt; Transactions &gt; Pair to Whirlpool GUI</strong>
           <div className="text-center pt-4">
-            <QrReader
-              constraints={{
-                aspectRatio: "1",
-                facingMode: "environment"
+            <QrScanner
+              onDecode={(result) => {
+                console.log('qr: '+result)
+                onScan(result);
+                onClose();
               }}
-              scanDelay={250}
-              onResult={(result, error) => {
-                if (!!result) {
-                  console.log('qr: '+result.getText())
-                  onScan(result?.text);
-                  onClose();
-                }
-                if (!!error && error.message) {
-                  modalUtils.setError('Could not read QR code: ' + error.message)
-                }
+              onError={(error) => {
+                modalUtils.setError('Could not read QR code: ' + error.message)
               }}
-              videoContainerStyle={{}}
-              videoStyle={{}}
             />
           </div>
         </div>

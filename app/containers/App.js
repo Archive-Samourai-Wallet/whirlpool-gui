@@ -116,7 +116,6 @@ class App extends React.Component<Props> {
     if (!cliService.isLoggedIn()) {
       return <Switch>
         <Route path={routes.STATUS} component={StatusPage}/>
-        <Route path={routes.CONFIG} component={ConfigPage}/>
         <Route path={routes.HOME} component={LoginPage}/>
       </Switch>
     }
@@ -214,9 +213,9 @@ class App extends React.Component<Props> {
                   </Link>
                 </li>}
                 {cliService.isLoggedIn() && walletService.isReady() && cliService.getExternalDestination() && <li className="nav-item">
-                  <Link to={routes.EXTERNAL_XPUB} className="nav-link" title='Utxos successfully mixed to external XPub'>
+                  <Link to={routes.EXTERNAL_XPUB} className="nav-link" title='Utxos successfully mixed-to external XPUB'>
                     <span data-feather="check"></span>
-                    XPub history
+                    External XPUB history
                     ({mixService.getMixHistory().externalXpubCount} · {utils.toBtc(mixService.getMixHistory().externalXpubVolume, true)})
                   </Link>
                 </li>}
@@ -249,7 +248,7 @@ class App extends React.Component<Props> {
                     Pools
                   </Link>
                 </li>}
-                {cliService.isConfigured() && cliService.isCliStatusReady() && <li className="nav-item">
+                {cliService.isConfigured() && cliService.isCliStatusReady() && cliService.isLoggedIn() && <li className="nav-item">
                   <Link to={routes.CONFIG} className="nav-link">
                     <span data-feather="settings"></span>
                     Configuration

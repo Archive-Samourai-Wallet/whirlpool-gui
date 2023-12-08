@@ -107,6 +107,11 @@ class Utils {
     return valueBtc
   }
 
+  toBtcFixed (sats) {
+    let valueBtc = this.toBtc(sats)
+    return valueBtc.toFixed(8)
+  }
+
   linkExplorer(utxo) {
     if (cliService.isTestnet()) {
       return 'https://blockstream.info/testnet/tx/'+utxo.hash

@@ -47,9 +47,9 @@ class PoolsPage extends Component {
             <td>{utils.toBtc(pool.tx0BalanceMin)}</td>
             <td>∞</td>
             <td>∞</td>
-            <td>{pool.mixAnonymitySet}</td>
+            <td>{pool.mixAnonymitySet} minimum</td>
             <td>{pool.tx0MaxOutputs}</td>
-            <td>{utils.toBtc(pool.feeValue)}</td>
+            <td>{utils.toBtcFixed(pool.feeValue)}</td>
           </tr>)}
           </tbody>
         </table>

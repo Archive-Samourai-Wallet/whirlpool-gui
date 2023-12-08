@@ -167,16 +167,16 @@ export default class ConfigPage extends Component<Props> {
               </div>
 
               <div className="form-group row">
-                <label htmlFor="externalDestinationEnabled" className="col-sm-2 col-form-label">Mix to XPub</label>
+                <label htmlFor="externalDestinationEnabled" className="col-sm-2 col-form-label">Mix-to XPUB</label>
                 {cliService.getExternalDestination() && <div className="col-sm-10 custom-control custom-switch">
                   <input type="checkbox" className="custom-control-input" onChange={e => myThis.onChangeCliConfig(cliConfig => cliConfig.externalDestination.enabled = checked(e))} defaultChecked={cliConfig.externalDestination.enabled} id="externalDestinationEnabled"/>
-                  <label className="custom-control-label" htmlFor="externalDestinationEnabled">Enable mixing to external XPub</label>
+                  <label className="custom-control-label" htmlFor="externalDestinationEnabled">Enable mixing-to external XPUB</label>
                   <span className="text-muted" title='Run CLI with --set-external-xpub to reconfigure'>
                     {' '}(<strong>{cliService.getExternalDestination().xpub?cliService.getExternalDestination().xpub:''}</strong> after at least <strong>{cliService.getExternalDestination().mixs} mixs</strong>)
                   </span>
                 </div>}
                 {!cliService.getExternalDestination() && <div className="col-sm-10 custom-control custom-switch">
-                  <label className="custom-control-label text-muted">Disabled: no external XPub configured yet, run CLI with <code>--set-external-xpub</code> to configure</label>
+                  <label className="custom-control-label text-muted">Disabled: no external XPUB configured yet, run CLI with <code>--set-external-xpub</code> to configure</label>
                 </div>}
               </div>
             </Card.Body>

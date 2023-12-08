@@ -47,7 +47,7 @@ class CliApiService {
   }
 
   getCliConfigFile() {
-    return cliApiService.getCliPath()+CLI_CONFIG_FILENAME
+    return cliApiService.getCliPath()+'/'+CLI_CONFIG_FILENAME
   }
 
   async fetchCliApi() {

@@ -148,7 +148,7 @@ class BackendService {
         , 'mix.fetchHistory', true)
     },
     fetchHistoryExternalXpub: () => {
-      return this.withStatus('Mix', 'Fetch external XPub history', () =>
+      return this.withStatus('Mix', 'Fetch external XPUB history', () =>
           this.fetchBackendAsJson('/rest/mix/history/externalXpub', 'GET')
         , 'mix.fetchHistoryExternalXpub', true)
     },

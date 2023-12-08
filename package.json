@@ -215,7 +215,7 @@
     "file-loader": "^5.1.0",
     "flow-bin": "^0.113.0",
     "flow-runtime": "^0.17.0",
-    "flow-typed": "^2.5.1",
+    "flow-typed": "^3.9.0",
     "husky": "^3.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.1.0",
