@@ -133,7 +133,7 @@ export default class ConfigPage extends Component<Props> {
                 <label htmlFor="scode" className="col-sm-2 col-form-label">SCODE</label>
                   <input type="text" className='form-control col-sm-3' onChange={e => {
                     const myValue = e.target.value
-                    myThis.onChangeCliConfig(cliConfig => cliConfig.e = myValue)
+                    myThis.onChangeCliConfig(cliConfig => cliConfig.scode = myValue)
                   }} defaultValue={cliConfig.scode} id="scode"/>
                   <label className='col-form-label col-sm-5 text-muted'>A Samourai Discount Code for reduced-cost mixing.</label>
               </div>
@@ -205,24 +205,6 @@ export default class ConfigPage extends Component<Props> {
                 }} defaultValue={cliConfig.mix.clientsPerPool} id="clientsPerPool"/>
                 <label className='col-form-label col-sm-5 text-muted'>Max simultaneous mixing clients per pool</label>
               </div>}
-
-              <div className="form-group row">
-                <label htmlFor="tx0FakeOutputRandomFactor" className="col-sm-2 col-form-label">TX0 obfuscation</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputRandomFactor = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputRandomFactor} id="tx0FakeOutputRandomFactor" disabled={!isTestnet}/>
-                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only) TX0 fake output (0 = never, 1 = always).</label>
-              </div>
-
-              <div className="form-group row">
-                <label htmlFor="tx0FakeOutputMinValue" className="col-sm-2 col-form-label">TX0 min change</label>
-                <input type="number" className='form-control col-sm-3' onChange={e => {
-                  const myValue = parseInt(e.target.value)
-                  myThis.onChangeCliConfig(cliConfig => cliConfig.mix.tx0FakeOutputMinValue = myValue)
-                }} defaultValue={cliConfig.mix.tx0FakeOutputMinValue} id="tx0FakeOutputMinValue" disabled={!isTestnet}/>
-                <label className='col-form-label col-sm-5 text-muted'><strong>Experimental</strong> (testnet only) minimum value per fake change output</label>
-              </div>
 
             </Card.Body>}
           </Card>

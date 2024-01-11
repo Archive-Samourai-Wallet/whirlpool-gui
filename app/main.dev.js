@@ -135,11 +135,12 @@ else {
     }
 
     ipcMain.on(IPC_CAMERA.REQUEST, async (event) => {
-      if (process.platform !== 'darwin' || systemPreferences.getMediaAccessStatus("camera") !== "granted") {
+      if (process.platform !== 'darwin' || systemPreferences.getMediaAccessStatus("camera") === "granted") {
+        console.log('IPC_CAMERA.REQUEST: platform='+process.platform+', mediaAccessStatus=GRANTED')
         event.reply(IPC_CAMERA.GRANTED)
       } else {
         const granted = await systemPreferences.askForMediaAccess("camera");
-
+        console.log('IPC_CAMERA.REQUEST => '+(granted?'GRANTED':'DENIED'))
         if (granted) {
           event.reply(IPC_CAMERA.GRANTED)
         } else {
