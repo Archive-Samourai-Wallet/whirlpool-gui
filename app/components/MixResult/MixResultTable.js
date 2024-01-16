@@ -106,16 +106,13 @@ const MixResultsTable = ({ mixResults, tableKey, actions, showAsUtxo }) => {
     {
       Header: 'Info',
       accessor: o => o.failReason,
-
-
-
       Cell: o => {
         if (!o.cell.value) {
           return ''
         }
         const mixResult = o.row.original
         const failUtxo = mixResult.failUtxo ? mixResult.failUtxo.hash+':'+mixResult.failUtxo.index : ''
-        return <small>{mixResult.failReason+' '+failUtxo+' '+(mixResult.failError?mixResult.failError:'')}</small>
+        return <div className='utxoMessage'><small>{mixResult.failReason+' '+failUtxo+' '+(mixResult.failError?mixResult.failError:'')}</small></div>
       }
     }
   );
