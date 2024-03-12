@@ -54,22 +54,25 @@ export default function Tx0Modal(props) {
     const defaultPoolId = pools.length > 0 ? pools[0].poolId : undefined
     // preserve selected poolId if still available
     const newPoolId = (poolId && pools.filter(p => p.poolId === poolId).length > 0) ? poolId : defaultPoolId
-    setPoolId(newPoolId)
+    if (newPoolId != defaultPoolId) {
+      setPoolId(newPoolId)
+    }
   }, [pools])
 
   const isTx0Possible = (tx0FeeTarget, mixFeeTarget, poolId, utxos) => tx0FeeTarget && mixFeeTarget && poolId && utxos && utxos.length > 0
 
   // tx0 preview
-  useEffect(() => {
-    // clear old tx0Preview
-    setTx0Preview(undefined)
-
+  const refreshTx0Preview = () => {
     if (isTx0Possible(tx0FeeTarget, mixFeeTarget, poolId, utxos)) {
       // preview
       modalUtils.load("Loading...", backendService.tx0.tx0Preview(utxos, tx0FeeTarget, mixFeeTarget, poolId).then(newTx0Preview => {
         setTx0Preview(newTx0Preview)
       }))
     }
+  }
+
+  useEffect(() => {
+    refreshTx0Preview()
   }, [tx0FeeTarget, mixFeeTarget, poolId, utxos])
 
   const submitTx0 = () => {
@@ -87,7 +90,8 @@ export default function Tx0Modal(props) {
     {utxos.length==1 && <div>Spending <strong>{utxos[0].hash}:{utxos[0].index}</strong></div>}
     {utxos.length>1 && <Alert variant='warning'>You are spending <strong>{utxos.length} utxos</strong> at once, this may degrade your privacy. We recommend premixing utxos individually when possible.</Alert>}
     <br/>
-    {!modalUtils.isLoading() && <div>
+    {!tx0Preview && !modalUtils.isLoading() && <div className="spinner-border spinner-border-sm" role="status"/>}
+    {tx0Preview && !modalUtils.isLoading() && !modalUtils.isError() && <div>
 
       {pools && pools.length>0 && <div>
         Pool fee: {tx0Preview && <span>
@@ -122,13 +126,16 @@ export default function Tx0Modal(props) {
           <small className='text-muted'>Mix speed and confirmation time (delay for completing mixing)</small>
         </div>
       </div>
-      <br/>
+    </div>}
+    <br/>
 
-      {!modalUtils.isError() && <div>
-        {tx0Preview && <div>
-          This will generate <strong>{tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(tx0Preview.changeValue)} btc</strong> change
-        </div>}
+    {!modalUtils.isError() && <div>
+      {tx0Preview && <div>
+        This will generate <strong>{tx0Preview.nbPremix} premixs</strong> of <strong>{utils.toBtc(tx0Preview.premixValue)} btc</strong> + <strong>{utils.toBtc(tx0Preview.changeValue)} btc</strong> change
       </div>}
+    </div>}
+    {modalUtils.isError() && <div className='text-center'>
+      <Button onClick={refreshTx0Preview}>Retry <Icon.RefreshCw size={12}/></Button>
     </div>}
   </GenericModal>
 }

@@ -74,7 +74,7 @@ class ConnectingPage extends Component<Props> {
         <br/>
 
         {cliService.getCliMessage() && <Alert variant='info'>{cliService.getCliMessage()}</Alert>}
-        {!cliService.isConnected() && <button type='button' className='btn btn-primary' onClick={this.reconnect}><FontAwesomeIcon icon={Icons.faSync} /> Retry to connect</button>}
+        {!cliService.isConnected() && <button type='button' className='btn btn-primary' onClick={this.reconnect}><FontAwesomeIcon icon={Icons.faSync} /> Retry to connect</button>}{' '}
         {!cliService.isConnected() && cliService.isCliLocal() && <button type='button' className='btn btn-danger' onClick={this.onReloadCliLocal}>Reload CLI</button>}
         {cliService.isConnected() && <button type='button' className='btn btn-danger' onClick={this.onRestartCli}>Restart CLI</button>}
 
