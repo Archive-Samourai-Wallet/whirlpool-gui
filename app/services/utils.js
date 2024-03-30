@@ -148,7 +148,7 @@ class Utils {
       case UTXO_STATUS.MIX_SUCCESS:
         return ['MIXED', <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>, false]
       case UTXO_STATUS.STOP:
-        return ['STOPPED', <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='TX0 FAILED'/>, false]
+        return ['STOPPED', <FontAwesomeIcon icon={Icons.faSquare} size='xs' color='red' title='STOPPED'/>, false]
     }
     if (utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX) {
       return ['MIXED', <FontAwesomeIcon icon={Icons.faCheck} size='xs' color='green' title='MIXED'/>, false]

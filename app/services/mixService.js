@@ -114,7 +114,7 @@ class MixService {
 
   isStartMixPossible(utxo) {
     return (utxo.account === WHIRLPOOL_ACCOUNTS.PREMIX || utxo.account === WHIRLPOOL_ACCOUNTS.POSTMIX)
-      && (utxo.status === UTXO_STATUS.MIX_FAILED || utxo.status === UTXO_STATUS.READY)
+      && (utxo.status === UTXO_STATUS.MIX_FAILED || utxo.status === UTXO_STATUS.READY || utxo.status === UTXO_STATUS.STOP)
       && this.getPoolsForMix(utxo).length > 0
   }
 
